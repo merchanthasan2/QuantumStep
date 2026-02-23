@@ -1,0 +1,762 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Salary Calculator India – FY 2025-26 | Quantum Step</title>
+<meta name="description" content="Free India salary calculator for FY 2025-26. Compare New vs Old tax regime, calculate in-hand salary, HRA, PF, and more.">
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.9.0/d3.min.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
+<style>
+  body { font-family: 'Inter', sans-serif; }
+  .back-link { text-decoration: none; }
+  input[type=range] { accent-color: #4f46e5; }
+  .tab-active { background: white; color: #4338ca; box-shadow: 0 1px 3px rgba(0,0,0,.1); }
+  .tab-inactive { color: #64748b; }
+  .slab-bar-segment { transition: width 0.5s ease; }
+  #ai-output b { font-weight: 700; }
+  #ai-output ul { list-style: disc; padding-left: 1.25rem; margin: .5rem 0; }
+  #ai-output li { margin: .25rem 0; }
+  @media print { .no-print { display: none !important; } }
+</style>
+</head>
+<body class="min-h-screen bg-slate-50">
+
+<!-- Nav -->
+<nav class="bg-slate-900 text-white px-4 py-3 flex items-center gap-4 no-print sticky top-0 z-50">
+  <a href="index.html" class="back-link text-indigo-300 hover:text-white text-sm flex items-center gap-1">
+    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M19 12H5"/><path d="m12 5-7 7 7 7"/></svg>
+    Quantum Step
+  </a>
+  <span class="text-slate-500">|</span>
+  <span class="text-sm font-semibold">Salary Calculator India</span>
+  <span class="ml-auto text-xs bg-indigo-600 px-2 py-0.5 rounded-full">FY 2025-26</span>
+</nav>
+
+<div class="max-w-6xl mx-auto py-8 px-4 sm:px-6">
+
+  <!-- Header -->
+  <header class="mb-8 sm:flex sm:items-end sm:justify-between">
+    <div>
+      <h1 class="text-3xl font-bold text-slate-900 tracking-tight">Salary Calculator <span class="text-indigo-600">India</span></h1>
+      <p class="mt-1 text-slate-600 text-sm">FY 2025-26 (AY 2026-27) &bull; Code on Wages &bull; Tax Planner</p>
+    </div>
+    <div class="mt-3 sm:mt-0 flex gap-2 flex-wrap">
+      <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-emerald-100 text-emerald-800 border border-emerald-200">Budget 2025</span>
+      <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-indigo-100 text-indigo-800 border border-indigo-200">Tax Free ≤ ₹12L (New Regime)</span>
+    </div>
+  </header>
+
+  <div class="grid grid-cols-1 md:grid-cols-12 gap-8">
+
+    <!-- LEFT: Inputs -->
+    <div class="md:col-span-5 space-y-6">
+      <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
+
+        <!-- Title + Regime Toggle -->
+        <div class="flex justify-between items-center mb-5">
+          <h2 class="text-lg font-semibold text-slate-900">📊 Input</h2>
+          <div class="flex items-center bg-slate-100 rounded-lg p-1 text-xs font-bold">
+            <button id="btn-new" onclick="setRegime('NEW')" class="px-3 py-1.5 rounded-md transition-all tab-active">New Regime</button>
+            <button id="btn-old" onclick="setRegime('OLD')" class="px-3 py-1.5 rounded-md transition-all tab-inactive">Old Regime</button>
+          </div>
+        </div>
+
+        <!-- Recommendation Banner -->
+        <div id="regime-banner" class="mb-5 p-3 rounded-lg border flex items-start gap-2 text-sm"></div>
+
+        <!-- Input Type Toggle -->
+        <div class="bg-slate-100 p-1 rounded-lg flex text-sm font-medium mb-4">
+          <button id="btn-tcc" onclick="setInputType('TCC')" class="flex-1 py-2 rounded-md transition-all tab-active">Total CTC</button>
+          <button id="btn-fixed" onclick="setInputType('FIXED')" class="flex-1 py-2 rounded-md transition-all tab-inactive">Fixed Pay</button>
+        </div>
+
+        <!-- Amount Input -->
+        <div class="mb-4">
+          <label id="input-label" class="block text-sm font-semibold text-slate-700 mb-1">Annual Total CTC</label>
+          <div class="relative">
+            <span class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500 font-bold text-lg">₹</span>
+            <input id="main-input" type="text" value="15,00,000" oninput="onMainInput(this)"
+              class="block w-full pl-9 pr-4 py-3.5 bg-slate-50 border border-slate-200 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none font-mono text-slate-900 text-xl shadow-inner">
+          </div>
+          <div class="mt-2 text-xs font-bold text-indigo-600 bg-indigo-50 px-3 py-2 rounded-md border border-indigo-100">
+            <span class="text-[10px] uppercase tracking-wider opacity-60 block">Amount in Words</span>
+            <span id="words-display">Fifteen Lakh Rupees Only</span>
+          </div>
+          <p id="input-hint" class="mt-1 text-xs text-slate-400">Includes Variable Pay</p>
+        </div>
+
+        <!-- Variable Pay -->
+        <div class="pt-3 border-t border-slate-100 mb-4">
+          <div class="flex justify-between items-center mb-1">
+            <label class="text-sm font-medium text-slate-700">Variable Pay (% of Fixed)</label>
+            <span id="var-pct-label" class="text-sm font-bold text-indigo-600">15%</span>
+          </div>
+          <input id="var-slider" type="range" min="0" max="50" step="5" value="15" oninput="onSlider()" class="w-full">
+          <div class="flex justify-between text-xs text-slate-400 mt-1">
+            <span>0%</span>
+            <span id="var-annual-label" class="text-amber-600 font-medium"></span>
+          </div>
+        </div>
+
+        <!-- Basic % -->
+        <div class="pt-3 border-t border-slate-100 mb-4">
+          <div class="flex justify-between items-center mb-1">
+            <label class="text-sm font-medium text-slate-700">Basic Pay Ratio</label>
+            <span id="basic-pct-label" class="text-sm font-bold text-indigo-600">50% of Fixed Pay</span>
+          </div>
+          <input id="basic-slider" type="range" min="30" max="60" step="1" value="50" oninput="onSlider()" class="w-full">
+        </div>
+
+        <!-- Old Regime Deductions -->
+        <div id="old-regime-section" class="hidden pt-3 border-t border-slate-100">
+          <div class="flex justify-between items-center mb-3">
+            <h3 class="text-sm font-semibold text-slate-900">🛡️ Exemptions &amp; Deductions</h3>
+            <span class="text-[10px] text-slate-400 bg-slate-100 px-2 py-0.5 rounded">Old Regime Only</span>
+          </div>
+          <div class="space-y-3">
+            <div>
+              <label class="block text-xs font-medium text-slate-600 mb-1">Annual Rent Paid (for HRA)</label>
+              <input id="rent-input" type="text" value="0" oninput="onDeductionInput(this,'rent')"
+                class="w-full p-2 text-sm border border-slate-200 rounded-md focus:ring-2 focus:ring-indigo-500 outline-none">
+            </div>
+            <div>
+              <div class="flex justify-between">
+                <label class="text-xs font-medium text-slate-600">Section 80C (Max ₹1.5L)</label>
+                <span class="text-[10px] text-slate-400">Includes Employee PF</span>
+              </div>
+              <div class="relative mt-1">
+                <input id="d80c-input" type="text" value="0" oninput="onDeductionInput(this,'d80c')"
+                  class="w-full p-2 pr-12 text-sm border border-slate-200 rounded-md focus:ring-2 focus:ring-indigo-500 outline-none">
+                <button onclick="maxDeduction('d80c',150000)" class="absolute right-1 top-1/2 -translate-y-1/2 text-xs bg-slate-100 hover:bg-slate-200 text-slate-600 font-semibold px-2 py-1 rounded">Max</button>
+              </div>
+            </div>
+            <div class="grid grid-cols-2 gap-3">
+              <div>
+                <label class="text-xs font-medium text-slate-600">Sec 80D (Health)</label>
+                <div class="relative mt-1">
+                  <input id="d80d-input" type="text" value="0" oninput="onDeductionInput(this,'d80d')"
+                    class="w-full p-2 pr-10 text-sm border border-slate-200 rounded-md focus:ring-2 focus:ring-indigo-500 outline-none">
+                  <button onclick="maxDeduction('d80d',100000)" class="absolute right-1 top-1/2 -translate-y-1/2 text-xs bg-slate-100 hover:bg-slate-200 text-slate-600 font-semibold px-1.5 py-1 rounded">Max</button>
+                </div>
+              </div>
+              <div>
+                <label class="text-xs font-medium text-slate-600">NPS (Sec 80CCD)</label>
+                <div class="relative mt-1">
+                  <input id="nps-input" type="text" value="0" oninput="onDeductionInput(this,'nps')"
+                    class="w-full p-2 pr-10 text-sm border border-slate-200 rounded-md focus:ring-2 focus:ring-indigo-500 outline-none">
+                  <button onclick="maxDeduction('nps',50000)" class="absolute right-1 top-1/2 -translate-y-1/2 text-xs bg-slate-100 hover:bg-slate-200 text-slate-600 font-semibold px-1.5 py-1 rounded">Max</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- New Regime: no deductions notice -->
+        <div id="new-regime-notice" class="pt-3 border-t border-slate-100 text-center">
+          <p class="text-xs text-slate-500 mb-2">Exemptions &amp; Deductions are not available in New Regime.</p>
+          <button onclick="setRegime('OLD')" class="text-xs text-indigo-600 font-medium hover:bg-indigo-50 px-3 py-1.5 rounded border border-indigo-100">Switch to Old Regime to add</button>
+        </div>
+
+        <!-- PF Config -->
+        <div class="mt-4 bg-slate-50 rounded-lg border border-slate-200 p-4">
+          <div class="flex items-center justify-between">
+            <div>
+              <p class="text-sm font-medium text-slate-900">PF Contribution</p>
+              <p class="text-xs text-slate-500">Choose calculation method</p>
+            </div>
+            <div class="flex items-center bg-white rounded-lg p-1 border border-slate-200 shadow-sm text-xs font-medium">
+              <button id="pf-capped" onclick="setPF(true)" class="px-3 py-1.5 rounded-md transition-all tab-active">Capped (₹1.8k)</button>
+              <button id="pf-full" onclick="setPF(false)" class="px-3 py-1.5 rounded-md transition-all tab-inactive">Full Basic</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- AI Advisor -->
+      <div class="bg-gradient-to-br from-indigo-50 to-purple-50 rounded-xl p-6 border border-indigo-100">
+        <div class="flex items-center gap-3 mb-3">
+          <div class="p-2 bg-indigo-600 rounded-lg text-white">🤖</div>
+          <h3 class="text-lg font-semibold text-indigo-900">AI Salary Analyst</h3>
+        </div>
+        <p class="text-slate-600 mb-4 text-sm">Get insights about your salary structure, tax liability, and labor law compliance powered by Google Gemini.</p>
+        <div id="ai-key-section">
+          <label class="block text-xs font-medium text-slate-600 mb-1">Gemini API Key</label>
+          <div class="flex gap-2">
+            <input id="ai-key-input" type="password" placeholder="AIza..." class="flex-1 p-2 text-sm border border-slate-200 rounded-md focus:ring-2 focus:ring-indigo-500 outline-none">
+            <button onclick="analyzeAI()" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg text-sm font-medium flex items-center gap-1">
+              <span id="ai-btn-text">Analyze</span>
+            </button>
+          </div>
+          <p class="text-xs text-slate-400 mt-1">Key is used only in your browser — not stored or sent to our servers.</p>
+        </div>
+        <div id="ai-error" class="hidden mt-3 p-3 bg-red-50 text-red-700 rounded-lg text-xs border border-red-100"></div>
+        <div id="ai-output-wrap" class="hidden mt-4 bg-white p-4 rounded-lg border border-slate-100 shadow-sm text-sm text-slate-700">
+          <div id="ai-output"></div>
+          <button onclick="clearAI()" class="mt-3 text-xs text-indigo-600 font-medium underline">Clear Analysis</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT: Results -->
+    <div class="md:col-span-7 space-y-6">
+
+      <!-- Big Cards Row -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div class="bg-gradient-to-br from-emerald-500 to-teal-600 rounded-2xl p-6 text-white shadow-lg shadow-emerald-200 relative overflow-hidden">
+          <div class="absolute right-0 top-0 w-32 h-32 bg-white opacity-10 rounded-full blur-3xl -mr-10 -mt-10"></div>
+          <p class="text-emerald-100 font-medium mb-1 text-sm">Monthly Take Home</p>
+          <h3 id="r-monthly" class="text-4xl font-bold tracking-tight">₹0</h3>
+          <p class="text-xs text-emerald-100 mt-4 opacity-80">Months 1–12 (Fixed Pay)</p>
+        </div>
+        <div class="bg-gradient-to-br from-amber-400 to-orange-500 rounded-2xl p-6 text-white shadow-lg shadow-orange-200 relative overflow-hidden">
+          <div class="absolute right-0 top-0 w-32 h-32 bg-white opacity-10 rounded-full blur-3xl -mr-10 -mt-10"></div>
+          <div class="flex justify-between items-start">
+            <p class="text-amber-100 font-medium mb-1 text-sm">Year End Bonus (Net)</p>
+            <span class="text-[10px] bg-white/20 px-2 py-0.5 rounded text-white">Tax Adj.</span>
+          </div>
+          <h3 id="r-bonus" class="text-4xl font-bold tracking-tight">₹0</h3>
+          <div class="mt-4 flex justify-between">
+            <p class="text-xs text-amber-100 opacity-80">Post Tax (Paid Month 12)</p>
+            <span id="r-bonus-gross" class="text-[10px] text-amber-50"></span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Stat Strip -->
+      <div class="grid grid-cols-2 gap-4">
+        <div class="bg-white rounded-xl p-4 border border-slate-200 shadow-sm">
+          <div class="flex justify-between items-start">
+            <p class="text-slate-500 text-xs font-medium uppercase tracking-wide">Total Tax Paid</p>
+            <span id="r-eff-rate" class="text-[10px] font-bold px-1.5 py-0.5 rounded bg-rose-50 text-rose-600 border border-rose-100">0% Eff. Rate</span>
+          </div>
+          <p id="r-total-tax" class="text-xl font-bold text-rose-600 mt-1">₹0</p>
+          <p id="r-tax-regime-label" class="text-[10px] text-slate-400">Includes Cess • NEW Regime</p>
+        </div>
+        <div class="bg-indigo-900 rounded-xl p-4 text-white">
+          <p class="text-indigo-300 text-xs font-medium uppercase tracking-wide">Forced Savings</p>
+          <p id="r-retirals" class="text-xl font-bold mt-1">₹0</p>
+          <p class="text-[10px] text-indigo-300">PF + Gratuity</p>
+        </div>
+      </div>
+
+      <!-- Variable Pay Analysis -->
+      <div class="bg-white rounded-xl p-5 border border-slate-200 shadow-sm">
+        <div class="flex items-center gap-2 mb-3">
+          <span class="text-amber-500">💵</span>
+          <h4 class="text-xs font-bold text-slate-700 uppercase tracking-wider">Variable Pay Analysis</h4>
+        </div>
+        <div class="grid grid-cols-3 gap-3">
+          <div class="p-3 bg-slate-50 rounded-lg border border-slate-100">
+            <p class="text-[10px] text-slate-500 uppercase font-medium mb-1">Gross Variable</p>
+            <p id="vp-gross" class="text-sm font-bold text-slate-900">₹0</p>
+          </div>
+          <div class="p-3 bg-rose-50 rounded-lg border border-rose-100">
+            <p class="text-[10px] text-rose-600 uppercase font-medium mb-1">Est. Tax</p>
+            <p id="vp-tax" class="text-sm font-bold text-rose-700">₹0</p>
+          </div>
+          <div class="p-3 bg-emerald-50 rounded-lg border border-emerald-100">
+            <p class="text-[10px] text-emerald-600 uppercase font-medium mb-1">Net Payout</p>
+            <p id="vp-net" class="text-sm font-bold text-emerald-700">₹0</p>
+          </div>
+        </div>
+        <p class="text-[10px] text-slate-400 italic mt-3">Tax on variable is calculated using marginal tax logic. Actual may vary.</p>
+      </div>
+
+      <!-- Detailed Breakdown + Chart -->
+      <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+        <div class="border-b border-slate-100 p-4 bg-slate-50/50 flex justify-between items-center">
+          <h3 class="font-semibold text-slate-900">Detailed Breakdown</h3>
+          <span class="text-xs font-mono text-slate-500 bg-white px-2 py-1 border rounded">Annual Figures</span>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 p-6">
+          <div id="breakdown-table" class="space-y-1 text-sm"></div>
+          <div class="flex items-center justify-center">
+            <div class="w-full flex flex-col items-center">
+              <div id="chart-container" class="relative w-full max-w-[260px] h-[260px]"></div>
+              <div class="flex flex-wrap justify-center gap-3 mt-3 text-xs font-medium text-slate-600">
+                <div class="flex items-center gap-1.5"><div class="w-2.5 h-2.5 rounded-full bg-emerald-500"></div><span>Fixed Net</span></div>
+                <div class="flex items-center gap-1.5"><div class="w-2.5 h-2.5 rounded-full bg-amber-400"></div><span>Variable</span></div>
+                <div class="flex items-center gap-1.5"><div class="w-2.5 h-2.5 rounded-full bg-rose-500"></div><span>Taxes</span></div>
+                <div class="flex items-center gap-1.5"><div class="w-2.5 h-2.5 rounded-full bg-blue-500"></div><span>Retirals</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tax Slab Breakdown -->
+      <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+        <div class="border-b border-slate-100 p-4 bg-slate-50/50 flex justify-between items-center">
+          <h3 class="font-semibold text-slate-900">📄 Tax Calculation Breakdown</h3>
+          <span id="r-regime-tag" class="text-xs font-mono text-slate-500">NEW REGIME</span>
+        </div>
+        <div class="p-6">
+          <div class="flex justify-between items-center mb-4 text-sm">
+            <span class="text-slate-600">Net Taxable Income</span>
+            <span id="r-taxable" class="font-bold text-slate-900 text-lg">₹0</span>
+          </div>
+          <!-- Slab Bar -->
+          <div id="slab-bar-wrap" class="mb-5 hidden">
+            <p class="text-xs text-slate-500 mb-2">Income Distribution Across Tax Slabs:</p>
+            <div id="slab-bar" class="w-full h-8 bg-slate-100 rounded-full flex overflow-hidden text-xs font-semibold shadow-inner"></div>
+          </div>
+          <!-- Slab Table -->
+          <div class="overflow-hidden rounded-lg border border-slate-200">
+            <table class="min-w-full divide-y divide-slate-200">
+              <thead class="bg-slate-50">
+                <tr>
+                  <th class="px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase">Slab Description</th>
+                  <th class="px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase">Rate</th>
+                  <th class="px-4 py-3 text-right text-xs font-medium text-slate-500 uppercase">Tax Amount</th>
+                </tr>
+              </thead>
+              <tbody id="slab-table-body" class="bg-white divide-y divide-slate-200"></tbody>
+              <tfoot>
+                <tr class="bg-slate-50">
+                  <td class="px-4 py-3 text-sm font-bold text-slate-900" colspan="2">Total Tax Payable</td>
+                  <td id="slab-total" class="px-4 py-3 text-sm font-bold text-rose-600 text-right">₹0</td>
+                </tr>
+              </tfoot>
+            </table>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="mt-12 py-6 border-t border-slate-200 text-center">
+    <p class="text-xs text-slate-500 max-w-2xl mx-auto leading-relaxed">
+      <strong>Disclaimer:</strong> This calculator is for informational purposes only. While we strive for accuracy based on FY 2025-26 (AY 2026-27) rules including Marginal Relief and Surcharge logic, tax laws are subject to change. Please consult a qualified CA or tax professional for your specific situation.
+    </p>
+    <p class="text-xs text-slate-400 mt-3">Made with ❤️ by <a href="index.html" class="text-indigo-500 hover:underline">Quantum Step Creations</a></p>
+  </footer>
+</div>
+
+<script>
+// =========================================================
+// STATE
+// =========================================================
+const state = {
+  inputType: 'TCC',
+  inputValue: 1500000,
+  variablePercent: 15,
+  basicPercent: 50,
+  limitPF: false,
+  taxRegime: 'NEW',
+  rent: 0,
+  d80c: 0,
+  d80d: 0,
+  nps: 0
+};
+
+// =========================================================
+// UTILS
+// =========================================================
+function fmtIN(n) {
+  if (!n && n !== 0) return '';
+  let s = Math.round(n).toString();
+  let last3 = s.slice(-3);
+  let rest = s.slice(0, -3);
+  if (rest) last3 = ',' + last3;
+  return rest.replace(/\B(?=(\d{2})+(?!\d))/g, ',') + last3;
+}
+
+function parseFmt(s) { return Number(String(s).replace(/,/g, '')) || 0; }
+
+function rupee(n) { return '₹' + fmtIN(Math.round(n)); }
+
+const WORDS_ONES = ['','One','Two','Three','Four','Five','Six','Seven','Eight','Nine','Ten','Eleven','Twelve','Thirteen','Fourteen','Fifteen','Sixteen','Seventeen','Eighteen','Nineteen'];
+const WORDS_TENS = ['','','Twenty','Thirty','Forty','Fifty','Sixty','Seventy','Eighty','Ninety'];
+function numToWords(n) {
+  if (n === 0) return 'Zero';
+  if (n < 0) return 'Negative ' + numToWords(-n);
+  function grp(x) {
+    let r = '';
+    if (x >= 100) { r += WORDS_ONES[Math.floor(x/100)] + ' Hundred '; x %= 100; }
+    if (x >= 20) { r += WORDS_TENS[Math.floor(x/10)] + ' '; x %= 10; }
+    if (x > 0) r += WORDS_ONES[x] + ' ';
+    return r.trim();
+  }
+  let w = '';
+  const cr = Math.floor(n/1e7); n %= 1e7;
+  const lk = Math.floor(n/1e5); n %= 1e5;
+  const th = Math.floor(n/1e3); n %= 1e3;
+  const un = Math.floor(n);
+  if (cr > 0) w += numToWords(cr) + ' Crore ';
+  if (lk > 0) w += grp(lk) + ' Lakh ';
+  if (th > 0) w += grp(th) + ' Thousand ';
+  if (un > 0) w += grp(un);
+  return w.trim() + ' Rupees Only';
+}
+
+// =========================================================
+// SALARY ENGINE (ported from salary.service.ts)
+// =========================================================
+const PF_CAP = 15000, PF_RATE = 0.12, PROF_TAX = 2400, GRAT = 15/26;
+const STD_NEW = 75000, STD_OLD = 50000;
+
+function calcTax(income, regime) {
+  let tax = 0, slabs = [];
+  if (regime === 'NEW') {
+    slabs.push({rate:'0%', desc:'Up to ₹3L', inc:Math.min(income,300000), color:'bg-slate-200', amt:0});
+    if (income > 300000) { const t=Math.min(income,700000)-300000; tax+=t*.05; slabs.push({rate:'5%',desc:'₹3L – ₹7L',inc:t,color:'bg-emerald-200',amt:t*.05}); }
+    if (income > 700000) { const t=Math.min(income,1000000)-700000; tax+=t*.10; slabs.push({rate:'10%',desc:'₹7L – ₹10L',inc:t,color:'bg-yellow-200',amt:t*.10}); }
+    if (income > 1000000) { const t=Math.min(income,1200000)-1000000; tax+=t*.15; slabs.push({rate:'15%',desc:'₹10L – ₹12L',inc:t,color:'bg-amber-300',amt:t*.15}); }
+    if (income > 1200000) { const t=Math.min(income,1500000)-1200000; tax+=t*.20; slabs.push({rate:'20%',desc:'₹12L – ₹15L',inc:t,color:'bg-orange-300',amt:t*.20}); }
+    if (income > 1500000) { const t=income-1500000; tax+=t*.30; slabs.push({rate:'30%',desc:'Above ₹15L',inc:t,color:'bg-red-400',amt:t*.30}); }
+    if (income <= 1200000) { slabs.push({rate:'Rebate',desc:'Sec 87A Rebate (Income ≤ ₹12L)',inc:0,color:'',amt:-tax}); tax=0; }
+    else if (income <= 1300000) { const exc=income-1200000; if(tax>exc){const rel=tax-exc; slabs.push({rate:'Relief',desc:'Marginal Relief (87A)',inc:0,color:'bg-emerald-100',amt:-rel}); tax=exc;} }
+  } else {
+    slabs.push({rate:'0%',desc:'Up to ₹2,50,000',inc:Math.min(income,250000),color:'bg-slate-200',amt:0});
+    if (income > 250000) { const t=Math.min(income,500000)-250000; tax+=t*.05; slabs.push({rate:'5%',desc:'₹2,50,001 – ₹5,00,000',inc:t,color:'bg-emerald-200',amt:t*.05}); }
+    if (income > 500000) { const t=Math.min(income,1000000)-500000; tax+=t*.20; slabs.push({rate:'20%',desc:'₹5,00,001 – ₹10,00,000',inc:t,color:'bg-orange-300',amt:t*.20}); }
+    if (income > 1000000) { const t=income-1000000; tax+=t*.30; slabs.push({rate:'30%',desc:'Above ₹10,00,000',inc:t,color:'bg-red-400',amt:t*.30}); }
+    if (income <= 500000) { slabs.push({rate:'Rebate',desc:'Sec 87A Rebate (Income ≤ ₹5L)',inc:0,color:'',amt:-tax}); tax=0; }
+    else if (income <= 515000) { const exc=income-500000; if(tax>exc){const rel=tax-exc; slabs.push({rate:'Relief',desc:'Marginal Relief (87A)',inc:0,color:'bg-emerald-100',amt:-rel}); tax=exc;} }
+  }
+  let surcharge = 0;
+  if (tax > 0) {
+    if (income > 5e6 && income <= 1e7) { surcharge=tax*.10; slabs.push({rate:'10%',desc:'Surcharge (>₹50L)',inc:0,color:'bg-purple-100',amt:surcharge}); }
+    else if (income > 1e7 && income <= 2e7) { surcharge=tax*.15; slabs.push({rate:'15%',desc:'Surcharge (>₹1Cr)',inc:0,color:'bg-purple-200',amt:surcharge}); }
+    else if (income > 2e7) { const r=regime==='OLD'&&income>5e7?.37:.25; surcharge=tax*r; slabs.push({rate:(r*100)+'%',desc:'Surcharge (>₹2Cr)',inc:0,color:'bg-purple-300',amt:surcharge}); }
+  }
+  const ts = tax + surcharge;
+  let cess = 0;
+  if (ts > 0) { cess = ts * .04; slabs.push({rate:'4%',desc:'Health & Education Cess',inc:0,color:'',amt:cess}); }
+  return { total: ts + cess, income: tax, cess, slabs };
+}
+
+function calcSalary() {
+  const {inputType, inputValue, variablePercent, basicPercent, limitPF, taxRegime, rent, d80c, d80d, nps} = state;
+  const vFrac = variablePercent / 100;
+  let tcc, fixedCTC, varPay;
+  if (inputType === 'TCC') { tcc=inputValue; fixedCTC=tcc/(1+vFrac); varPay=fixedCTC*vFrac; }
+  else { fixedCTC=inputValue; varPay=fixedCTC*vFrac; tcc=fixedCTC+varPay; }
+
+  const basicAnnual = fixedCTC * (basicPercent/100);
+  let ePF, empPF;
+  if (limitPF) { const b=Math.min(basicAnnual,PF_CAP*12); ePF=b*PF_RATE; empPF=b*PF_RATE; }
+  else { ePF=basicAnnual*PF_RATE; empPF=basicAnnual*PF_RATE; }
+
+  const gratuity = (basicAnnual/12)*GRAT;
+  const retirals = ePF + gratuity;
+  const grossAnnual = Math.max(0, fixedCTC - retirals);
+  const hraAnnual = basicAnnual * .50;
+  const specAllow = Math.max(0, grossAnnual - basicAnnual - hraAnnual);
+  const totalGross = grossAnnual + varPay;
+
+  const calcRegime = (r) => {
+    let taxable, hraEx=0, totDed, stdDed;
+    if (r === 'NEW') {
+      stdDed = STD_NEW; taxable = Math.max(0, totalGross - stdDed - PROF_TAX); totDed = stdDed + PROF_TAX;
+    } else {
+      stdDed = STD_OLD;
+      if (rent > 0) { hraEx = Math.min(hraAnnual, Math.max(0,rent-.10*basicAnnual), basicAnnual*.50); }
+      const c80=Math.min(150000,d80c+empPF), c80d=Math.min(100000,d80d), cNPS=Math.min(50000,nps);
+      totDed = stdDed + PROF_TAX + hraEx + c80 + c80d + cNPS;
+      taxable = Math.max(0, totalGross - totDed);
+    }
+    const t = calcTax(taxable, r);
+    return { taxable, hraEx, totDed, stdDed, ...t };
+  };
+
+  const newD = calcRegime('NEW'), oldD = calcRegime('OLD');
+  const savings = Math.abs(newD.total - oldD.total);
+  const betterRegime = oldD.total < newD.total ? 'OLD' : 'NEW';
+
+  const sel = taxRegime === 'NEW' ? newD : oldD;
+  const annualNet = totalGross - empPF - PROF_TAX - sel.total;
+
+  let fixedTaxable;
+  if (taxRegime === 'NEW') fixedTaxable = Math.max(0, grossAnnual - sel.stdDed - PROF_TAX);
+  else fixedTaxable = Math.max(0, grossAnnual - sel.totDed);
+
+  const {total: taxFixed} = calcTax(fixedTaxable, taxRegime);
+  const taxOnVar = Math.max(0, sel.total - taxFixed);
+  const netVar = Math.max(0, varPay - taxOnVar);
+  const monthlyFixed = (grossAnnual - empPF - PROF_TAX - taxFixed) / 12;
+  const effRate = totalGross > 0 ? (sel.total / totalGross) * 100 : 0;
+
+  return {
+    tcc, fixedCTC, varPay, basicAnnual, hraAnnual, specAllow, grossAnnual,
+    ePF, empPF, gratuity,
+    professionalTax: PROF_TAX, stdDed: sel.stdDed, hraEx: sel.hraEx,
+    d80c: taxRegime==='OLD' ? Math.min(150000,d80c+empPF) : 0, d80d, nps,
+    totDed: sel.totDed, taxable: sel.taxable,
+    incomeTax: sel.income, cess: sel.cess, totalTax: sel.total, effRate,
+    taxRegime, slabs: sel.slabs,
+    comparison: { newTax: newD.total, oldTax: oldD.total, betterRegime, savings },
+    annualNet, monthlyFixed, netVar, taxOnVar, empPFAnnual: empPF, retirals: empPF+ePF+gratuity
+  };
+}
+
+// =========================================================
+// RENDER
+// =========================================================
+function render() {
+  const d = calcSalary();
+
+  // Big cards
+  document.getElementById('r-monthly').textContent = rupee(d.monthlyFixed);
+  document.getElementById('r-bonus').textContent = rupee(d.netVar);
+  document.getElementById('r-bonus-gross').textContent = 'Gross: ' + rupee(d.varPay);
+
+  // Stat strip
+  document.getElementById('r-total-tax').textContent = rupee(d.totalTax);
+  document.getElementById('r-eff-rate').textContent = d.effRate.toFixed(1) + '% Eff. Rate';
+  document.getElementById('r-tax-regime-label').textContent = 'Includes Cess • ' + d.taxRegime + ' Regime';
+  document.getElementById('r-retirals').textContent = rupee(d.retirals);
+
+  // Variable analysis
+  document.getElementById('vp-gross').textContent = rupee(d.varPay);
+  document.getElementById('vp-tax').textContent = rupee(d.taxOnVar);
+  document.getElementById('vp-net').textContent = rupee(d.netVar);
+
+  // Regime tag
+  document.getElementById('r-regime-tag').textContent = d.taxRegime + ' REGIME';
+
+  // Taxable
+  document.getElementById('r-taxable').textContent = rupee(d.taxable);
+
+  // Breakdown table
+  const btEl = document.getElementById('breakdown-table');
+  btEl.innerHTML = row('Total CTC', rupee(d.tcc), true) +
+    rowSub('Annual Remuneration (Fixed)', rupee(d.fixedCTC), 'indigo') +
+    rowSub('Variable Pay (Year End)', rupee(d.varPay), 'amber') +
+    '<div class="pt-3 pb-1"><span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Salary Structure</span></div>' +
+    row('Basic Salary', rupee(d.basicAnnual)) +
+    row('HRA (50% of Basic)', rupee(d.hraAnnual)) +
+    row('Special / Flexi Allowance', rupee(d.specAllow)) +
+    rowHighlight('Annual Gross', rupee(d.grossAnnual), 'emerald') +
+    '<div class="pt-3 pb-1"><span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Deductions</span></div>' +
+    (d.stdDed>0 ? rowGreen('Standard Deduction', '– '+rupee(d.stdDed)) : '') +
+    (d.taxRegime==='OLD' && d.hraEx>0 ? rowGreen('HRA Exemption', '– '+rupee(d.hraEx)) : '') +
+    (d.taxRegime==='OLD' ? rowGreen('Chapter VI-A (80C etc)', '– '+rupee(Math.max(0,d.totDed-d.stdDed-d.hraEx-PROF_TAX))) : '') +
+    row('PF (Employee)', rupee(d.empPF)) +
+    row('Professional Tax', rupee(d.professionalTax)) +
+    rowHighlight('Income Tax + Cess', rupee(d.totalTax), 'rose');
+
+  // Slab bar + table
+  const slabBar = document.getElementById('slab-bar');
+  const slabBody = document.getElementById('slab-table-body');
+  const slabTotal = document.getElementById('slab-total');
+  slabBar.innerHTML = '';
+  slabBody.innerHTML = '';
+  document.getElementById('slab-bar-wrap').classList.toggle('hidden', d.taxable <= 0);
+
+  d.slabs.forEach(s => {
+    if (s.inc > 0 && d.taxable > 0) {
+      const pct = (s.inc / d.taxable * 100).toFixed(2);
+      slabBar.innerHTML += `<div class="h-full flex items-center justify-center ${s.color} slab-bar-segment transition-all duration-500" style="width:${pct}%" title="${s.desc}: ${rupee(s.inc)}"><span class="opacity-70 text-[10px]">${s.rate}</span></div>`;
+    }
+    const isSpecial = s.rate === 'Rebate' || s.rate === 'Relief';
+    slabBody.innerHTML += `<tr class="hover:bg-slate-50 ${isSpecial?'bg-emerald-50':''}">
+      <td class="px-4 py-2.5 text-sm ${isSpecial?'text-emerald-800 font-medium':'text-slate-600'}">${s.desc}</td>
+      <td class="px-4 py-2.5 text-sm"><span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-indigo-50 text-indigo-700">${s.rate}</span></td>
+      <td class="px-4 py-2.5 text-sm text-right font-medium ${isSpecial?'text-emerald-600':'text-slate-900'}">${isSpecial?'– '+rupee(-s.amt):rupee(s.amt)}</td>
+    </tr>`;
+  });
+  slabTotal.textContent = rupee(d.totalTax);
+
+  // Regime banner
+  const isBetter = d.comparison.betterRegime === d.taxRegime;
+  const bannerEl = document.getElementById('regime-banner');
+  if (isBetter) {
+    bannerEl.className = 'mb-5 p-3 rounded-lg border flex items-start gap-2 text-sm bg-emerald-50 border-emerald-200';
+    bannerEl.innerHTML = `<span class="text-emerald-600 mt-0.5">✅</span><div class="text-emerald-900"><p class="font-semibold">Optimal Regime Selected</p><p class="text-emerald-700 mt-0.5 text-xs">You are on the best tax regime.${d.comparison.savings>0?' Saving '+rupee(d.comparison.savings)+' vs '+( d.taxRegime==='NEW'?'Old':'New')+' Regime.':''}</p></div>`;
+  } else {
+    bannerEl.className = 'mb-5 p-3 rounded-lg border flex items-start gap-2 text-sm bg-amber-50 border-amber-200';
+    bannerEl.innerHTML = `<span class="text-amber-600 mt-0.5">⚠️</span><div class="text-amber-900"><p class="font-semibold">Savings Opportunity</p><p class="text-amber-800 text-xs mt-0.5">Switch to <b>${d.comparison.betterRegime} REGIME</b> to save <u>${rupee(d.comparison.savings)}</u> in taxes.</p><button onclick="setRegime('${d.comparison.betterRegime}')" class="mt-2 text-xs bg-white border border-amber-300 text-amber-800 px-2 py-1 rounded shadow-sm hover:bg-amber-50">Switch Now</button></div>`;
+  }
+
+  // Var slider label
+  document.getElementById('var-annual-label').textContent = 'Annual: ' + rupee(d.varPay) + ' (Paid Year End)';
+
+  // Chart
+  renderChart(d);
+}
+
+function row(label, val, bold=false) {
+  return `<div class="flex justify-between py-2 border-b border-slate-100"><span class="text-slate-600${bold?' font-medium':''}">${label}</span><span class="${bold?'font-bold text-slate-900':'text-slate-900'}">${val}</span></div>`;
+}
+function rowSub(label, val, color='slate') {
+  return `<div class="flex justify-between py-2 border-b border-slate-100 pl-4 bg-${color}-50/30 rounded-r"><span class="text-slate-600">${label}</span><span class="text-slate-900">${val}</span></div>`;
+}
+function rowGreen(label, val) {
+  return `<div class="flex justify-between py-2 border-b border-slate-100"><span class="text-slate-600">${label}</span><span class="text-emerald-600 font-medium">${val}</span></div>`;
+}
+function rowHighlight(label, val, color='slate') {
+  const cMap = {emerald:'text-emerald-800 bg-emerald-50/50', rose:'text-rose-700 bg-rose-50/30'};
+  const c = cMap[color]||'';
+  return `<div class="flex justify-between py-2 border-b border-slate-100 ${c} -mx-2 px-2 rounded"><span class="font-medium">${label}</span><span class="font-semibold">${val}</span></div>`;
+}
+
+// =========================================================
+// CHART (D3 Donut)
+// =========================================================
+function renderChart(d) {
+  const el = document.getElementById('chart-container');
+  d3.select(el).selectAll('*').remove();
+  const W = 260, H = 260, R = Math.min(W,H)/2;
+  const svg = d3.select(el).append('svg').attr('width',W).attr('height',H)
+    .attr('viewBox',`0 0 ${W} ${H}`).append('g').attr('transform',`translate(${W/2},${H/2})`);
+
+  const retiralsTotal = d.empPF + d.ePF + d.gratuity;
+  const netFixed = d.annualNet - d.netVar;
+  const chartData = [
+    {label:'Fixed Net', value:Math.max(0,netFixed), color:'#10b981'},
+    {label:'Variable', value:Math.max(0,d.netVar), color:'#fbbf24'},
+    {label:'Taxes', value:Math.max(0,d.totalTax), color:'#f43f5e'},
+    {label:'Retirals', value:Math.max(0,retiralsTotal), color:'#3b82f6'}
+  ].filter(x => x.value > 0);
+
+  const pie = d3.pie().value(x=>x.value).sort(null);
+  const arc = d3.arc().innerRadius(R*.60).outerRadius(R);
+
+  svg.selectAll('path').data(pie(chartData)).enter().append('path')
+    .attr('fill',d=>d.data.color).attr('stroke','white').attr('stroke-width','2px')
+    .transition().duration(900).attrTween('d', function(d) {
+      const i = d3.interpolate(d.startAngle+0.1, d.endAngle);
+      return t => { d.endAngle=i(t); return arc(d)||''; };
+    });
+
+  svg.append('text').attr('text-anchor','middle').attr('dy','-0.5em').text('Total CTC').style('font-size','13px').style('fill','#64748b');
+  svg.append('text').attr('text-anchor','middle').attr('dy','1em').text(`₹${(d.tcc/1e5).toFixed(1)}L`).style('font-size','22px').style('font-weight','bold').style('fill','#0f172a');
+}
+
+// =========================================================
+// SETTERS / EVENT HANDLERS
+// =========================================================
+function setRegime(r) {
+  state.taxRegime = r;
+  document.getElementById('btn-new').className = 'px-3 py-1.5 rounded-md transition-all ' + (r==='NEW'?'tab-active':'tab-inactive');
+  document.getElementById('btn-old').className = 'px-3 py-1.5 rounded-md transition-all ' + (r==='OLD'?'tab-active':'tab-inactive');
+  document.getElementById('old-regime-section').classList.toggle('hidden', r!=='OLD');
+  document.getElementById('new-regime-notice').classList.toggle('hidden', r==='OLD');
+  render();
+}
+
+function setInputType(t) {
+  const d = calcSalary();
+  if (t==='FIXED' && state.inputType==='TCC') state.inputValue = Math.round(d.fixedCTC);
+  if (t==='TCC' && state.inputType==='FIXED') state.inputValue = Math.round(d.tcc);
+  state.inputType = t;
+  document.getElementById('btn-tcc').className = 'flex-1 py-2 rounded-md transition-all ' + (t==='TCC'?'tab-active':'tab-inactive');
+  document.getElementById('btn-fixed').className = 'flex-1 py-2 rounded-md transition-all ' + (t==='FIXED'?'tab-active':'tab-inactive');
+  document.getElementById('input-label').textContent = t==='TCC' ? 'Annual Total CTC' : 'Annual Fixed Pay';
+  document.getElementById('input-hint').textContent = t==='TCC' ? 'Includes Variable Pay' : 'Excludes Variable Pay';
+  document.getElementById('main-input').value = fmtIN(state.inputValue);
+  document.getElementById('words-display').textContent = numToWords(state.inputValue);
+  render();
+}
+
+function onMainInput(el) {
+  const raw = parseFmt(el.value);
+  state.inputValue = raw;
+  document.getElementById('words-display').textContent = raw ? numToWords(raw) : '—';
+  el.value = fmtIN(raw);
+  render();
+}
+
+function onSlider() {
+  state.variablePercent = Number(document.getElementById('var-slider').value);
+  state.basicPercent = Number(document.getElementById('basic-slider').value);
+  document.getElementById('var-pct-label').textContent = state.variablePercent + '%';
+  document.getElementById('basic-pct-label').textContent = state.basicPercent + '% of Fixed Pay';
+  render();
+}
+
+function onDeductionInput(el, key) {
+  const v = parseFmt(el.value);
+  state[key] = v;
+  el.value = fmtIN(v);
+  render();
+}
+
+function maxDeduction(key, max) {
+  state[key] = max;
+  const idMap = {d80c:'d80c-input', d80d:'d80d-input', nps:'nps-input'};
+  document.getElementById(idMap[key]).value = fmtIN(max);
+  render();
+}
+
+function setPF(capped) {
+  state.limitPF = capped;
+  document.getElementById('pf-capped').className = 'px-3 py-1.5 rounded-md transition-all ' + (capped?'tab-active':'tab-inactive');
+  document.getElementById('pf-full').className = 'px-3 py-1.5 rounded-md transition-all ' + (!capped?'tab-active':'tab-inactive');
+  render();
+}
+
+// =========================================================
+// AI ADVISOR
+// =========================================================
+async function analyzeAI() {
+  const apiKey = document.getElementById('ai-key-input').value.trim();
+  if (!apiKey) { showAIError('Please enter your Gemini API key above.'); return; }
+  const d = calcSalary();
+  document.getElementById('ai-btn-text').textContent = 'Analyzing…';
+  document.getElementById('ai-error').classList.add('hidden');
+  document.getElementById('ai-output-wrap').classList.add('hidden');
+
+  const prompt = `You are an expert Indian Chartered Accountant and Labor Law specialist.
+Analyze this salary breakdown for AY 2026-27 (FY 2025-26).
+Rule: New Regime — taxable income ≤ ₹12L is completely tax-free via 87A Rebate.
+
+Input Data (Annual):
+- CTC: ₹${d.tcc.toFixed(0)}
+- Basic Salary: ₹${d.basicAnnual.toFixed(0)}
+- Gross Salary: ₹${d.grossAnnual.toFixed(0)}
+- Taxable Income: ₹${d.taxable.toFixed(0)}
+- Total Tax: ₹${d.totalTax.toFixed(0)}
+- Net Take Home: ₹${d.annualNet.toFixed(0)}
+- Employer PF + Gratuity: ₹${(d.ePF+d.gratuity).toFixed(0)}
+- Tax Regime: ${d.taxRegime}
+
+Provide a concise analysis:
+1. **Tax Efficiency**: Is the tax reasonable? Mention effective tax rate ${d.effRate.toFixed(1)}%. Highlight 87A if ≤12L.
+2. **Labor Law Check**: Is Basic at least 50% of CTC? It is ${(d.basicAnnual/d.tcc*100).toFixed(1)}%. Flag Code on Wages risk if not.
+3. **Savings vs Liquidity**: Comment on forced savings vs take home.
+Keep it short with bullet points. Use simple HTML (<b>, <ul>, <li>).`;
+
+  try {
+    const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`, {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({contents:[{parts:[{text:prompt}]}]})
+    });
+    if (!res.ok) { const e=await res.json(); showAIError('API error: '+(e.error?.message||res.statusText)); return; }
+    const json = await res.json();
+    const text = json.candidates?.[0]?.content?.parts?.[0]?.text || 'No response.';
+    document.getElementById('ai-output').innerHTML = text.replace(/\*\*(.*?)\*\*/g,'<b>$1</b>');
+    document.getElementById('ai-output-wrap').classList.remove('hidden');
+  } catch(e) {
+    showAIError('Failed to reach Gemini API. Check your internet connection.');
+  } finally {
+    document.getElementById('ai-btn-text').textContent = 'Analyze';
+  }
+}
+
+function showAIError(msg) {
+  const el = document.getElementById('ai-error');
+  el.textContent = msg;
+  el.classList.remove('hidden');
+  document.getElementById('ai-btn-text').textContent = 'Analyze';
+}
+
+function clearAI() {
+  document.getElementById('ai-output-wrap').classList.add('hidden');
+  document.getElementById('ai-output').innerHTML = '';
+  document.getElementById('ai-error').classList.add('hidden');
+}
+
+// Init
+document.getElementById('main-input').value = fmtIN(state.inputValue);
+render();
+</script>
+</body>
+</html>

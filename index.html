@@ -1,0 +1,826 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Security-Policy"
+        content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://fonts.googleapis.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self';">
+    <meta name="description"
+        content="Quantum Step Creations - Full-Stack Development Experts in Mumbai. We build Websites, Web Apps, Full-Stack Solutions & Mobile Apps.">
+    <meta name="keywords"
+        content="web development, full-stack, web apps, mobile apps, Mumbai, quantum step, website design">
+
+    <!-- OpenGraph -->
+    <meta property="og:title" content="Quantum Step Creations - No-Code Web Mastery">
+    <meta property="og:description" content="Mumbai's Premier Low-Code Agency | Websites in Weeks, Not Months">
+    <meta property="og:type" content="website">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Quantum Step Creations">
+
+    <title>Quantum Step Creations - No-Code Web Mastery | Mumbai</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&display=swap"
+        rel="stylesheet">
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        indigo: { 400: '#818cf8', 500: '#6366f1', 600: '#4f46e5', 900: '#312e81' },
+                        slate: { 800: '#1e293b', 900: '#0f172a', 950: '#020617' },
+                        emerald: { 400: '#34d399', 500: '#10b981', 600: '#059669', 900: '#064e3b' },
+                        rose: { 400: '#fb7185', 500: '#f43f5e', 600: '#e11d48', 900: '#881337' },
+                        cyan: { 400: '#22d3ee', 500: '#06b6d4' }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- GSAP -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+
+    <!-- Custom Styles -->
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <!-- Loading Screen -->
+    <div id="loading-screen" class="loading-screen">
+        <div class="quantum-loader"></div>
+    </div>
+
+    <!-- Navigation -->
+    <nav id="main-nav" class="main-nav">
+        <div class="nav-container">
+            <a href="#" class="logo">
+                <img src="logo-light.png" alt="Quantum Step Creations" class="logo-image">
+                <span class="logo-text">Quantum Step</span>
+            </a>
+            <button id="mobile-menu-btn" class="mobile-menu-btn" aria-label="Toggle menu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+            <ul id="nav-menu" class="nav-menu">
+                <li><a href="#hero" class="nav-link">Home</a></li>
+                <li><a href="#services" class="nav-link">Services</a></li>
+                <li><a href="#tools" class="nav-link">Tools</a></li>
+                <li><a href="#portfolio" class="nav-link">Portfolio</a></li>
+                <li><a href="#pricing" class="nav-link">Pricing</a></li>
+                <li><a href="#contact" class="nav-link">Contact</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="hero" class="hero-section">
+        <div class="gradient-mesh"></div>
+        <div class="floating-shapes">
+            <div class="shape shape-1"></div>
+            <div class="shape shape-2"></div>
+            <div class="shape shape-3"></div>
+        </div>
+
+        <div class="hero-content">
+            <div class="hero-badge" style="display:flex;align-items:center;gap:8px;">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <path
+                        d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z" />
+                    <path
+                        d="m12 15-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z" />
+                    <path d="M9 12H4s.55-3.03 2-5c1.62-2.2 5-3 5-3" />
+                    <path d="M12 15v5s3.03-.55 5-2c2.2-1.62 3-5 3-5" />
+                </svg>
+                Full-Stack Development Experts
+            </div>
+            <h1 class="hero-title">
+                <span class="gradient-text">Quantum Step</span><br>
+                Creations
+            </h1>
+            <p class="hero-subtitle">
+                Websites • Web Apps • Full-Stack Solutions • Mobile Apps • AI-Enabled Products
+            </p>
+            <div class="hero-cta">
+                <button id="cta-primary" class="btn btn-primary">Start Your Project</button>
+                <button id="cta-consultation" class="btn btn-secondary">Free Consultation</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- AI Integration Section -->
+    <section id="ai-integration" class="ai-section">
+        <div class="container">
+            <div class="ai-grid">
+                <div class="ai-content fade-in">
+                    <div class="section-badge">Future-Ready</div>
+                    <h2 class="section-title text-left">How We Use <span class="gradient-text">AI</span> to Build Better
+                        Software?</h2>
+                    <p class="ai-intro">Artificial Intelligence is a core part of our development process, helping us
+                        work faster, reduce errors, and deliver solutions that are intelligent.</p>
+
+                    <div class="ai-feature">
+                        <div class="ai-feature-icon">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path
+                                    d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" />
+                                <path d="M7 12L10 15L17 8" />
+                            </svg>
+                        </div>
+                        <div class="ai-feature-text">
+                            <h3>More Reliable Software</h3>
+                            <p>With AI-assisted debugging and automated testing, we catch issues early and keep your app
+                                running smoothly from day one.</p>
+                        </div>
+                    </div>
+
+                    <div class="ai-feature">
+                        <div class="ai-feature-icon">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path
+                                    d="M21 16V8C20.9996 7.64927 20.9071 7.30481 20.7321 7.0019C20.557 6.699 20.3051 6.44747 20 6.273L13 2.273C12.6973 2.09848 12.3516 2.00656 12 2.00656C11.6484 2.00656 11.3027 2.09848 11 2.273L4 6.273C3.69487 6.44747 3.44301 6.699 3.26794 7.0019C3.09287 7.30481 3.0004 7.64927 3 8V16C3.0004 16.3507 3.09287 16.6952 3.26794 16.9981C3.44301 17.301 3.69487 17.5525 4 17.727L11 21.727C11.3027 21.9015 11.6484 21.9934 12 21.9934C12.3516 21.9934 12.6973 21.9015 13 21.727L20 17.727C20.3051 17.5525 20.557 17.301 20.7321 16.9981C20.9071 16.6952 20.9996 16.3507 21 16Z" />
+                                <path d="M12 22V12" />
+                                <path d="M12 12L20.2 7.266" />
+                                <path d="M12 12L3.8 7.266" />
+                            </svg>
+                        </div>
+                        <div class="ai-feature-text">
+                            <h3>Built-In Smarter Features</h3>
+                            <p>Want predictive search, intelligent chatbots, or personalized dashboards? We integrate AI
+                                into products to give users more value.</p>
+                        </div>
+                    </div>
+
+                    <div class="ai-feature">
+                        <div class="ai-feature-icon">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M12 2V22" />
+                                <path
+                                    d="M17 5H9.5C8.57174 5 7.6815 5.36875 7.02513 6.02513C6.36875 6.6815 6 7.57174 6 8.5C6 9.42826 6.36875 10.3185 7.02513 10.9749C7.6815 11.6313 8.57174 12 9.5 12H14.5C15.4283 12 16.3185 12.3687 16.9749 13.0251C17.6313 13.6815 18 14.5717 18 15.5C18 16.4283 17.6313 17.3185 16.9749 17.9749C16.3185 18.6313 15.4283 19 14.5 19H6" />
+                            </svg>
+                        </div>
+                        <div class="ai-feature-text">
+                            <h3>Cost-Efficient Development</h3>
+                            <p>We automate repetitive tasks and improve accuracy with AI. It helps us reduce development
+                                costs.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="ai-visual reveal">
+                    <img src="service_ai_iot.png" alt="AI Interface" class="floating-ai">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Why Quantum Step (KPIs) Section -->
+    <section id="why-quantum" class="why-section">
+        <div class="container text-center">
+            <div class="section-badge">Excellence Delivered</div>
+            <h2 class="section-title">Why <span class="gradient-text">Quantum Step</span> for Enterprise Development?
+            </h2>
+            <p class="section-description">When it comes to software product development, results matter. Here’s why
+                businesses around the world trust us.</p>
+
+            <div class="kpi-grid">
+                <div class="kpi-card fade-in">
+                    <div class="kpi-value">24+</div>
+                    <div class="kpi-label">Years of Expertise</div>
+                </div>
+                <div class="kpi-card fade-in">
+                    <div class="kpi-value">40%</div>
+                    <div class="kpi-label">Average Cost Saving</div>
+                </div>
+                <div class="kpi-card fade-in">
+                    <div class="kpi-value">85%</div>
+                    <div class="kpi-label">Faster Time-to-Market</div>
+                </div>
+                <div class="kpi-card fade-in">
+                    <div class="kpi-value">98%</div>
+                    <div class="kpi-label">Client Retention Rate</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Services Section -->
+    <section id="services" class="services-section">
+        <div class="container">
+            <div class="section-header">
+                <div class="section-badge">Our Services</div>
+                <h2 class="section-title">Our <span class="gradient-text">Services</span></h2>
+                <p class="section-description">
+                    Full-stack development solutions tailored to your business needs
+                </p>
+            </div>
+
+            <div class="services-grid">
+                <div class="service-card fade-in">
+                    <div class="service-image">
+                        <img src="service_consulting_1771865849047.png" alt="Software Consulting">
+                    </div>
+                    <div class="service-content">
+                        <h3>Software Consulting Service</h3>
+                        <ul class="service-list">
+                            <li>Digital Product Planning</li>
+                            <li>Tech Stack Selection</li>
+                            <li>Architecture & Growth Roadmap</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="service-card fade-in">
+                    <div class="service-image">
+                        <img src="service_solutions.png" alt="Custom Software Solutions">
+                    </div>
+                    <div class="service-content">
+                        <h3>Custom Software Solutions</h3>
+                        <ul class="service-list">
+                            <li>Workflow Automation Tools</li>
+                            <li>Vendor & Contract Management</li>
+                            <li>ERP, HR & Attendance Platforms</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="service-card fade-in">
+                    <div class="service-image">
+                        <img src="service_apps.png" alt="Web & Mobile App Development">
+                    </div>
+                    <div class="service-content">
+                        <h3>Web & Mobile App Development</h3>
+                        <ul class="service-list">
+                            <li>Client & Internal Portals</li>
+                            <li>On-demand Delivery & Fitness Apps</li>
+                            <li>Custom CRMs & Communication Tools</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="service-card fade-in">
+                    <div class="service-image">
+                        <img src="service_cloud.png" alt="SaaS & Cloud">
+                    </div>
+                    <div class="service-content">
+                        <h3>SaaS & Cloud Platform Development</h3>
+                        <ul class="service-list">
+                            <li>Learning Management Systems (LMS)</li>
+                            <li>Subscription & Billing Platforms</li>
+                            <li>Marketing & Collaboration Tools</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="service-card fade-in">
+                    <div class="service-image">
+                        <img src="service_ai_iot.png" alt="AI & IoT">
+                    </div>
+                    <div class="service-content">
+                        <h3>AI, IoT & Next-Gen Tech</h3>
+                        <ul class="service-list">
+                            <li>AI Chatbots & Analytics Dashboards</li>
+                            <li>Fleet/Factory Monitoring (IoT)</li>
+                            <li>Smart Energy & Document Tools</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="service-card fade-in">
+                    <div class="service-image">
+                        <img src="service_support.png" alt="Support">
+                    </div>
+                    <div class="service-content">
+                        <h3>Ongoing Support & Optimization</h3>
+                        <ul class="service-list">
+                            <li>Performance Tuning</li>
+                            <li>Bug Fixing & Security Patches</li>
+                            <li>Continuous Monitoring & Upgrades</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="service-card fade-in">
+                    <div class="service-image">
+                        <img src="service_mobile_1765273855228.png" alt="Mobile Apps">
+                    </div>
+                    <div class="service-content">
+                        <div class="service-icon">📱</div>
+                        <h3>Mobile Apps</h3>
+                        <p>Native and cross-platform mobile applications for iOS and Android with stunning UI/UX.</p>
+                    </div>
+                </div>
+
+                <div class="service-card fade-in">
+                    <div class="service-image">
+                        <img src="service_ecommerce_1765273886201.png" alt="E-Commerce Platforms">
+                    </div>
+                    <div class="service-content">
+                        <div class="service-icon">🛒</div>
+                        <h3>E-Commerce Platforms</h3>
+                        <p>Complete online stores with payment integration, inventory management, and analytics.</p>
+                    </div>
+                </div>
+
+                <div class="service-card fade-in">
+                    <div class="service-image">
+                        <img src="service_ai_1765273902888.png" alt="AI & Automation">
+                    </div>
+                    <div class="service-content">
+                        <div class="service-icon">🤖</div>
+                        <h3>AI & Automation</h3>
+                        <p>Intelligent features, chatbots, and workflow automation to streamline your operations.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Engagement Models Section -->
+    <section id="engagement" class="engagement-section">
+        <div class="container">
+            <div class="section-header">
+                <div class="section-badge">How We Partner</div>
+                <h2 class="section-title">Engagement <span class="gradient-text">Types</span></h2>
+                <p class="section-description">Choose the partnership model that best fits your business goals and
+                    project requirements.</p>
+            </div>
+            <div class="engagement-grid">
+                <div class="engagement-node fade-in">
+                    <h3>Dedicated Team</h3>
+                    <ul>
+                        <li>Full-time team for your project</li>
+                        <li>For long-term projects</li>
+                        <li>Scalable on-demand</li>
+                    </ul>
+                    <div class="node-dot"></div>
+                </div>
+                <div class="engagement-node fade-in">
+                    <h3>Staff Augmentation</h3>
+                    <ul>
+                        <li>Add experts to your existing team</li>
+                        <li>For quick skill support</li>
+                        <li>Seamless integration</li>
+                    </ul>
+                    <div class="node-dot"
+                        style="background: var(--color-secondary); box-shadow: 0 0 15px var(--color-secondary);"></div>
+                </div>
+                <div class="engagement-node fade-in">
+                    <h3>Hybrid Model</h3>
+                    <ul>
+                        <li>A core full-time team + flexible experts</li>
+                        <li>Changing project needs or spikes</li>
+                        <li>Cost-optimized strategy</li>
+                    </ul>
+                    <div class="node-dot"
+                        style="background: var(--color-highlight); box-shadow: 0 0 15px var(--color-highlight);"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Tech Ecosystem Section -->
+    <section id="ecosystem" class="ecosystem-section">
+        <div class="container">
+            <div class="section-header">
+                <div class="section-badge">Modern Stack</div>
+                <h2 class="section-title">Powering Your Vision with the <span class="gradient-text">Latest Tech</span>
+                </h2>
+                <p class="section-description">We leverage the most powerful tools to build software that’s fast,
+                    secure, and future-ready.</p>
+            </div>
+
+            <div class="orbit-container">
+                <div class="tech-logo" style="--d: 8s; --r: 150px; top: 170px; left: 470px;">
+                    <svg width="32" height="32" viewBox="0 0 53.94 47.16" fill="#61DAFB">
+                        <path
+                            d="M53.94,23.58c0,5.82-5.46,11.39-14,15.65-4.33,2.16-9.15,3.92-13.38,5l-1.37,0.36L24,44.2C10,40.5,0,32.74,0,23.58S10,6.66,24,3l1.19-0.31,1.37,0.36c4.23,1.1,9.05,2.86,13.38,5C48.48,12.19,53.94,17.76,53.94,23.58Zm-27,0a1.18,1.18,0,1,0,0,0a1.18,1.18,0,1,0,0,0ZM2.33,23.58c0,7.18,8.23,13.63,20,17.27,1.06-2.58,2.71-5.69,4.64-9.11-6.1-2.17-10.42-4.66-12.75-7.38-0.28-0.34-0.12-1-.12-1s-0.16.66-.12,1c2.33,2.72,6.65,5.21,12.75,7.38a73,73,0,0,1,7-12c-2.31-2-4.75-3.61-7.14-4.81C15,8.81,9.8,7,6.85,7s-3.57.82-4,2.39C2.48,10.63,2.33,16,2.33,23.58Zm24.64,18c12.28-3.19,21-9.43,24.65-18.1,0.31-7.58,0.16-12.95-0.51-14.19-0.41-1.57-1.42-2.39-4.37-2.39s-8.12,1.86-19.8,7.76c-2.39,1.2-4.83,2.81-7.14,4.81a73,73,0,0,1,7,12.24c6.1-2.17,10.42-4.66,12.75-7.38,0.08-.1,0.08-0.3.12-0.5,0,0.2-.12,0.9-.12,1C37.38,27.1,33,29.59,27,31.76a147.22,147.22,0,0,1,4.64,9.55ZM27,24.93a147.22,147.22,0,0,1-4.64-9.55,147.22,147.22,0,0,1,4.64,9.55Z" />
+                    </svg>
+                </div>
+                <div class="tech-logo" style="--d: 12s; --r: 220px; top: 170px; left: 470px;">
+                    <svg width="32" height="32" viewBox="0 0 256 221" fill="#41B883">
+                        <path d="M204.8 0H256L128 220.8L0 0H51.2L128 132.48L204.8 0Z" />
+                        <path d="M0 0H51.2L128 132.48L204.8 0H256L128 220.8L0 0Z" fill="#41B883" />
+                        <path d="M51.2 0H89.6L128 66.4L166.4 0H204.8L128 132.48L51.2 0Z" fill="#35495E" />
+                    </svg>
+                </div>
+                <div class="tech-logo" style="--d: 15s; --r: 280px; top: 170px; left: 470px;">
+                    <svg width="32" height="32" viewBox="0 0 256 256" fill="#DD0031">
+                        <path
+                            d="M128 0L24.5 37.1L40.2 198.5L128 256L215.8 198.5L231.5 37.1L128 0ZM197.8 178.6H58.2L48 202.4H24.5L128 12L231.5 202.4H208L197.8 178.6ZM128 54L83 155.1H173L128 54Z" />
+                    </svg>
+                </div>
+                <div class="tech-logo" style="--d: 10s; --r: 100px; top: 170px; left: 470px;">
+                    <svg width="32" height="32" viewBox="0 0 256 256" fill="#339933">
+                        <path
+                            d="M128 256C57.3 256 0 198.7 0 128S57.3 0 128 0s128 57.3 128 128-57.3 128-128 128zm0-230.4C69.9 25.6 25.6 69.9 25.6 128S69.9 230.4 128 230.4 230.4 186.1 230.4 128 186.1 25.6 128 25.6z" />
+                        <path
+                            d="M136 128h-16c-4.4 0-8-3.6-8-8v-64c0-4.4 3.6-8 8-8h16c4.4 0 8 3.6 8 8v64c0 4.4-3.6 8-8 8zm0 64h-16c-4.4 0-8-3.6-8-8v-16c0-4.4 3.6-8 8-8h16c4.4 0 8 3.6 8 8v16c0 4.4-3.6 8-8 8z" />
+                    </svg>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section id="tools" class="tools-section">
+        <div class="container">
+            <div class="section-header">
+                <div class="section-badge"
+                    style="display:flex;align-items:center;gap:8px;justify-content:center;margin-left:auto;margin-right:auto;">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <path
+                            d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z" />
+                    </svg>
+                    Free Resources
+                </div>
+                <h2 class="section-title">Powerful Free <span class="gradient-text">Tools</span></h2>
+                <p class="section-description">Built for Indian professionals. No sign-up. No cost. Just results.</p>
+            </div>
+
+            <div class="tools-grid">
+                <!-- Salary Calculator -->
+                <a href="tool-salary-calculator.html" class="tool-card fade-in" style="text-decoration:none;">
+                    <div class="tool-icon"
+                        style="background:rgba(99,102,241,0.1); color:#818cf8; border-color:rgba(99,102,241,0.2);">
+                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="2" y="6" width="20" height="12" rx="2"></rect>
+                            <circle cx="12" cy="12" r="2"></circle>
+                            <path d="M6 12h.01M18 12h.01"></path>
+                        </svg>
+                    </div>
+                    <div
+                        style="font-size:0.65rem; font-weight:700; text-transform:uppercase; letter-spacing:0.1em; color:#818cf8; margin-bottom:0.5rem;">
+                        Finance · Tax</div>
+                    <h3 style="color:#f8fafc; font-size:1.5rem; font-weight:700; margin-bottom:0.5rem;">India Salary
+                        Calculator</h3>
+                    <p style="color:#94a3b8; line-height:1.6; flex-grow:1; margin-bottom:1.5rem;">New vs Old Tax Regime,
+                        in-hand salary, PF, HRA deductions &amp; AI-powered insights. FY 2025-26 ready.</p>
+                    <div class="gradient-text"
+                        style="font-weight:700; font-size:0.95rem; margin-top:auto; display:flex; align-items:center; gap:8px;">
+                        Open Tool <span style="font-size:1.2rem;">&rarr;</span>
+                    </div>
+                </a>
+
+                <!-- ArthaWealth -->
+                <a href="tool-artha-wealth.html" class="tool-card fade-in" style="text-decoration:none;">
+                    <div class="tool-icon"
+                        style="background:rgba(16,185,129,0.1); color:#34d399; border-color:rgba(16,185,129,0.2);">
+                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="12" y1="20" x2="12" y2="10"></line>
+                            <line x1="18" y1="20" x2="18" y2="4"></line>
+                            <line x1="6" y1="20" x2="6" y2="16"></line>
+                            <polyline points="4 14 10 9 15 13 21 6"></polyline>
+                        </svg>
+                    </div>
+                    <div
+                        style="font-size:0.65rem; font-weight:700; text-transform:uppercase; letter-spacing:0.1em; color:#34d399; margin-bottom:0.5rem;">
+                        Finance · Investment</div>
+                    <h3 style="color:#f8fafc; font-size:1.5rem; font-weight:700; margin-bottom:0.5rem;">ArthaWealth
+                        Planner</h3>
+                    <p style="color:#94a3b8; line-height:1.6; flex-grow:1; margin-bottom:1.5rem;">SIP &amp; SWP
+                        calculator with visual wealth projections. Plan your financial freedom step by step.</p>
+                    <div
+                        style="font-weight:700; font-size:0.95rem; margin-top:auto; display:flex; align-items:center; gap:8px; background:linear-gradient(135deg,#10b981,#06b6d4); -webkit-background-clip:text; -webkit-text-fill-color:transparent;">
+                        Open Tool <span style="font-size:1.2rem;">&rarr;</span>
+                    </div>
+                </a>
+
+                <!-- Home Loan -->
+                <a href="tool-home-loan-calculator.html" class="tool-card fade-in" style="text-decoration:none;">
+                    <div class="tool-icon"
+                        style="background:rgba(244,63,94,0.1); color:#fb7185; border-color:rgba(244,63,94,0.2);">
+                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                            <polyline points="9 22 9 12 15 12 15 22"></polyline>
+                        </svg>
+                    </div>
+                    <div
+                        style="font-size:0.65rem; font-weight:700; text-transform:uppercase; letter-spacing:0.1em; color:#fb7185; margin-bottom:0.5rem;">
+                        Finance · Property</div>
+                    <h3 style="color:#f8fafc; font-size:1.5rem; font-weight:700; margin-bottom:0.5rem;">Home Loan
+                        Calculator</h3>
+                    <p style="color:#94a3b8; line-height:1.6; flex-grow:1; margin-bottom:1.5rem;">Advanced EMI
+                        calculator with full amortization schedule, prepayment strategies &amp; interest breakdowns.</p>
+                    <div
+                        style="font-weight:700; font-size:0.95rem; margin-top:auto; display:flex; align-items:center; gap:8px; background:linear-gradient(135deg,#f43f5e,#f97316); -webkit-background-clip:text; -webkit-text-fill-color:transparent;">
+                        Open Tool <span style="font-size:1.2rem;">&rarr;</span>
+                    </div>
+                </a>
+            </div>
+
+            <div
+                style="text-align:center; color:var(--text-muted); font-size:0.85rem; margin-top:3rem; letter-spacing:0.05em;">
+                More tools coming soon &bull; Built &amp; maintained by Quantum Step Creations
+            </div>
+        </div>
+    </section>
+
+    <!-- Portfolio / Clients Section -->
+    <section id="portfolio" class="portfolio-section">
+        <div class="container">
+            <div class="section-header">
+                <div class="section-badge">Our Work</div>
+                <h2 class="section-title">Trusted by <span class="gradient-text">Real Clients</span></h2>
+                <p class="section-description">From edtech to fintech, we build products that perform. Click any card to
+                    visit the live project.</p>
+            </div>
+
+            <div class="portfolio-grid">
+                <!-- IPN PaathShala -->
+                <a href="https://www.ipn-india.in" target="_blank" rel="noopener" class="portfolio-item fade-in"
+                    style="text-decoration:none;">
+                    <div class="portfolio-image"
+                        style="background:linear-gradient(135deg,#1e3a5f,#2563eb,#7c3aed);display:flex;align-items:center;justify-content:center;">
+                        <svg width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5"
+                            stroke-linecap="round" stroke-linejoin="round"
+                            style="position:relative;z-index:10;filter:drop-shadow(0 4px 6px rgba(0,0,0,0.3));">
+                            <path d="M22 10v6M2 10l10-5 10 5-10 5z" />
+                            <path d="M6 12v5c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2v-5" />
+                        </svg>
+                    </div>
+                    <div class="portfolio-content">
+                        <div
+                            style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.5rem;">
+                            <h3 style="color:#f8fafc; font-size:1.5rem; font-weight:700; margin-bottom:0;">IPN
+                                PaathShala</h3>
+                            <span
+                                style="font-size:0.7rem;background:rgba(99,102,241,.15);color:#818cf8;padding:2px 8px;border-radius:999px;font-weight:600;">EdTech</span>
+                        </div>
+                        <p style="color:#cbd5e1; font-size:0.95rem;">Online learning platform empowering students across
+                            India with structured courses &amp; live sessions.</p>
+                    </div>
+                </a>
+
+                <!-- Royal Visa Experts -->
+                <a href="https://rvxtravels.com" target="_blank" rel="noopener" class="portfolio-item fade-in"
+                    style="text-decoration:none;">
+                    <div class="portfolio-image"
+                        style="background:linear-gradient(135deg,#1a1a2e,#c9a84c,#8b6914);display:flex;align-items:center;justify-content:center;">
+                        <svg width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5"
+                            stroke-linecap="round" stroke-linejoin="round"
+                            style="position:relative;z-index:10;filter:drop-shadow(0 4px 6px rgba(0,0,0,0.3));">
+                            <path
+                                d="M17.8 19.2L16 11l3.5-3.5C21 6 21.5 4 21 3c-1-.5-3 0-4.5 1.5L13 8 4.8 6.2c-.5-.1-.9.1-1.1.5l-.3.5c-.2.5-.1 1 .3 1.3L9 12l-2 3H4l-1 1 3 2 2 3 1-1v-3l3-2 3.7 5.2c.3.4.8.5 1.3.3l.5-.3c.4-.2.6-.6.5-1.1z" />
+                        </svg>
+                    </div>
+                    <div class="portfolio-content">
+                        <div
+                            style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.5rem;">
+                            <h3 style="color:#f8fafc; font-size:1.5rem; font-weight:700; margin-bottom:0;">Royal Visa
+                                Experts</h3>
+                            <span
+                                style="font-size:0.7rem;background:rgba(245,158,11,.15);color:#fbbf24;padding:2px 8px;border-radius:999px;font-weight:600;">Travel</span>
+                        </div>
+                        <p style="color:#cbd5e1; font-size:0.95rem;">Premium visa consultancy &amp; travel solutions
+                            trusted by thousands of global travellers.</p>
+                    </div>
+                </a>
+
+                <!-- AI Shield -->
+                <a href="https://chromewebstore.google.com" target="_blank" rel="noopener"
+                    class="portfolio-item fade-in" style="text-decoration:none;">
+                    <div class="portfolio-image"
+                        style="background:linear-gradient(135deg,#0f2027,#203a43,#2c5364);display:flex;align-items:center;justify-content:center;">
+                        <svg width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5"
+                            stroke-linecap="round" stroke-linejoin="round"
+                            style="position:relative;z-index:10;filter:drop-shadow(0 4px 6px rgba(0,0,0,0.3));">
+                            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                        </svg>
+                    </div>
+                    <div class="portfolio-content">
+                        <div
+                            style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.5rem;">
+                            <h3 style="color:#f8fafc; font-size:1.5rem; font-weight:700; margin-bottom:0;">AI Shield
+                            </h3>
+                            <span
+                                style="font-size:0.7rem;background:rgba(6,182,212,.15);color:#22d3ee;padding:2px 8px;border-radius:999px;font-weight:600;">Security</span>
+                        </div>
+                        <p style="color:#cbd5e1; font-size:0.95rem;">Chrome extension providing real-time AI-powered
+                            threat detection to keep your browser safe.</p>
+                    </div>
+                </a>
+
+                <!-- Aaj Ka Scene -->
+                <a href="https://aajkascene.netlify.app" target="_blank" rel="noopener" class="portfolio-item fade-in"
+                    style="text-decoration:none;">
+                    <div class="portfolio-image"
+                        style="background:linear-gradient(135deg,#1a0533,#7c2d8e,#e879f9);display:flex;align-items:center;justify-content:center;">
+                        <svg width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5"
+                            stroke-linecap="round" stroke-linejoin="round"
+                            style="position:relative;z-index:10;filter:drop-shadow(0 4px 6px rgba(0,0,0,0.3));">
+                            <path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6" />
+                            <path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18" />
+                            <path d="M4 22h16" />
+                            <path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22" />
+                            <path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22" />
+                            <path d="M18 2H6v7a6 6 0 0 0 12 0V2Z" />
+                        </svg>
+                    </div>
+                    <div class="portfolio-content">
+                        <div
+                            style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.5rem;">
+                            <h3 style="color:#f8fafc; font-size:1.5rem; font-weight:700; margin-bottom:0;">Aaj Ka Scene
+                            </h3>
+                            <span
+                                style="font-size:0.7rem;background:rgba(236,72,153,.15);color:#f472b6;padding:2px 8px;border-radius:999px;font-weight:600;">Events</span>
+                        </div>
+                        <p style="color:#cbd5e1; font-size:0.95rem;">India's event aggregator — discover what's
+                            happening in your city tonight across all major metros.</p>
+                    </div>
+                </a>
+
+                <!-- Small Cap Sniper -->
+                <a href="https://smallcapsniper.netlify.app" target="_blank" rel="noopener"
+                    class="portfolio-item fade-in" style="text-decoration:none;">
+                    <div class="portfolio-image"
+                        style="background:linear-gradient(135deg,#0a1a0a,#14532d,#22c55e);display:flex;align-items:center;justify-content:center;">
+                        <span
+                            style="font-size:3.5rem;position:relative;z-index:10;filter:drop-shadow(0 4px 6px rgba(0,0,0,0.3));">📊</span>
+                    </div>
+                    <div class="portfolio-content">
+                        <div
+                            style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.5rem;">
+                            <h3 style="color:#f8fafc; font-size:1.5rem; font-weight:700; margin-bottom:0;">Small Cap
+                                Sniper</h3>
+                            <span
+                                style="font-size:0.7rem;background:rgba(34,197,94,.15);color:#4ade80;padding:2px 8px;border-radius:999px;font-weight:600;">FinTech</span>
+                        </div>
+                        <p style="color:#cbd5e1; font-size:0.95rem;">Fundamental analysis tool for Indian Small &amp;
+                            MicroCap stocks — built for the serious retail investor.</p>
+                    </div>
+                </a>
+
+                <!-- CTA Card -->
+                <div class="portfolio-item fade-in"
+                    style="display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;background:linear-gradient(135deg,rgba(99,102,241,.08),rgba(6,182,212,.06));border:1px dashed rgba(99,102,241,.3);cursor:default;min-height:300px;padding:2rem;">
+                    <span style="font-size:3rem;margin-bottom:1rem;">🚀</span>
+                    <h3 style="color:#f8fafc; font-size:1.5rem; font-weight:700; margin-bottom:0.5rem;">Your Product
+                        Here</h3>
+                    <p style="color:#94a3b8; font-size:0.95rem; margin-bottom:1.5rem;">We build ideas that launch. Let's
+                        make yours next.</p>
+                    <button class="btn btn-primary" onclick="document.getElementById('cta-primary').click()"
+                        style="font-size:0.9rem;padding:0.75rem 2rem;">Start a Project</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pricing Section -->
+    <section id="pricing" class="pricing-section">
+        <div class="container">
+            <div class="section-header">
+                <div class="section-badge">Pricing</div>
+                <h2 class="section-title">Choose Your <span class="gradient-text">Plan</span></h2>
+                <p class="section-description">
+                    Transparent pricing with no hidden fees
+                </p>
+            </div>
+
+            <div class="pricing-grid">
+                <div class="pricing-card fade-in">
+                    <h3>Starter</h3>
+                    <div class="pricing-price">₹20K</div>
+                    <ul class="pricing-features">
+                        <li>5-page website</li>
+                        <li>Mobile responsive design</li>
+                        <li>Basic SEO optimization</li>
+                        <li>Contact form integration</li>
+                        <li>1 month support</li>
+                    </ul>
+                    <button class="btn btn-primary">Get Started</button>
+                </div>
+
+                <div class="pricing-card featured fade-in">
+                    <div class="pricing-badge">Most Popular</div>
+                    <h3>Business</h3>
+                    <div class="pricing-price">₹60K</div>
+                    <ul class="pricing-features">
+                        <li>10-page website</li>
+                        <li>Custom design system</li>
+                        <li>Advanced SEO & analytics</li>
+                        <li>E-commerce ready</li>
+                        <li>CMS integration</li>
+                        <li>3 months support</li>
+                    </ul>
+                    <button class="btn btn-primary">Get Started</button>
+                </div>
+
+                <div class="pricing-card fade-in">
+                    <h3>Premium</h3>
+                    <div class="pricing-price">₹1.5L</div>
+                    <ul class="pricing-features">
+                        <li>Unlimited pages</li>
+                        <li>Custom web application</li>
+                        <li>AI integration</li>
+                        <li>Advanced animations</li>
+                        <li>Priority support</li>
+                        <li>1 year maintenance</li>
+                    </ul>
+                    <button class="btn btn-primary">Get Started</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="contact-section">
+        <div class="container">
+            <div class="section-header">
+                <div class="section-badge">Get In Touch</div>
+                <h2 class="section-title">Let's Build Something <span class="gradient-text">Amazing</span></h2>
+                <p class="section-description">
+                    Ready to transform your digital presence? Let's talk!
+                </p>
+            </div>
+
+            <div class="contact-grid">
+                <form id="contact-form" class="contact-form">
+                    <input type="text" placeholder="Your Name" required>
+                    <input type="email" placeholder="Email Address" required>
+                    <input type="tel" placeholder="Phone Number">
+                    <select required>
+                        <option value="">Select Service</option>
+                        <option>Business Website</option>
+                        <option>E-commerce</option>
+                        <option>Web App</option>
+                        <option>AI Solutions</option>
+                        <option>Maintenance</option>
+                    </select>
+                    <textarea placeholder="Tell us about your project" required></textarea>
+                    <button type="submit" class="btn btn-primary">Send Message</button>
+                </form>
+
+                <div class="contact-info">
+                    <div class="contact-item">
+                        <div class="contact-icon">📧</div>
+                        <div class="contact-item-content">
+                            <div class="contact-item-label">Email</div>
+                            <div class="contact-item-value">contact@quantumstep.com</div>
+                        </div>
+                    </div>
+
+                    <div class="contact-item">
+                        <div class="contact-icon">📱</div>
+                        <div class="contact-item-content">
+                            <div class="contact-item-label">Phone</div>
+                            <div class="contact-item-value">+91 98765 43210</div>
+                        </div>
+                    </div>
+
+                    <div class="contact-item">
+                        <div class="contact-icon">📍</div>
+                        <div class="contact-item-content">
+                            <div class="contact-item-label">Location</div>
+                            <div class="contact-item-value">Mumbai, India</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-logo">
+                <img src="logo-light.png" alt="Quantum Step Creations" class="footer-logo-image">
+            </div>
+            <p>&copy; 2025 Quantum Step Creations | Mumbai, India | Crafted with ❤️</p>
+        </div>
+    </footer>
+
+    <!-- Modal -->
+    <div id="cta-modal" class="modal">
+        <div class="modal-content">
+            <button class="modal-close">&times;</button>
+            <h2><span class="gradient-text">Start Your Project</span></h2>
+            <form id="modal-form">
+                <input type="text" placeholder="Your Name" required>
+                <input type="email" placeholder="Email Address" required>
+                <textarea placeholder="Tell us about your project" required></textarea>
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Custom Script -->
+    <script src="script.js"></script>
+</body>
+
+</html>
