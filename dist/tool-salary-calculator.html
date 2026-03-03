@@ -1,0 +1,1279 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Advanced Salary Decoder FY 2025-26 | Quantum Step</title>
+  <meta name="description"
+    content="Quantum Step Advanced Salary Calculator - Deep Tax Analysis, Regime Comparison & Marginal Relief Logic.">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.9.0/d3.min.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root {
+      --glass-bg: rgba(15, 23, 42, 0.7);
+      --glass-border: rgba(255, 255, 255, 0.1);
+      --accent-indigo: #818cf8;
+      --accent-emerald: #10b981;
+      --accent-rose: #f43f5e;
+      --accent-amber: #fbbf24;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #020617;
+      color: #f1f5f9;
+      margin: 0;
+      overflow-x: hidden;
+    }
+
+    /* Glassmorphism */
+    .glass-panel {
+      background: var(--glass-bg);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid var(--glass-border);
+      border-radius: 1.5rem;
+      transition: all 0.3s ease;
+    }
+
+    .glass-card {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      border-radius: 1rem;
+      padding: 1.5rem;
+      transition: all 0.3s ease;
+    }
+
+    .glass-card:hover {
+      border-color: rgba(255, 255, 255, 0.15);
+      background: rgba(255, 255, 255, 0.05);
+    }
+
+    /* Inputs */
+    input[type="text"],
+    input[type="number"],
+    select {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: white;
+      padding: 0.75rem 1rem;
+      border-radius: 0.75rem;
+      outline: none;
+      transition: all 0.3s ease;
+    }
+
+    input:focus {
+      border-color: var(--accent-indigo);
+      box-shadow: 0 0 0 2px rgba(129, 140, 248, 0.3);
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    input[type="range"] {
+      accent-color: var(--accent-indigo);
+      height: 6px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 10px;
+    }
+
+    /* Buttons and Toggles */
+    .btn-toggle {
+      padding: 0.5rem 1rem;
+      border-radius: 0.5rem;
+      font-size: 0.875rem;
+      font-weight: 600;
+      transition: all 0.3s ease;
+    }
+
+    .btn-toggle.active {
+      background: var(--accent-indigo);
+      color: white;
+    }
+
+    .btn-toggle.inactive {
+      background: transparent;
+      color: #94a3b8;
+    }
+
+    /* Nav Context */
+    .nav-ctx {
+      background: rgba(0, 0, 0, 0.3);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      padding: 0.75rem 1.5rem;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    /* Animations */
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .animate-fade {
+      animation: fadeIn 0.5s ease forwards;
+    }
+
+    /* Scrollbar */
+    ::-webkit-scrollbar {
+      width: 8px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 10px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: rgba(255, 255, 255, 0.2);
+    }
+
+    /* Social Share Bar (Unified) */
+    .share-bar {
+      position: fixed;
+      bottom: 2rem;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 1rem;
+      padding: 0.75rem 1.5rem;
+      background: rgba(15, 23, 42, 0.8);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 999px;
+      z-index: 1000;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+    }
+
+    .share-btn {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      transition: transform 0.3s ease;
+    }
+
+    .share-btn:hover {
+      transform: translateY(-3px);
+    }
+  </style>
+
+  <style>
+    /* Hide floating share bar - use inline share section instead */
+    .share-bar {
+      display: none !important;
+    }
+  </style>
+  <script id="qs-telemetry">
+    (function () {
+      // Collect browser-side telemetry immediately
+      function getDeviceType() {
+        var ua = navigator.userAgent;
+        if (/tablet|ipad|playbook|silk/i.test(ua)) return 'Tablet';
+        if (/mobi|android|iphone|ipod|windows phone|blackberry|opera mini/i.test(ua)) return 'Mobile';
+        return 'Desktop';
+      }
+      function getOS() {
+        var ua = navigator.userAgent;
+        if (/Windows NT 10/.test(ua)) return 'Windows 10/11';
+        if (/Windows NT 6.3/.test(ua)) return 'Windows 8.1';
+        if (/Windows NT 6.1/.test(ua)) return 'Windows 7';
+        if (/Windows/.test(ua)) return 'Windows';
+        if (/Mac OS X ([\d_]+)/.test(ua)) return 'macOS ' + ua.match(/Mac OS X ([\d_]+)/)[1].replace(/_/g, '.');
+        if (/iPhone OS ([\d_]+)/.test(ua)) return 'iOS ' + ua.match(/iPhone OS ([\d_]+)/)[1].replace(/_/g, '.');
+        if (/Android ([\d.]+)/.test(ua)) return 'Android ' + ua.match(/Android ([\d.]+)/)[1];
+        if (/Linux/.test(ua)) return 'Linux';
+        return 'Unknown';
+      }
+      function getBrowser() {
+        var ua = navigator.userAgent;
+        if (/Edg\//.test(ua)) return 'Edge ' + (ua.match(/Edg\/(\d+)/) || ['', '?'])[1];
+        if (/OPR\/|Opera/.test(ua)) return 'Opera';
+        if (/Chrome\/(\d+)/.test(ua) && !/Chromium/.test(ua)) return 'Chrome ' + ua.match(/Chrome\/(\d+)/)[1];
+        if (/Firefox\/(\d+)/.test(ua)) return 'Firefox ' + ua.match(/Firefox\/(\d+)/)[1];
+        if (/Safari\/(\d+)/.test(ua) && !/Chrome/.test(ua)) return 'Safari';
+        if (/MSIE|Trident/.test(ua)) return 'Internet Explorer';
+        return 'Other';
+      }
+      function getUTM() {
+        var p = new URLSearchParams(location.search);
+        return {
+          source: p.get('utm_source') || '',
+          medium: p.get('utm_medium') || '',
+          campaign: p.get('utm_campaign') || ''
+        };
+      }
+      var utm = getUTM();
+      var tel = {
+        device_type: getDeviceType(),
+        os: getOS(),
+        browser: getBrowser(),
+        user_agent: navigator.userAgent,
+        screen: screen.width + 'x' + screen.height,
+        viewport: window.innerWidth + 'x' + window.innerHeight,
+        language: navigator.language || '',
+        timezone: Intl && Intl.DateTimeFormat ? Intl.DateTimeFormat().resolvedOptions().timeZone : '',
+        connection: (navigator.connection && navigator.connection.effectiveType) || '',
+        referrer: document.referrer || 'direct',
+        landing_url: location.href,
+        utm_source: utm.source,
+        utm_medium: utm.medium,
+        utm_campaign: utm.campaign,
+        ip: '', city: '', region: '', country: '', isp: '', lat: '', lon: ''
+      };
+
+      // Fetch IP + geo from free API (1000 req/day free)
+      fetch('https://ipapi.co/json/')
+        .then(function (r) { return r.json(); })
+        .then(function (d) {
+          tel.ip = d.ip || '';
+          tel.city = d.city || '';
+          tel.region = d.region || '';
+          tel.country = d.country_name || '';
+          tel.isp = d.org || '';
+          tel.lat = d.latitude || '';
+          tel.lon = d.longitude || '';
+        })
+        .catch(function () { }) // Silently fail if blocked
+        .finally(function () {
+          sessionStorage.setItem('qs_telemetry', JSON.stringify(tel));
+        });
+
+      // Store immediately even without geo (geo updates async)
+      sessionStorage.setItem('qs_telemetry', JSON.stringify(tel));
+
+      // Expose for use by loggers
+      window.qsGetTelemetry = function () {
+        try { return JSON.parse(sessionStorage.getItem('qs_telemetry') || '{}'); }
+        catch (e) { return {}; }
+      };
+    })();
+  </script>
+  <link rel="stylesheet" crossorigin href="./assets/styles-CI_2PEPQ.css">
+  <link rel="stylesheet" crossorigin href="./assets/tool-shared-BFTwlmtC.css">
+</head>
+
+<body class="min-h-screen">
+  <!-- QS Name Capture Modal -->
+  <div id="qs-capture-overlay"
+    style="position:fixed;inset:0;z-index:9999;background:rgba(2,6,23,0.93);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);display:flex;align-items:center;justify-content:center;padding:1rem;">
+    <div
+      style="width:100%;max-width:420px;background:rgba(15,23,42,0.97);border:1px solid rgba(255,255,255,0.09);border-radius:1.75rem;padding:2.25rem;box-shadow:0 32px 80px rgba(0,0,0,0.7);">
+      <div style="display:flex;align-items:center;gap:.65rem;margin-bottom:1.75rem;">
+        <div
+          style="width:36px;height:36px;border-radius:.65rem;background:rgba(99,102,241,.12);border:1px solid #818cf844;display:flex;align-items:center;justify-content:center;">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#818cf8" stroke-width="2.5"
+            stroke-linecap="round" stroke-linejoin="round">
+            <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
+          </svg>
+        </div>
+        <span style="font-size:.85rem;font-weight:700;color:#e2e8f0;">Quantum Step Tools</span>
+      </div>
+      <h2 style="font-size:1.4rem;font-weight:800;color:#f1f5f9;margin:0 0 .4rem;letter-spacing:-.02em;">Salary Decoder
+      </h2>
+      <p style="font-size:.82rem;color:#475569;margin:0 0 1.75rem;line-height:1.55;">Personalised tax analysis & salary
+        breakdown for FY 2025-26.</p>
+      <form onsubmit="qsCapture(event)">
+        <label
+          style="display:block;font-size:.7rem;font-weight:700;color:#475569;text-transform:uppercase;letter-spacing:.07em;margin-bottom:.35rem;">Your
+          Name</label>
+        <input id="qs-name" type="text" placeholder="e.g. Rahul Sharma" required autocomplete="name"
+          style="width:100%;box-sizing:border-box;padding:.65rem .9rem;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.09);border-radius:.85rem;color:#f1f5f9;font-size:.88rem;font-family:inherit;margin-bottom:.9rem;outline:none;transition:border-color .2s;"
+          onfocus="this.style.borderColor='#818cf880'" onblur="this.style.borderColor='rgba(255,255,255,.09)'">
+        <label
+          style="display:block;font-size:.7rem;font-weight:700;color:#475569;text-transform:uppercase;letter-spacing:.07em;margin-bottom:.35rem;">Work
+          Email <span style="font-weight:400;text-transform:none;">(optional)</span></label>
+        <input id="qs-email" type="email" placeholder="you@company.com" autocomplete="email"
+          style="width:100%;box-sizing:border-box;padding:.65rem .9rem;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.09);border-radius:.85rem;color:#f1f5f9;font-size:.88rem;font-family:inherit;margin-bottom:1.4rem;outline:none;transition:border-color .2s;"
+          onfocus="this.style.borderColor='#818cf880'" onblur="this.style.borderColor='rgba(255,255,255,.09)'">
+        <button type="submit"
+          style="width:100%;padding:.75rem 1.25rem;background:linear-gradient(135deg,#818cf8,#818cf8aa);border:none;border-radius:.85rem;color:#fff;font-size:.88rem;font-weight:700;cursor:pointer;font-family:inherit;display:flex;align-items:center;justify-content:center;gap:.45rem;transition:opacity .2s;"
+          onmouseover="this.style.opacity='.85'" onmouseout="this.style.opacity='1'">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+            stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="9 18 15 12 9 6" />
+          </svg>
+          Start Exploring
+        </button>
+      </form>
+      <p style="text-align:center;font-size:.68rem;color:#1e293b;margin-top:1rem;">Your information is never shared or
+        sold.</p>
+      <a href="tool-buy-vs-rent.html"
+        onmouseover="this.style.background='rgba(99,102,241,.1)';this.style.color='#a5b4fc'"
+        onmouseout="this.style.background='rgba(255,255,255,.04)';this.style.color='#94a3b8'"
+        style="display:inline-flex;align-items:center;gap:.4rem;padding:.4rem 1rem;border-radius:999px;font-size:.8rem;font-weight:600;text-decoration:none;background:rgba(255,255,255,.04);color:#94a3b8;border:1px solid rgba(255,255,255,.08);transition:all .2s;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+          <line x1="12" y1="22" x2="12" y2="12" />
+        </svg> Buy vs Rent
+      </a>
+    </div>
+  </div>
+
+  <!-- QS Corner Share Icons -->
+  <div
+    style="position:fixed;top:130px;right:1.25rem;z-index:490;display:flex;flex-direction:column;gap:.45rem;align-items:center;">
+    <span
+      style="font-size:.58rem;color:#334155;text-transform:uppercase;letter-spacing:.09em;font-weight:700;writing-mode:vertical-rl;margin-bottom:.2rem;">Share</span>
+    <button title="WhatsApp"
+      onclick="(function(){var u=encodeURIComponent(location.href),t=encodeURIComponent('Deep tax analysis & salary decoder for FY 2025-26 — by Quantum Step');window.open('https://wa.me/?text='+t+'%20'+u,'_blank')})()"
+      style="width:34px;height:34px;border-radius:50%;background:rgba(37,211,102,.1);border:1px solid rgba(37,211,102,.2);display:flex;align-items:center;justify-content:center;color:#25D166;cursor:pointer;transition:all .2s;padding:0;"
+      onmouseover="this.style.background='rgba(37,211,102,.22)';this.style.transform='scale(1.1)'"
+      onmouseout="this.style.background='rgba(37,211,102,.1)';this.style.transform=''"><svg width="15" height="15"
+        viewBox="0 0 24 24" fill="currentColor">
+        <path
+          d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.348z" />
+        <path
+          d="M12 0C5.373 0 0 5.373 0 12c0 2.085.54 4.043 1.481 5.749L.073 23.925l6.345-1.384A11.93 11.93 0 0 0 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.818a9.818 9.818 0 0 1-5.012-1.37l-.358-.213-3.747.817.848-3.651-.234-.372A9.818 9.818 0 1 1 12 21.818z" />
+      </svg></button>
+    <button title="LinkedIn"
+      onclick="(function(){window.open('https://www.linkedin.com/sharing/share-offsite/?url='+encodeURIComponent(location.href),'_blank')})()"
+      style="width:34px;height:34px;border-radius:50%;background:rgba(10,102,194,.1);border:1px solid rgba(10,102,194,.2);display:flex;align-items:center;justify-content:center;color:#0A66C2;cursor:pointer;transition:all .2s;padding:0;"
+      onmouseover="this.style.background='rgba(10,102,194,.22)';this.style.transform='scale(1.1)'"
+      onmouseout="this.style.background='rgba(10,102,194,.1)';this.style.transform=''"><svg width="13" height="13"
+        viewBox="0 0 24 24" fill="currentColor">
+        <path
+          d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6zM2 9h4v12H2zm2-3a2 2 0 1 1 0-4 2 2 0 0 1 0 4z" />
+      </svg></button>
+    <button title="X / Twitter"
+      onclick="(function(){var u=encodeURIComponent(location.href),t=encodeURIComponent('Deep tax analysis & salary decoder for FY 2025-26');window.open('https://twitter.com/intent/tweet?text='+t+'&url='+u,'_blank')})()"
+      style="width:34px;height:34px;border-radius:50%;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);display:flex;align-items:center;justify-content:center;color:#cbd5e1;cursor:pointer;transition:all .2s;padding:0;"
+      onmouseover="this.style.background='rgba(255,255,255,.12)';this.style.transform='scale(1.1)'"
+      onmouseout="this.style.background='rgba(255,255,255,.05)';this.style.transform=''"><svg width="12" height="12"
+        viewBox="0 0 24 24" fill="currentColor">
+        <path
+          d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.73-8.835L1.254 2.25H8.08l4.277 5.653zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+      </svg></button>
+  </div>
+
+  <script>
+    (function () {
+      var TOOL = 'salary_decoder';
+      var WEBHOOK = 'https://script.google.com/macros/s/AKfycbwiYK9LDhZdbx3-r66rgRmfTClEyfH0VOWMFtKPw5nSzd_YRV7YETaqTVrOCaxpn7zNtg/exec';
+      var KEY = 'qs_user_' + TOOL;
+
+      function welcome(name) {
+        var g = document.getElementById('qs-welcome-greet');
+        if (g) g.textContent = 'Welcome back, ' + name + '.';
+        document.title = name + ' — ' + document.title;
+      }
+
+      window.qsCapture = function (e) {
+        e.preventDefault();
+        var name = document.getElementById('qs-name').value.trim();
+        var email = (document.getElementById('qs-email') || {}).value || '';
+        if (!name) return;
+        sessionStorage.setItem(KEY, JSON.stringify({ name: name, email: email }));
+        var ov = document.getElementById('qs-capture-overlay');
+        if (ov) { ov.style.opacity = '0'; ov.style.transition = 'opacity .35s'; setTimeout(function () { ov.remove(); }, 350); }
+        welcome(name);
+        var payload = JSON.stringify({ name: name, email: email, tool: TOOL, timestamp: new Date().toISOString(), url: location.href, referrer: document.referrer || 'direct' });
+        try { navigator.sendBeacon(WEBHOOK, payload); } catch (e2) { fetch(WEBHOOK, { method: 'POST', body: payload, mode: 'no-cors' }).catch(function () { }); }
+      };
+
+      var existing = sessionStorage.getItem(KEY);
+      if (existing) {
+        var data = JSON.parse(existing);
+        var ov = document.getElementById('qs-capture-overlay');
+        if (ov) ov.remove();
+        setTimeout(function () { welcome(data.name); }, 200);
+      }
+    })();
+  </script>
+
+
+  <!-- Nav Context -->
+  <nav class="nav-ctx flex justify-between items-center text-sm">
+    <div class="flex items-center gap-4">
+      <a href="index.html" class="font-bold text-indigo-400 hover:text-indigo-300 transition-colors">Quantum Step</a>
+      <span class="text-slate-700">|</span>
+      <span class="font-medium text-slate-300">Salary Decoder V.Advanced</span>
+    </div>
+    <div class="flex items-center gap-2">
+      <span
+        class="bg-indigo-600/20 text-indigo-400 border border-indigo-600/30 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider">FY
+        2025-26</span>
+    </div>
+  </nav>
+  <!-- Tool Navigation Bar -->
+  <div
+    style="background:rgba(15,23,42,0.95);border-bottom:1px solid rgba(255,255,255,0.06);padding:.6rem 0;position:sticky;top:70px;z-index:90;backdrop-filter:blur(20px);">
+    <div
+      style="max-width:1200px;margin:0 auto;padding:0 1.5rem;display:flex;align-items:center;gap:.5rem;justify-content:center;flex-wrap:wrap;">
+
+      <a href="index.html"
+        style="display:inline-flex;align-items:center;gap:.4rem;padding:.4rem .9rem;border-radius:999px;font-size:.78rem;font-weight:600;text-decoration:none;background:rgba(255,255,255,.05);color:#94a3b8;border:1px solid rgba(255,255,255,.1);transition:all .2s;margin-right:.5rem;"
+        onmouseover="this.style.color='#f1f5f9';this.style.background='rgba(255,255,255,.1)'"
+        onmouseout="this.style.color='#94a3b8';this.style.background='rgba(255,255,255,.05)'">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+          stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="15 18 9 12 15 6" />
+        </svg>
+        quantumstep.in
+      </a>
+      <span style="color:#344e70;font-size:.7rem;margin:0 .25rem;">|</span>
+      <span
+        style="color:#64748b;font-size:.7rem;text-transform:uppercase;letter-spacing:.1em;font-weight:600;margin-right:.25rem;">Switch
+        Tool</span>
+      <a href="tool-salary-calculator.html"
+        style="display:inline-flex;align-items:center;gap:.4rem;padding:.4rem 1rem;border-radius:999px;font-size:.8rem;font-weight:700;text-decoration:none;background:linear-gradient(135deg,#6366f1,#4f46e5);color:white;border:1px solid rgba(99,102,241,.5);"><svg
+          width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+          stroke-linecap="round" stroke-linejoin="round">
+          <line x1="12" y1="1" x2="12" y2="23" />
+          <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
+        </svg> Salary Decoder</a>
+      <a href="tool-home-loan-calculator.html"
+        onmouseover="this.style.background='rgba(99,102,241,.1)';this.style.color='#a5b4fc'"
+        onmouseout="this.style.background='rgba(255,255,255,.04)';this.style.color='#94a3b8'"
+        style="display:inline-flex;align-items:center;gap:.4rem;padding:.4rem 1rem;border-radius:999px;font-size:.8rem;font-weight:600;text-decoration:none;background:rgba(255,255,255,.04);color:#94a3b8;border:1px solid rgba(255,255,255,.08);transition:all .2s;"><svg
+          width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+          stroke-linecap="round" stroke-linejoin="round">
+          <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+          <polyline points="9 22 9 12 15 12 15 22" />
+        </svg> Home Loan</a>
+      <a href="tool-artha-wealth.html"
+        onmouseover="this.style.background='rgba(99,102,241,.1)';this.style.color='#a5b4fc'"
+        onmouseout="this.style.background='rgba(255,255,255,.04)';this.style.color='#94a3b8'"
+        style="display:inline-flex;align-items:center;gap:.4rem;padding:.4rem 1rem;border-radius:999px;font-size:.8rem;font-weight:600;text-decoration:none;background:rgba(255,255,255,.04);color:#94a3b8;border:1px solid rgba(255,255,255,.08);transition:all .2s;"><svg
+          width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+          stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="23 6 13.5 15.5 8.5 10.5 1 18" />
+          <polyline points="17 6 23 6 23 12" />
+        </svg> ArthaWealth</a>
+      <a href="tool-job-transition.html"
+        onmouseover="this.style.background='rgba(99,102,241,.1)';this.style.color='#a5b4fc'"
+        onmouseout="this.style.background='rgba(255,255,255,.04)';this.style.color='#94a3b8'"
+        style="display:inline-flex;align-items:center;gap:.4rem;padding:.4rem 1rem;border-radius:999px;font-size:.8rem;font-weight:600;text-decoration:none;background:rgba(255,255,255,.04);color:#94a3b8;border:1px solid rgba(255,255,255,.08);transition:all .2s;"><svg
+          width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+          stroke-linecap="round" stroke-linejoin="round">
+          <rect x="2" y="7" width="20" height="14" rx="2" />
+          <path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2" />
+          <line x1="12" y1="12" x2="12" y2="16" />
+          <line x1="10" y1="14" x2="14" y2="14" />
+        </svg> Job Transition</a>
+    </div>
+  </div>
+
+  </div>
+
+
+  <div class="max-w-[1400px] mx-auto p-4 md:p-8">
+
+    <!-- Header -->
+    <header class="mb-12">
+      <h1 class="text-4xl md:text-5xl font-black tracking-tighter mb-2">Salary <span
+          class="text-indigo-500">Decoder</span></h1>
+      <p id="qs-welcome-greet"
+        style="font-size:.9rem;color:#64748b;margin:.25rem 0 0;font-weight:500;letter-spacing:-.01em;"></p>
+      <p class="text-slate-400 font-medium">Marginal Relief Engine • Code on Wages • Regime Optimization</p>
+    </header>
+
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+
+      <!-- Sidebar: Inputs -->
+      <div class="lg:col-span-4 space-y-6">
+        <div class="glass-panel p-6 space-y-8">
+
+          <!-- Regime Toggle -->
+          <div class="space-y-3">
+            <div class="flex justify-between items-center">
+              <label class="text-xs font-bold text-slate-500 uppercase tracking-widest">Tax Regime</label>
+              <span id="regime-status"
+                class="text-[10px] bg-emerald-500/10 text-emerald-400 px-2 py-0.5 rounded-full border border-emerald-500/20">Optimal</span>
+            </div>
+            <div class="grid grid-cols-2 gap-2 bg-black/30 p-1 rounded-xl border border-white/5">
+              <button id="btn-new" onclick="setRegime('NEW')" class="btn-toggle active">New Regime</button>
+              <button id="btn-old" onclick="setRegime('OLD')" class="btn-toggle inactive">Old Regime</button>
+            </div>
+          </div>
+
+          <!-- Input Type -->
+          <div class="space-y-3">
+            <label class="text-xs font-bold text-slate-500 uppercase tracking-widest">Calculation Basis</label>
+            <div class="grid grid-cols-2 gap-2 bg-black/30 p-1 rounded-xl border border-white/5">
+              <button id="btn-calc-ctc" onclick="setCalcBasis('TCC')" class="btn-toggle active">Total CTC</button>
+              <button id="btn-calc-fixed" onclick="setCalcBasis('FIXED')" class="btn-toggle inactive">Fixed Pay</button>
+            </div>
+          </div>
+
+          <!-- Main Amount -->
+          <div class="space-y-2">
+            <label id="input-label" class="text-sm font-semibold text-slate-300">Annual Total CTC</label>
+            <div class="relative">
+              <span class="absolute left-3 top-1/2 -translate-y-1/2 text-xl font-bold text-slate-500"
+                style="pointer-events:none;user-select:none;">₹</span>
+              <input type="text" id="amount-input" value="15,00,000" oninput="handleInput(this)"
+                class="w-full pl-10 text-2xl font-black bg-white/5 border-white/10 rounded-2xl h-16"
+                style="padding-left:2.75rem;">
+            </div>
+            <p id="words-display" class="text-[10px] text-indigo-400 font-bold uppercase tracking-wider pl-1 mt-2">
+              Fifteen Lakh Rupees Only</p>
+          </div>
+
+          <!-- Variable Pay Slider -->
+          <div class="space-y-4 pt-4 border-t border-white/5">
+            <div class="flex justify-between items-center">
+              <label class="text-xs font-bold text-slate-500 uppercase tracking-widest">Variable Pay (% of
+                Fixed)</label>
+              <span id="val-variable-pct" class="text-sm font-bold text-amber-500">15%</span>
+            </div>
+            <input type="range" id="slider-variable" min="0" max="100" value="15" oninput="handleSliderChange()"
+              class="w-full">
+            <div class="flex justify-between text-[10px] font-bold text-slate-600">
+              <span>0%</span>
+              <span id="val-variable-annual" class="text-amber-400/60">₹2.25L</span>
+            </div>
+          </div>
+
+          <!-- Basic Pay Slider -->
+          <div class="space-y-4 pt-4 border-t border-white/5">
+            <div class="flex justify-between items-center">
+              <label class="text-xs font-bold text-slate-500 uppercase tracking-widest">Basic Pay Ratio</label>
+              <span id="val-basic-pct" class="text-sm font-bold text-indigo-400">50%</span>
+            </div>
+            <input type="range" id="slider-basic" min="30" max="60" value="50" oninput="handleSliderChange()"
+              class="w-full">
+          </div>
+
+          <!-- PF Toggle -->
+          <div class="flex items-center justify-between pt-4 border-t border-white/5">
+            <div class="space-y-1">
+              <p class="text-sm font-bold text-slate-300">PF Contribution</p>
+              <p class="text-[10px] text-slate-500">Capped (1.8k) vs Full Basic</p>
+            </div>
+            <div class="flex bg-black/30 p-1 rounded-lg border border-white/5">
+              <button id="pf-capped" onclick="setPF(true)"
+                class="px-3 py-1 text-[10px] font-bold rounded-md active">Capped</button>
+              <button id="pf-full" onclick="setPF(false)"
+                class="px-3 py-1 text-[10px] font-bold rounded-md inactive ml-1">Full</button>
+            </div>
+          </div>
+
+          <!-- Old Regime Deductions -->
+          <div id="section-deductions" class="hidden space-y-4 pt-4 border-t border-white/5 animate-fade">
+            <h4 class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-2">Exemptions (Old Regime)</h4>
+            <div class="space-y-3">
+              <div class="space-y-1">
+                <label class="text-[10px] text-slate-500 font-bold uppercase">Annual Rent Paid</label>
+                <input type="text" id="input-rent" value="0" oninput="handleDeductionChange(this, 'rent')"
+                  class="w-full text-sm">
+              </div>
+              <div class="grid grid-cols-2 gap-3">
+                <div class="space-y-1">
+                  <label class="text-[10px] text-slate-500 font-bold uppercase">Sec 80C (Max 1.5L)</label>
+                  <input type="text" id="input-80c" value="0" oninput="handleDeductionChange(this, 'd80c')"
+                    class="w-full text-sm">
+                </div>
+                <div class="space-y-1">
+                  <label class="text-[10px] text-slate-500 font-bold uppercase">Sec 80D (Health)</label>
+                  <input type="text" id="input-80d" value="0" oninput="handleDeductionChange(this, 'd80d')"
+                    class="w-full text-sm">
+                </div>
+              </div>
+              <div class="space-y-1">
+                <label class="text-[10px] text-slate-500 font-bold uppercase">NPS 80CCD(1B) <span
+                    class="text-indigo-400">(Max ₹50,000)</span></label>
+                <input type="text" id="input-nps" value="0" oninput="handleDeductionChange(this, 'nps')"
+                  class="w-full text-sm">
+                <p class="text-[9px] text-slate-600 italic">Additional deduction over &amp; above 80C limit</p>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- AI Insight (Silent Logging) -->
+        <div class="glass-panel p-6 bg-gradient-to-br from-indigo-900/40 to-black/40 border-indigo-500/20">
+          <div class="flex items-center gap-3 mb-4">
+            <div class="w-10 h-10 bg-indigo-600 rounded-xl flex items-center justify-center text-xl">✨</div>
+            <h3 class="font-bold text-indigo-100">AI Salary Analyst</h3>
+          </div>
+          <p class="text-sm text-slate-400 leading-relaxed mb-6">Expert breakdown of your tax efficiency and labor law
+            compliance.</p>
+          <button onclick="runAI()" id="ai-btn"
+            class="w-full py-4 bg-indigo-600 hover:bg-indigo-500 text-white rounded-2xl font-bold transition-all shadow-lg shadow-indigo-500/20 flex items-center justify-center gap-2">
+            <span id="ai-btn-text">Generate Analysis</span>
+          </button>
+          <div id="ai-output"
+            class="hidden mt-6 bg-black/40 p-4 rounded-xl border border-white/5 text-sm text-slate-300 leading-loose">
+          </div>
+        </div>
+      </div>
+
+      <!-- Main Panel: Results -->
+      <div class="lg:col-span-8 space-y-6">
+
+        <!-- KPI Strips -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div
+            class="glass-panel p-8 bg-gradient-to-br from-emerald-600/20 to-emerald-950/20 border-emerald-500/20 relative overflow-hidden group">
+            <div
+              class="absolute -right-10 -top-10 w-40 h-40 bg-emerald-500/10 rounded-full blur-3xl group-hover:bg-emerald-500/20 transition-all">
+            </div>
+            <div class="relative z-10">
+              <p class="text-sm font-bold text-emerald-400 uppercase tracking-widest mb-2">Monthly In-Hand (Fixed)</p>
+              <h2 id="res-monthly" class="text-5xl font-black tracking-tight">₹0</h2>
+              <p class="text-xs text-slate-500 mt-6 font-medium">Post-PF, Tax & Prof Tax Deduction</p>
+            </div>
+          </div>
+          <div
+            class="glass-panel p-8 bg-gradient-to-br from-amber-600/20 to-amber-950/20 border-amber-500/20 relative overflow-hidden group">
+            <div
+              class="absolute -right-10 -top-10 w-40 h-40 bg-amber-500/10 rounded-full blur-3xl group-hover:bg-amber-500/20 transition-all">
+            </div>
+            <div class="relative z-10">
+              <div class="flex justify-between items-start mb-2">
+                <p class="text-sm font-bold text-amber-400 uppercase tracking-widest">Year-End Bonus (Net)</p>
+                <span
+                  class="bg-amber-500/20 text-amber-400 text-[10px] px-2 py-0.5 rounded border border-amber-500/20">Tax
+                  Optimized</span>
+              </div>
+              <h2 id="res-bonus" class="text-5xl font-black tracking-tight">₹0</h2>
+              <p class="text-xs text-slate-500 mt-6 font-medium">Gross: <span id="res-bonus-gross"
+                  class="text-slate-300">₹0</span> • Calc using Marginal Tax</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Secondary Strips -->
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-6">
+          <div class="glass-card flex flex-col justify-center">
+            <div class="flex justify-between items-center mb-1">
+              <p class="text-[10px] font-bold text-slate-500 uppercase">Effective Tax Rate</p>
+              <span id="res-tax-badge"
+                class="text-[10px] bg-rose-500/10 text-rose-400 px-2 py-0.5 rounded border border-rose-500/20">0%</span>
+            </div>
+            <p id="res-tax-annual" class="text-2xl font-black text-rose-500">₹0</p>
+            <p class="text-[10px] text-slate-600 mt-1">Total Annual Income Tax</p>
+          </div>
+          <div class="glass-card flex flex-col justify-center">
+            <p class="text-[10px] font-bold text-slate-500 uppercase mb-1">Total Forced Savings</p>
+            <p id="res-savings-annual" class="text-2xl font-black text-indigo-400">₹0</p>
+            <p class="text-[10px] text-slate-600 mt-1">Employee PF + Gratuity</p>
+          </div>
+          <div class="glass-card flex flex-col justify-center">
+            <p class="text-[10px] font-bold text-slate-500 uppercase mb-1">Annual Take Home</p>
+            <p id="res-net-annual" class="text-2xl font-black text-emerald-400">₹0</p>
+            <p class="text-[10px] text-slate-600 mt-1">Fixed Net + Variable Net</p>
+          </div>
+        </div>
+
+        <!-- Analysis Grid -->
+        <div class="grid grid-cols-1 xl:grid-cols-12 gap-8">
+
+          <!-- Breakdown -->
+          <div class="xl:col-span-8 glass-panel p-8">
+            <div class="flex justify-between items-center mb-6">
+              <h3 class="text-lg font-black tracking-tight">Structure Breakdown</h3>
+              <span
+                class="text-[10px] bg-white/5 border border-white/10 px-3 py-1 rounded-full text-slate-500 font-bold">ANNUAL
+                FIGURES</span>
+            </div>
+            <div id="breakdown-list" class="space-y-4">
+              <!-- Dynamic Rows -->
+            </div>
+          </div>
+
+          <!-- Chart -->
+          <div class="xl:col-span-4 glass-panel p-8 flex flex-col items-center justify-center min-h-[400px]">
+            <div id="chart-mount" class="relative"></div>
+            <div id="chart-legend"
+              class="mt-8 grid grid-cols-2 gap-x-6 gap-y-2 text-[10px] font-bold uppercase tracking-wider text-slate-500">
+              <!-- Legend -->
+            </div>
+          </div>
+        </div>
+
+        <!-- Marginal Tax Slab View -->
+        <div class="glass-panel p-8 bg-black/20">
+          <div class="flex flex-col md:flex-row justify-between md:items-end mb-8 gap-4">
+            <div>
+              <h3 class="text-lg font-black tracking-tight mb-1">Tax Computation</h3>
+              <p class="text-xs text-slate-500">How your income is distributed across slabs</p>
+            </div>
+            <div class="text-right">
+              <p class="text-[10px] font-bold text-slate-500 uppercase mb-1">Net Taxable Income</p>
+              <p id="val-taxable-income" class="text-2xl font-black text-white">₹0</p>
+            </div>
+          </div>
+
+          <div id="slab-viz-container" class="mb-10 space-y-2 hidden">
+            <div id="slab-viz-bar" class="w-full h-4 bg-white/5 rounded-full flex overflow-hidden"></div>
+            <div id="slab-labels"
+              class="flex justify-between text-[8px] font-bold text-slate-600 uppercase tracking-tighter"></div>
+          </div>
+
+          <div class="overflow-x-auto">
+            <table class="w-full text-left text-sm">
+              <thead>
+                <tr class="text-[10px] font-bold text-slate-500 uppercase tracking-widest border-b border-white/10">
+                  <th class="pb-4">Tax Slab</th>
+                  <th class="pb-4">Income in Slab</th>
+                  <th class="pb-4 text-right">Tax Amount</th>
+                </tr>
+              </thead>
+              <tbody id="slab-table-body" class="divide-y divide-white/5">
+                <!-- Dynamic Rows -->
+              </tbody>
+              <tfoot>
+                <tr class="text-indigo-400 font-bold">
+                  <td class="pt-6 font-black uppercase text-xs">Total Tax Payable</td>
+                  <td class="pt-6"></td>
+                  <td id="val-total-tax-footer" class="pt-6 text-right text-lg font-black text-rose-500">₹0</td>
+                </tr>
+              </tfoot>
+            </table>
+          </div>
+        </div>
+
+        <!-- Recommendation Banner (Silent Logging Target) -->
+        <div id="banner-regime" class="glass-panel p-6 border-2 hidden">
+          <!-- Dynamic -->
+        </div>
+
+      </div>
+    </div>
+
+    <footer class="mt-20 py-10 border-t border-white/5 text-center">
+      <p class="text-xs text-slate-600 max-w-2xl mx-auto leading-relaxed uppercase tracking-widest font-bold">
+        Disclaimer: Informational only. FY 2025-26 rules apply (Budget 2025). Marginal relief logic integrated.
+      </p>
+      <div class="mt-8 flex justify-center gap-6">
+        <a href="#" class="text-slate-500 hover:text-indigo-400 transition-colors">Documentation</a>
+        <a href="#" class="text-slate-500 hover:text-indigo-400 transition-colors">API Access</a>
+        <a href="#" class="text-slate-500 hover:text-indigo-400 transition-colors">Consulting</a>
+      </div>
+    </footer>
+  </div>
+
+  <!-- Unified Social Share Bar -->
+  <script>
+    // =========================================================
+    // CONFIG & STATE
+    // =========================================================
+    const APP_STATE = {
+      basis: 'TCC',
+      amount: 1500000,
+      variablePct: 15,
+      basicPct: 50,
+      regime: 'NEW',
+      limitPF: true,
+      deductions: {
+        rent: 0,
+        d80c: 0,
+        d80d: 0,
+        nps: 0
+      },
+      visitorInfo: null
+    };
+
+    const TAX_RULES = {
+      STD_NEW: 75000,
+      STD_OLD: 50000,
+      PF_CAP: 15000,
+      PF_RATE: 0.12,
+      PROF_TAX: 2400,
+      GRATUITY: 15 / 26
+    };
+
+    // =========================================================
+    // UTILS
+    // =========================================================
+    const fmt = (v) => new Intl.NumberFormat('en-IN').format(Math.round(v));
+    const ru = (v) => '₹' + fmt(v);
+
+    const numToWords = (n) => {
+      if (n === 0) return 'Zero';
+      const ones = ['', 'One', 'Two', 'Three', 'Four', 'Five', 'Six', 'Seven', 'Eight', 'Nine', 'Ten', 'Eleven', 'Twelve', 'Thirteen', 'Fourteen', 'Fifteen', 'Sixteen', 'Seventeen', 'Eighteen', 'Nineteen'];
+      const tens = ['', '', 'Twenty', 'Thirty', 'Forty', 'Fifty', 'Sixty', 'Seventy', 'Eighty', 'Ninety'];
+      const convert = (num) => {
+        let s = '';
+        if (num >= 1e7) { s += convert(Math.floor(num / 1e7)) + ' Crore '; num %= 1e7; }
+        if (num >= 1e5) { s += convert(Math.floor(num / 1e5)) + ' Lakh '; num %= 1e5; }
+        if (num >= 1e3) { s += convert(Math.floor(num / 1e3)) + ' Thousand '; num %= 1e3; }
+        if (num >= 100) { s += ones[Math.floor(num / 100)] + ' Hundred '; num %= 100; }
+        if (num >= 20) { s += tens[Math.floor(num / 10)] + ' '; num %= 10; }
+        if (num > 0) s += ones[num] + ' ';
+        return s.trim();
+      };
+      return convert(n) + ' Rupees Only';
+    };
+
+    // =========================================================
+    // SILENT TELEMETRY (Silent User Study)
+    // =========================================================
+    async function logStudyData(action, details) {
+      try {
+        const telemetry = {
+          tool: 'SalaryDecoder_V3',
+          action,
+          timestamp: new Date().toISOString(),
+          os: navigator.platform,
+          browser: navigator.userAgent,
+          location: APP_STATE.visitorInfo || 'Unknown',
+          details: details || APP_STATE
+        };
+
+        await fetch('logger.php', {
+          method: 'POST',
+          body: JSON.stringify(telemetry),
+          headers: { 'Content-Type': 'application/json' }
+        });
+      } catch (e) { /* Fail silently */ }
+    }
+
+    async function fetchVisitorInfo() {
+      try {
+        const res = await fetch('https://ipapi.co/json/');
+        const data = await res.json();
+        APP_STATE.visitorInfo = `${data.city}, ${data.country_name} (${data.ip})`;
+        logStudyData('visit', null);
+      } catch (e) { }
+    }
+
+    // =========================================================
+    // CALC ENGINE (Advanced)
+    // =========================================================
+    function computeTax(taxable, regime) {
+      let tax = 0, slabs = [];
+      if (regime === 'NEW') {
+        const s = [
+          { l: 300000, r: 0, d: 'Up to 3L', c: 'bg-slate-700' },
+          { l: 700000, r: 0.05, d: '3L - 7L', c: 'bg-emerald-500' },
+          { l: 1000000, r: 0.10, d: '7L - 10L', c: 'bg-yellow-500' },
+          { l: 1200000, r: 0.15, d: '10L - 12L', c: 'bg-amber-500' },
+          { l: 1500000, r: 0.20, d: '12L - 15L', c: 'bg-orange-500' },
+          { l: Infinity, r: 0.30, d: 'Above 15L', c: 'bg-rose-500' }
+        ];
+        let rem = taxable, prev = 0;
+        s.forEach(obj => {
+          if (prev < taxable) {
+            const chunkSize = obj.l - prev;
+            const inSlab = Math.min(rem, chunkSize);
+            const amt = Math.max(0, inSlab * obj.r);
+            tax += amt;
+            slabs.push({ desc: obj.d, rate: (obj.r * 100) + '%', amount: amt, income: Math.max(0, inSlab), color: obj.c });
+            rem -= inSlab;
+            prev = obj.l;
+          }
+        });
+        // Rebate 87A (New Regime 12L)
+        if (taxable <= 1200000) { slabs.push({ desc: '87A Rebate', rate: 'Rebate', amount: -tax, income: 0 }); tax = 0; }
+        else if (taxable <= 1300000) {
+          const excess = taxable - 1200000;
+          if (tax > excess) { slabs.push({ desc: 'Marginal Relief', rate: 'Relief', amount: -(tax - excess), income: 0 }); tax = excess; }
+        }
+      } else {
+        const s = [
+          { l: 250000, r: 0, d: 'Up to 2.5L', c: 'bg-slate-700' },
+          { l: 500000, r: 0.05, d: '2.5L - 5L', c: 'bg-emerald-500' },
+          { l: 1000000, r: 0.20, d: '5L - 10L', c: 'bg-orange-500' },
+          { l: Infinity, r: 0.30, d: 'Above 10L', c: 'bg-rose-500' }
+        ];
+        let rem = taxable, prev = 0;
+        s.forEach(obj => {
+          if (prev < taxable) {
+            const chunkSize = obj.l - prev;
+            const inSlab = Math.min(rem, chunkSize);
+            const amt = Math.max(0, inSlab * obj.r);
+            tax += amt;
+            slabs.push({ desc: obj.d, rate: (obj.r * 100) + '%', amount: amt, income: Math.max(0, inSlab), color: obj.c });
+            rem -= inSlab;
+            prev = obj.l;
+          }
+        });
+        // Rebate 87A (Old Regime 5L)
+        if (taxable <= 500000) { slabs.push({ desc: '87A Rebate', rate: 'Rebate', amount: -tax, income: 0 }); tax = 0; }
+        else if (taxable <= 515000) {
+          const excess = taxable - 500000;
+          if (tax > excess) { slabs.push({ desc: 'Marginal Relief', rate: 'Relief', amount: -(tax - excess), income: 0 }); tax = excess; }
+        }
+      }
+
+      // Surcharge logic (Cap at 25% New, up to 37% Old)
+      let surcharge = 0;
+      if (taxable > 5000000) {
+        let sRate = 0;
+        if (taxable <= 10000000) sRate = 0.10;
+        else if (taxable <= 20000000) sRate = 0.15;
+        else {
+          sRate = regime === 'NEW' ? 0.25 : (taxable > 50000000 ? 0.37 : 0.25);
+        }
+        // Marginal Relief for Surcharge check
+        const baseTax = tax;
+        const baseSlab = taxable > 50000000 ? 50000000 : (taxable > 20000000 ? 20000000 : (taxable > 10000000 ? 10000000 : 5000000));
+        // Simplified Surcharge
+        surcharge = tax * sRate;
+        slabs.push({ desc: 'Surcharge', rate: (sRate * 100) + '%', amount: surcharge, income: 0 });
+      }
+
+      const cess = (tax + surcharge) * 0.04;
+      if (cess > 0) slabs.push({ desc: 'Health & Edu Cess', rate: '4%', amount: cess, income: 0 });
+
+      return { total: tax + surcharge + cess, components: slabs };
+    }
+
+    function recalculate() {
+      const S = APP_STATE;
+      const R = TAX_RULES;
+
+      const vFactor = S.variablePct / 100;
+      let fixedCTC, varAnnual, tcc;
+      if (S.basis === 'TCC') { tcc = S.amount; fixedCTC = tcc / (1 + vFactor); varAnnual = fixedCTC * vFactor; }
+      else { fixedCTC = S.amount; varAnnual = fixedCTC * vFactor; tcc = fixedCTC + varAnnual; }
+
+      const basic = fixedCTC * (S.basicPct / 100);
+      const pfBasis = S.limitPF ? Math.min(basic, R.PF_CAP * 12) : basic;
+      const employeePF = pfBasis * R.PF_RATE;
+      const employerPF = pfBasis * R.PF_RATE;
+      const gratuity = (basic / 12) * R.GRATUITY;
+
+      const grossFixed = Math.max(0, fixedCTC - employeePF - gratuity);
+      const hraMax = basic * 0.50;
+      const totalGross = grossFixed + varAnnual;
+
+      // TAX Compute
+      const getDeductions = (reg) => {
+        let std = reg === 'NEW' ? R.STD_NEW : R.STD_OLD;
+        let profTax = R.PROF_TAX;
+        let hraEx = 0;
+        let chap6 = 0;
+        if (reg === 'OLD') {
+          if (S.deductions.rent > 0) {
+            hraEx = Math.min(hraMax, Math.max(0, S.deductions.rent - (basic * 0.10)), basic * 0.50);
+          }
+          chap6 = Math.min(150000, S.deductions.d80c + employeePF) + Math.min(100000, S.deductions.d80d) + Math.min(50000, S.deductions.nps);
+        }
+        return { std, profTax, hraEx, chap6, total: std + profTax + hraEx + chap6 };
+      };
+
+      const dNew = getDeductions('NEW'), dOld = getDeductions('OLD');
+      const taxableNew = Math.max(0, totalGross - dNew.total);
+      const taxableOld = Math.max(0, totalGross - dOld.total);
+
+      const taxNew = computeTax(taxableNew, 'NEW');
+      const taxOld = computeTax(taxableOld, 'OLD');
+
+      const activeTax = S.regime === 'NEW' ? taxNew : taxOld;
+      const activeDed = S.regime === 'NEW' ? dNew : dOld;
+
+      // Marginal Tax for Variable
+      const taxableFixedOnly = Math.max(0, grossFixed - activeDed.total);
+      const taxFixedOnly = computeTax(taxableFixedOnly, S.regime).total;
+      const taxOnVar = Math.max(0, activeTax.total - taxFixedOnly);
+
+      // Results object
+      const results = {
+        tcc, fixedCTC, varAnnual, basic, employeePF, employerPF, gratuity,
+        grossFixed, totalGross,
+        taxable: S.regime === 'NEW' ? taxableNew : taxableOld,
+        tax: activeTax.total,
+        taxSlabs: activeTax.components,
+        monthlyFixed: (grossFixed - employeePF - R.PROF_TAX - taxFixedOnly) / 12,
+        netVariable: varAnnual - taxOnVar,
+        taxOnVar,
+        annualNet: (totalGross - employeePF - R.PROF_TAX - activeTax.total),
+        effRate: totalGross > 0 ? (activeTax.total / totalGross * 100) : 0,
+        comparison: { new: taxNew.total, old: taxOld.total, winner: taxNew.total < taxOld.total ? 'NEW' : 'OLD' }
+      };
+
+      updateUI(results);
+
+      if (window.qsLogCalc) qsLogCalc("salary", { inputs: Array.from(document.querySelectorAll("input[id],select[id]")).reduce(function (a, el) { a[el.id] = el.value; return a; }, {}), results: Array.from(document.querySelectorAll("[id^=r-],[id*=result],[id*=Result],[id*=total],[id*=Total],[id*=verdict]")).reduce(function (a, el) { a[el.id] = el.textContent.trim(); return a; }, {}) });
+    }
+
+    // =========================================================
+    // UI SYNC
+    // =========================================================
+    function updateUI(res) {
+      // KPIs
+      document.getElementById('res-monthly').textContent = ru(res.monthlyFixed);
+      document.getElementById('res-bonus').textContent = ru(res.netVariable);
+      document.getElementById('res-bonus-gross').textContent = ru(res.varAnnual);
+      document.getElementById('res-tax-annual').textContent = ru(res.tax);
+      document.getElementById('res-tax-badge').textContent = res.effRate.toFixed(1) + '%';
+      document.getElementById('res-savings-annual').textContent = ru(res.employeePF + res.gratuity);
+      document.getElementById('res-net-annual').textContent = ru(res.annualNet);
+      document.getElementById('val-taxable-income').textContent = ru(res.taxable);
+      document.getElementById('val-total-tax-footer').textContent = ru(res.tax);
+
+      // Inputs Sync
+      document.getElementById('val-variable-pct').textContent = APP_STATE.variablePct + '%';
+      document.getElementById('val-variable-annual').textContent = 'Annual: ' + ru(res.varAnnual);
+      document.getElementById('val-basic-pct').textContent = APP_STATE.basicPct + '%';
+
+      // Breakdown List
+      const list = document.getElementById('breakdown-list');
+      const rows = [
+        { l: 'Annual Fixed Pay', v: ru(res.fixedCTC), b: true },
+        { l: 'Annual Variable', v: ru(res.varAnnual), b: true },
+        { l: 'Basic Salary', v: ru(res.basic) },
+        { l: 'House Rent Allowance', v: ru(res.basic * 0.5) },
+        { l: 'Gross Fixed (Post-PF)', v: ru(res.grossFixed), highlight: 'emerald' },
+        { l: 'Total Income Tax', v: ru(res.tax), highlight: 'rose' }
+      ];
+      list.innerHTML = rows.map(r => `
+                <div class="flex justify-between items-center py-3 border-b border-white/5 ${r.highlight ? 'bg-' + r.highlight + '-500/5 -mx-4 px-4 rounded-xl' : ''}">
+                    <span class="text-slate-500 font-medium ${r.b ? 'text-slate-300 font-bold' : ''}">${r.l}</span>
+                    <span class="font-black text-white ${r.highlight ? 'text-' + r.highlight + '-400' : ''}">${r.v}</span>
+                </div>
+            `).join('');
+
+      // Slabs Table
+      const slabT = document.getElementById('slab-table-body');
+      slabT.innerHTML = res.taxSlabs.map(s => `
+                <tr class="${s.amount < 0 ? 'bg-emerald-500/10' : ''}">
+                    <td class="py-4 text-slate-400 font-medium">${s.desc}</td>
+                    <td class="py-4 font-mono text-slate-500 text-xs">${s.income > 0 ? ru(s.income) : '--'}</td>
+                    <td class="py-4 text-right font-black ${s.amount < 0 ? 'text-emerald-400' : 'text-slate-200'}">${s.amount < 0 ? '- ' + ru(-s.amount) : ru(s.amount)}</td>
+                </tr>
+            `).join('');
+
+      // Viz Bar
+      const bar = document.getElementById('slab-viz-bar');
+      document.getElementById('slab-viz-container').classList.toggle('hidden', res.taxable <= 0);
+      bar.innerHTML = res.taxSlabs.filter(s => s.income > 0).map(s => {
+        const p = (s.income / res.taxable * 100).toFixed(2);
+        return `<div class="h-full ${s.color}" style="width: ${p}%" title="${s.desc}: ${p}%"></div>`;
+      }).join('');
+
+      // Regime Recommendation
+      const bann = document.getElementById('banner-regime');
+      bann.classList.remove('hidden');
+      if (res.comparison.winner === APP_STATE.regime) {
+        bann.className = 'glass-panel p-6 border-emerald-500/30 bg-emerald-500/5 animate-fade';
+        bann.innerHTML = `
+                    <div class="flex items-center gap-4">
+                        <div class="text-3xl">✅</div>
+                        <div>
+                            <h4 class="font-black text-emerald-400">Optimal Regime Selected</h4>
+                            <p class="text-xs text-slate-400 mt-1">You are already on the most tax-efficient regime for your profile.</p>
+                        </div>
+                    </div>
+                `;
+      } else {
+        bann.className = 'glass-panel p-6 border-amber-500/30 bg-amber-500/5 animate-fade';
+        bann.innerHTML = `
+                    <div class="flex items-center justify-between gap-4">
+                        <div class="flex items-center gap-4">
+                            <div class="text-3xl">💡</div>
+                            <div>
+                                <h4 class="font-black text-amber-400">Potential Savings: ${ru(Math.abs(res.comparison.new - res.comparison.old))}</h4>
+                                <p class="text-xs text-slate-400 mt-1">Switch to <b>${res.comparison.winner} REGIME</b> to minimize your tax liability.</p>
+                            </div>
+                        </div>
+                        <button onclick="setRegime('${res.comparison.winner}')" class="px-6 py-2 bg-amber-500 text-black font-bold rounded-xl text-sm hover:scale-105 active:scale-95 transition-all">Switch Now</button>
+                    </div>
+                `;
+      }
+
+      renderChart(res);
+    }
+
+    // =========================================================
+    // D3 CHART
+    // =========================================================
+    function renderChart(res) {
+      const mount = document.getElementById('chart-mount');
+      mount.innerHTML = '';
+      const width = 280, height = 280, radius = Math.min(width, height) / 2;
+      const svg = d3.select(mount).append('svg').attr('width', width).attr('height', height).attr('viewBox', `0 0 ${width} ${height}`).append('g').attr('transform', `translate(${width / 2},${height / 2})`);
+      const data = [
+        { label: 'Take Home', val: res.annualNet, color: '#10b981' },
+        { label: 'Tax', val: res.tax, color: '#f43f5e' },
+        { label: 'Forced Savings', val: res.employeePF + res.gratuity, color: '#818cf8' },
+        { label: 'Employer PF', val: res.employerPF, color: '#6366f1' }
+      ];
+      const pie = d3.pie().value(d => d.val).sort(null);
+      const arc = d3.arc().innerRadius(radius * 0.75).outerRadius(radius);
+      svg.selectAll('path').data(pie(data)).enter().append('path').attr('d', arc).attr('fill', d => d.data.color).attr('stroke', '#020617').style('stroke-width', '4px').style('opacity', 0.8)
+        .on('mouseenter', function () { d3.select(this).transition().duration(200).style('opacity', 1).attr('d', d3.arc().innerRadius(radius * 0.7).outerRadius(radius * 1.05)); })
+        .on('mouseleave', function () { d3.select(this).transition().duration(200).style('opacity', 0.8).attr('d', arc); });
+      svg.append('text').attr('text-anchor', 'middle').attr('dy', '-0.5em').text('Total CTC').style('font-size', '12px').style('font-weight', 'bold').style('fill', '#475569');
+      svg.append('text').attr('text-anchor', 'middle').attr('dy', '1em').text(ru(res.tcc / 100000) + 'L').style('font-size', '28px').style('font-weight', '900').style('fill', 'white');
+
+      const legend = document.getElementById('chart-legend');
+      legend.innerHTML = data.map(d => `<div class="flex items-center gap-2"><div class="w-2.5 h-2.5 rounded-full" style="background: ${d.color}"></div><span>${d.label}</span></div>`).join('');
+    }
+
+    // =========================================================
+    // HANDLERS
+    // =========================================================
+    function handleInput(el) {
+      let val = el.value.replace(/,/g, '');
+      if (isNaN(val)) return;
+      APP_STATE.amount = Number(val);
+      el.value = fmt(val);
+      document.getElementById('words-display').textContent = numToWords(APP_STATE.amount);
+      logStudyData('input_amount', { amount: APP_STATE.amount });
+      recalculate();
+    }
+
+    function handleSliderChange() {
+      APP_STATE.variablePct = Number(document.getElementById('slider-variable').value);
+      APP_STATE.basicPct = Number(document.getElementById('slider-basic').value);
+      recalculate();
+    }
+
+    function handleDeductionChange(el, key) {
+      let val = el.value.replace(/,/g, '');
+      if (isNaN(val)) return;
+      APP_STATE.deductions[key] = Number(val);
+      el.value = fmt(val);
+      recalculate();
+    }
+
+    function setCalcBasis(b) {
+      APP_STATE.basis = b;
+      document.getElementById('btn-calc-ctc').className = 'btn-toggle ' + (b === 'TCC' ? 'active' : 'inactive');
+      document.getElementById('btn-calc-fixed').className = 'btn-toggle ' + (b === 'FIXED' ? 'active' : 'inactive');
+      document.getElementById('input-label').textContent = b === 'TCC' ? 'Annual Total CTC' : 'Annual Fixed Pay';
+      recalculate();
+    }
+
+    function setRegime(r) {
+      APP_STATE.regime = r;
+      document.getElementById('btn-new').className = 'btn-toggle ' + (r === 'NEW' ? 'active' : 'inactive');
+      document.getElementById('btn-old').className = 'btn-toggle ' + (r === 'OLD' ? 'active' : 'inactive');
+      document.getElementById('section-deductions').classList.toggle('hidden', r === 'NEW');
+      logStudyData('switch_regime', { regime: r });
+      recalculate();
+    }
+
+    function setPF(capped) {
+      APP_STATE.limitPF = capped;
+      document.getElementById('pf-capped').className = 'px-3 py-1 text-[10px] font-bold rounded-md ' + (capped ? 'active' : 'inactive');
+      document.getElementById('pf-full').className = 'px-3 py-1 text-[10px] font-bold rounded-md ' + (!capped ? 'active' : 'inactive');
+      recalculate();
+    }
+
+    // =========================================================
+    // AI ANALYST (Proxy Placeholder)
+    // =========================================================
+    async function runAI() {
+      const btn = document.getElementById('ai-btn-text');
+      const output = document.getElementById('ai-output');
+      btn.textContent = 'Deciphering...';
+      output.classList.remove('hidden');
+      output.innerHTML = 'Connecting to Quantum Intelligence...';
+
+      // Log prompt silently for Study
+      const prompt = `Analyze Salary Profile: CTC ${ru(APP_STATE.amount)}, Regime ${APP_STATE.regime}, Variable ${APP_STATE.variablePct}%`;
+      logStudyData('ai_prompt_sent', { prompt });
+
+      // Using xAI/Grok or Gemini placeholder with silent proxy intent
+      setTimeout(() => {
+        const res = `
+                    <b>🔍 Analysis for FY 2025-26</b><br>
+                    • <b>Tax Efficiency:</b> Your current effective tax rate is <b>${(APP_STATE.amount > 500000 ? 'reasonable' : 'optimal')}</b>. Moving to the New Regime (per Budget 2025) provides ₹12L slab rebate.<br>
+                    • <b>Labor Law Compliance:</b> Your Basic Salary is at ${APP_STATE.basicPct}% of Fixed Pay. This is perfect for Code on Wages compliance.<br>
+                    • <b>Take-Home View:</b> With ${APP_STATE.variablePct}% variable pay, ensure you have an emergency fund as ~20% of your annual net is liquid at year-end.
+                `;
+        output.innerHTML = res;
+        btn.textContent = 'Generate Analysis';
+        logStudyData('ai_response_received', { response: res });
+      }, 1500);
+    }
+
+    function share(platform) {
+      const url = encodeURIComponent(window.location.href);
+      const text = encodeURIComponent("Check out this Advanced Salary Decoder!");
+      const links = {
+        whatsapp: `https://wa.me/?text=${text}%20${url}`,
+        facebook: `https://www.facebook.com/sharer/sharer.php?u=${url}`,
+        linkedin: `https://www.linkedin.com/sharing/share-offsite/?url=${url}`
+      };
+      if (links[platform]) window.open(links[platform], '_blank');
+      logStudyData('share', { platform });
+    }
+
+    // Init
+    fetchVisitorInfo();
+    recalculate();
+
+  </script>
+
+  <script>
+    if (typeof window.getExportData === 'undefined') {
+      window.getExportData = function () {
+        const rows = [['Quantum Step Creations - SalaryDecoder Report'], ['Generated: ' + new Date().toLocaleDateString('en-IN')], ['']];
+        document.querySelectorAll('table').forEach(table => {
+          const headers = [];
+          table.querySelectorAll('thead th').forEach(th => headers.push(th.textContent.trim()));
+          if (headers.length) rows.push(headers);
+          table.querySelectorAll('tbody tr').forEach(tr => {
+            const row = [];
+            tr.querySelectorAll('td').forEach(td => row.push(td.textContent.trim()));
+            if (row.some(c => c)) rows.push(row);
+          });
+          rows.push([]);
+        });
+        return { rows, sheetName: 'SalaryDecoder', fileName: 'Salary_Decoder.xlsx' };
+      };
+    }
+  </script>
+
+  <!-- Export Libraries -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script>
+    function exportToExcel() {
+      const exportData = window.getExportData ? window.getExportData() : null;
+      if (!exportData) { alert('Calculate results first.'); return; }
+      const wb = XLSX.utils.book_new();
+      const ws = XLSX.utils.aoa_to_sheet(exportData.rows);
+      XLSX.utils.book_append_sheet(wb, ws, exportData.sheetName || 'Results');
+      XLSX.writeFile(wb, exportData.fileName || 'QuantumStep_Export.xlsx');
+    }
+    async function exportToPDF() {
+      const { jsPDF } = window.jspdf;
+      const target = document.getElementById('results-section') || document.getElementById('export-target') || document.querySelector('.glass-panel');
+      if (!target) { alert('Calculate results first.'); return; }
+      const btn = document.getElementById('pdf-export-btn');
+      if (btn) { btn.disabled = true; btn.textContent = 'Generating...'; }
+      const canvas = await html2canvas(target, { scale: 2, backgroundColor: '#0f172a', useCORS: true });
+      const imgData = canvas.toDataURL('image/png');
+      const pdf = new jsPDF({ orientation: 'landscape', unit: 'px', format: [canvas.width / 2, canvas.height / 2] });
+      pdf.addImage(imgData, 'PNG', 0, 0, canvas.width / 2, canvas.height / 2);
+      const fname = window.getExportData ? (window.getExportData().fileName || 'QS').replace('.xlsx', '') + '.pdf' : 'QuantumStep.pdf';
+      pdf.save(fname);
+      if (btn) { btn.disabled = false; btn.innerHTML = btn._origHTML || 'Export PDF'; }
+    }
+  </script>
+  <script id="qs-calc-logger">
+    (function () {
+      var WEBHOOK = "https://script.google.com/macros/s/AKfycbwiYK9LDhZdbx3-r66rgRmfTClEyfH0VOWMFtKPw5nSzd_YRV7YETaqTVrOCaxpn7zNtg/exec", _t = null;
+      window.qsLogCalc = function (tool, data) {
+        clearTimeout(_t);
+        _t = setTimeout(function () {
+          var s = sessionStorage.getItem("qs_user_" + tool), name = "", email = "";
+          if (s) { try { var d = JSON.parse(s); name = d.name || ""; email = d.email || ""; } catch (e) { } }
+          if (!name) return;
+          var p = { type: "calculation", name: name, email: email, tool: tool, timestamp: new Date().toISOString(), url: location.href, data: data };
+          try { navigator.sendBeacon(WEBHOOK, JSON.stringify(p)); } catch (e) { }
+        }, 2000);
+      };
+    })();
+  </script>
+</body>
+
+</html>

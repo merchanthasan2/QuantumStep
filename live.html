@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Join Presentation | EngageIQ</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        violet: { 500: '#7C3AED', 600: '#6D28D9', 950: '#2e1065' },
+                        slate: { 950: '#020617' }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #020617;
+            color: white;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 1.5rem;
+        }
+
+        .join-input {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+
+        .join-input:focus {
+            border-color: #7C3AED;
+            background: rgba(124, 58, 237, 0.05);
+            outline: none;
+            box-shadow: 0 0 20px rgba(124, 58, 237, 0.1);
+        }
+
+        .btn-join {
+            background: linear-gradient(135deg, #7C3AED, #6D28D9);
+            transition: all 0.3s ease;
+        }
+
+        .btn-join:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(124, 58, 237, 0.3);
+        }
+    </style>
+</head>
+
+<body class="aurora-bg">
+    <div class="max-w-md w-full mx-auto">
+        <div class="text-center mb-12">
+            <div
+                class="w-16 h-16 bg-violet-600 rounded-2xl flex items-center justify-center shadow-lg shadow-violet-500/20 mx-auto mb-6">
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5">
+                    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+                </svg>
+            </div>
+            <h1 class="text-3xl font-black mb-2">EngageIQ</h1>
+            <p class="text-slate-400">Enter the 6-digit code to join the live session.</p>
+        </div>
+
+        <form action="#" class="space-y-6"
+            onsubmit="event.preventDefault(); window.location.href='live-interaction.html'">
+            <div>
+                <input type="text" placeholder="Digits only (e.g. 582914)"
+                    class="join-input w-full h-16 rounded-2xl text-center text-4xl font-black tracking-[0.2em] placeholder:text-slate-700 placeholder:text-lg placeholder:tracking-normal"
+                    maxlength="6" autofocus>
+            </div>
+
+            <button type="submit"
+                class="btn-join w-full h-16 rounded-2xl font-black text-xl shadow-xl shadow-violet-600/20">
+                Join Session
+            </button>
+        </form>
+
+        <p class="mt-8 text-center text-xs text-slate-500">
+            By joining, you agree to our <a href="#" class="underline">Terms of Service</a>.
+        </p>
+    </div>
+</body>
+
+</html>

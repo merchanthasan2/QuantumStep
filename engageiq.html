@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EngageIQ | Interactive Audience Engagement by Quantum Step</title>
+    <meta name="description"
+        content="EngageIQ - Live Polls, Q&A, Word Clouds, and Real-time Audience Interaction for your presentations. Boost engagement with ease.">
+    <meta name="keywords"
+        content="live polls, audience engagement, presentation interaction, live Q&A, word cloud generator, presenter tools, Quantum Step, EngageIQ">
+
+    <!-- OpenGraph -->
+    <meta property="og:title" content="EngageIQ | Interactive Audience Engagement by Quantum Step">
+    <meta property="og:description"
+        content="Engage your audience with live polls, Q&A, and word clouds. Real-time interaction for seamless presentations.">
+    <meta property="og:image" content="engageiq_mockup.png">
+    <meta property="og:url" content="https://quantumstep.in/engageiq.html">
+    <meta property="og:type" content="website">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="EngageIQ | Interactive Audience Engagement">
+    <meta name="twitter:description"
+        content="Real-time audience interaction for your next presentation. Live polls, Q&A, and more.">
+    <meta name="twitter:image" content="engageiq_mockup.png">
+
+    <!-- JSON-LD Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "SoftwareApplication",
+      "name": "EngageIQ",
+      "applicationCategory": "BusinessApplication",
+      "operatingSystem": "Web",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "INR"
+      },
+      "description": "Interactive audience engagement module with live polls, Q&A, and word clouds.",
+      "aggregateRating": {
+        "@type": "AggregateRating",
+        "ratingValue": "4.8",
+        "ratingCount": "150"
+      }
+    }
+    </script>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&display=swap"
+        rel="stylesheet">
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        violet: { 500: '#7C3AED', 600: '#6D28D9', 700: '#5B21B6' },
+                        slate: { 800: '#1e293b', 900: '#0f172a', 950: '#020617' }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- GSAP -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+
+    <!-- Custom Styles -->
+    <link rel="stylesheet" href="styles.css">
+
+    <style>
+        .engage-hero {
+            background: radial-gradient(circle at 70% 20%, rgba(124, 58, 237, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 20% 80%, rgba(59, 130, 246, 0.1) 0%, transparent 40%),
+                #020617;
+            padding-top: 10rem;
+            padding-bottom: 8rem;
+        }
+
+        .engage-gradient-text {
+            background: linear-gradient(135deg, #a78bfa 0%, #60a5fa 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .pricing-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(20px);
+            transition: all 0.3s ease;
+        }
+
+        .pricing-card:hover {
+            border-color: rgba(124, 58, 237, 0.4);
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4), 0 0 20px rgba(124, 58, 237, 0.1);
+        }
+
+        .pricing-card.featured {
+            border-color: rgba(124, 58, 237, 0.5);
+            background: rgba(124, 58, 237, 0.05);
+        }
+    </style>
+</head>
+
+<body class="aurora-bg">
+    <!-- Navigation -->
+    <nav id="main-nav" class="main-nav scrolled">
+        <div class="nav-container">
+            <a href="index.html" class="logo">
+                <img src="logo-light.png" alt="Quantum Step Creations" class="logo-image">
+                <span class="logo-text">Quantum Step</span>
+            </a>
+            <ul id="nav-menu" class="nav-menu">
+                <li><a href="index.html" class="nav-link">Home</a></li>
+                <li><a href="index.html#services" class="nav-link">Services</a></li>
+                <li><a href="#features" class="nav-link">Features</a></li>
+                <li><a href="#pricing" class="nav-link">Pricing</a></li>
+                <li><a href="index.html#contact" class="nav-cta-btn">Get Started &rarr;</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="engage-hero">
+        <div class="container mx-auto px-6 text-center">
+            <div
+                class="mb-6 inline-block rounded-full bg-violet-500/10 px-4 py-1.5 text-sm font-semibold text-violet-400 border border-violet-500/20">
+                Interactive Audience Engagement
+            </div>
+            <h1 class="mb-6 text-5xl md:text-7xl font-black tracking-tight text-white">
+                Engage Your Audience <br>
+                <span class="engage-gradient-text">In Real-Time</span>
+            </h1>
+            <p class="mx-auto mb-10 max-w-2xl text-xl text-slate-400">
+                The ultimate interaction module for presenters. Live polls, Q&As, word clouds, and more — integrated
+                seamlessly into your QuantumStep ecosystem.
+            </p>
+            <div class="flex flex-wrap justify-center gap-4">
+                <a href="#pricing" class="btn-engageiq">Get Started Free</a>
+                <a href="#features" class="btn-secondary">Watch Demo</a>
+            </div>
+
+            <div class="mt-20">
+                <img src="engageiq_mockup.png" alt="EngageIQ Dashboard"
+                    class="mx-auto w-full max-w-5xl rounded-[2rem] border border-white/10 shadow-2xl">
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="py-24 bg-slate-950">
+        <div class="container mx-auto px-6">
+            <div class="mb-16 text-center">
+                <h2 class="text-4xl font-bold text-white mb-4">Powerful Interaction Features</h2>
+                <p class="text-slate-400 max-w-2xl mx-auto">Everything you need to keep your audience hooked from the
+                    first slide to the last question.</p>
+            </div>
+
+            <div class="grid md:grid-cols-3 gap-8">
+                <!-- Feature 1 -->
+                <div class="engage-feature-card h-full">
+                    <div
+                        class="w-12 h-12 bg-violet-500/10 rounded-xl flex items-center justify-center mb-6 text-violet-500 border border-violet-500/20">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M12 20v-6M6 20V10M18 20V4" />
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-bold text-white mb-3">Live Polling</h3>
+                    <p class="text-slate-400">Create multiple choice, rating, or ranking polls and see results update
+                        live as your audience votes.</p>
+                </div>
+                <!-- Feature 2 -->
+                <div class="engage-feature-card h-full">
+                    <div
+                        class="w-12 h-12 bg-violet-500/10 rounded-xl flex items-center justify-center mb-6 text-violet-500 border border-violet-500/20">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+                            <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-bold text-white mb-3">Audience Q&A</h3>
+                    <p class="text-slate-400">Let your audience submit questions and upvote others' queries. Present the
+                        top questions in a sleek interface.</p>
+                </div>
+                <!-- Feature 3 -->
+                <div class="engage-feature-card h-full">
+                    <div
+                        class="w-12 h-12 bg-violet-500/10 rounded-xl flex items-center justify-center mb-6 text-violet-500 border border-violet-500/20">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-bold text-white mb-3">Visual Word Clouds</h3>
+                    <p class="text-slate-400">Visualize audience sentiments with beautiful word clouds that grow and
+                        shift as new responses come in.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pricing Section -->
+    <section id="pricing" class="py-24 bg-slate-900/50">
+        <div class="container mx-auto px-6">
+            <div class="mb-16 text-center">
+                <h2 class="text-4xl font-bold text-white mb-4">Flexible Pricing Tiers</h2>
+                <p class="text-slate-400">Scale your engagement based on your audience size. One-time batches or custom
+                    enterprise plans.</p>
+            </div>
+
+            <div class="grid md:grid-cols-3 gap-8">
+                <!-- Free Tier -->
+                <div class="pricing-card p-10 rounded-3xl flex flex-col">
+                    <h3 class="text-xl font-bold text-white mb-2">Starter</h3>
+                    <div class="text-4xl font-black text-white mb-6">Free</div>
+                    <ul class="mb-10 space-y-4 text-slate-400 text-sm">
+                        <li class="flex items-center gap-2"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+                                stroke="#10b981" stroke-width="3">
+                                <polyline points="20 6 9 17 4 12" />
+                            </svg> 200 Free Participants</li>
+                        <li class="flex items-center gap-2"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+                                stroke="#10b981" stroke-width="3">
+                                <polyline points="20 6 9 17 4 12" />
+                            </svg> Basic Poll Types</li>
+                        <li class="flex items-center gap-2"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+                                stroke="#10b981" stroke-width="3">
+                                <polyline points="20 6 9 17 4 12" />
+                            </svg> Standard Dashboard</li>
+                    </ul>
+                    <a href="dashboard.html"
+                        class="mt-auto block w-full py-3 text-center border border-white/20 rounded-xl text-white font-bold hover:bg-white/5">Start
+                        for Free</a>
+                </div>
+
+                <!-- Pro Tier (Mockup of Batch) -->
+                <div
+                    class="pricing-card featured p-10 rounded-3xl flex flex-col scale-105 border-violet-500/50 relative overflow-hidden">
+                    <div
+                        class="absolute top-4 right-[-35px] bg-violet-500 text-white text-[10px] font-black px-10 py-1 rotate-45">
+                        MOST POPULAR</div>
+                    <h3 class="text-xl font-bold text-white mb-2">Pro Batch</h3>
+                    <div class="text-4xl font-black text-white mb-1">Custom</div>
+                    <p class="text-violet-400 text-sm mb-6">Pay-per-Event</p>
+                    <ul class="mb-10 space-y-4 text-slate-400 text-sm">
+                        <li class="flex items-center gap-2"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+                                stroke="#10b981" stroke-width="3">
+                                <polyline points="20 6 9 17 4 12" />
+                            </svg> Up to 1,000 Participants</li>
+                        <li class="flex items-center gap-2"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+                                stroke="#10b981" stroke-width="3">
+                                <polyline points="20 6 9 17 4 12" />
+                            </svg> All Question Types</li>
+                        <li class="flex items-center gap-2"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+                                stroke="#10b981" stroke-width="3">
+                                <polyline points="20 6 9 17 4 12" />
+                            </svg> Advanced Analytics</li>
+                        <li class="flex items-center gap-2"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+                                stroke="#10b981" stroke-width="3">
+                                <polyline points="20 6 9 17 4 12" />
+                            </svg> Data Export (CSV/PDF)</li>
+                    </ul>
+                    <a href="#"
+                        class="mt-auto block w-full py-3 text-center bg-violet-500 rounded-xl text-white font-bold hover:bg-violet-600 shadow-lg shadow-violet-500/20">Buy
+                        Batch</a>
+                </div>
+
+                <!-- Enterprise Tier -->
+                <div class="pricing-card p-10 rounded-3xl flex flex-col">
+                    <h3 class="text-xl font-bold text-white mb-2">Enterprise</h3>
+                    <div class="text-4xl font-black text-white mb-6">Contact</div>
+                    <ul class="mb-10 space-y-4 text-slate-400 text-sm">
+                        <li class="flex items-center gap-2"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+                                stroke="#10b981" stroke-width="3">
+                                <polyline points="20 6 9 17 4 12" />
+                            </svg> 5,000+ Participants</li>
+                        <li class="flex items-center gap-2"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+                                stroke="#10b981" stroke-width="3">
+                                <polyline points="20 6 9 17 4 12" />
+                            </svg> White-label Branding</li>
+                        <li class="flex items-center gap-2"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+                                stroke="#10b981" stroke-width="3">
+                                <polyline points="20 6 9 17 4 12" />
+                            </svg> API Integration</li>
+                        <li class="flex items-center gap-2"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+                                stroke="#10b981" stroke-width="3">
+                                <polyline points="20 6 9 17 4 12" />
+                            </svg> Dedicated Support</li>
+                    </ul>
+                    <a href="#"
+                        class="mt-auto block w-full py-3 text-center border border-white/20 rounded-xl text-white font-bold hover:bg-white/5">Let's
+                        Talk</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer (Mini) -->
+    <footer class="py-12 border-t border-white/5">
+        <div class="container mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-8">
+            <div class="flex items-center gap-3">
+                <img src="logo-light.png" alt="Quantum Step" class="w-10 h-10 opacity-50">
+                <span class="text-slate-500 font-bold">Quantum Step Creations</span>
+            </div>
+            <div class="text-slate-600 text-sm">
+                &copy; 2026 EngageIQ Module. All rights reserved.
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Simple reveal animation
+        const observerOptions = {
+            threshold: 0.1
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.engage-feature-card, .pricing-card').forEach(el => {
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(20px)';
+            el.style.transition = 'all 0.6s ease';
+            observer.observe(el);
+        });
+
+        // Toggle visibility via class
+        document.addEventListener('scroll', () => {
+            document.querySelectorAll('.visible').forEach(el => {
+                el.style.opacity = '1';
+                el.style.transform = 'translateY(0)';
+            });
+        });
+    </script>
+</body>
+
+</html>

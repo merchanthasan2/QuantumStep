@@ -1,0 +1,331 @@
+/* =========================================================
+   Quantum Step — Shared Tool Design System
+   Applied across all 4 tool pages for consistent look/feel
+   ========================================================= */
+
+/* ── Design Tokens ─────────────────────────────────────── */
+:root {
+    --tool-bg: #020617;
+    --tool-surface: rgba(15, 23, 42, 0.7);
+    --tool-surface-hover: rgba(15, 23, 42, 0.9);
+    --tool-border: rgba(255, 255, 255, 0.08);
+    --tool-border-accent: rgba(99, 102, 241, 0.3);
+    --tool-radius: 1.5rem;
+    --tool-radius-sm: 0.875rem;
+    --tool-radius-xs: 0.5rem;
+    --tool-blur: blur(24px);
+    --tool-transition: 0.25s ease;
+    --tool-indigo: #818cf8;
+    --tool-emerald: #34d399;
+    --tool-rose: #fb7185;
+    --tool-amber: #fbbf24;
+    --tool-text: #f1f5f9;
+    --tool-text-muted: #94a3b8;
+    --tool-text-dim: #64748b;
+}
+
+/* ── Page Base ─────────────────────────────────────────── */
+body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    background: var(--tool-bg);
+    color: var(--tool-text);
+    margin: 0;
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+}
+
+/* ── Glass Panel — unified across all tools ────────────── */
+.glass-panel {
+    background: var(--tool-surface) !important;
+    backdrop-filter: var(--tool-blur) !important;
+    -webkit-backdrop-filter: var(--tool-blur) !important;
+    border: 1px solid var(--tool-border) !important;
+    border-radius: var(--tool-radius) !important;
+    transition: box-shadow var(--tool-transition), border-color var(--tool-transition);
+}
+
+.glass-panel:hover {
+    border-color: rgba(99, 102, 241, 0.15) !important;
+}
+
+/* Glass card variant (inner panels) */
+.glass-card {
+    background: rgba(255, 255, 255, 0.03) !important;
+    border: 1px solid rgba(255, 255, 255, 0.06) !important;
+    border-radius: var(--tool-radius-sm) !important;
+    padding: 1.25rem !important;
+    transition: all var(--tool-transition);
+}
+
+.glass-card:hover {
+    background: rgba(255, 255, 255, 0.05) !important;
+    border-color: rgba(255, 255, 255, 0.1) !important;
+}
+
+/* ── Rounded overrides (Tailwind round fixes) ──────────── */
+.rounded-xl {
+    border-radius: var(--tool-radius-sm) !important;
+}
+
+.rounded-2xl {
+    border-radius: var(--tool-radius) !important;
+}
+
+.rounded-3xl {
+    border-radius: 2rem !important;
+}
+
+.rounded-full {
+    border-radius: 999px !important;
+}
+
+.rounded-lg {
+    border-radius: var(--tool-radius-xs) !important;
+}
+
+/* ── Input / Select / Textarea ─────────────────────────── */
+input[type="text"],
+input[type="number"],
+input[type="email"],
+input[type="tel"],
+input[type="range"],
+select,
+textarea {
+    background: rgba(15, 23, 42, 0.6) !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    border-radius: var(--tool-radius-sm) !important;
+    color: var(--tool-text) !important;
+    font-family: 'Inter', sans-serif !important;
+    font-size: 0.9rem !important;
+    transition: border-color var(--tool-transition), box-shadow var(--tool-transition) !important;
+    outline: none !important;
+}
+
+input[type="text"]:focus,
+input[type="number"]:focus,
+select:focus,
+textarea:focus {
+    border-color: rgba(99, 102, 241, 0.5) !important;
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.12) !important;
+}
+
+input[type="range"] {
+    -webkit-appearance: none;
+    height: 6px;
+    border-radius: 999px !important;
+    background: rgba(99, 102, 241, 0.2) !important;
+    border: none !important;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: #6366f1;
+    box-shadow: 0 0 8px rgba(99, 102, 241, 0.6);
+    cursor: pointer;
+    border: 2px solid #818cf8;
+}
+
+select option {
+    background: #1e293b;
+    color: var(--tool-text);
+}
+
+/* ── Result / Stat Cards ───────────────────────────────── */
+.result-card,
+.stat-card,
+.metric-card,
+[class*="result-"] {
+    background: rgba(255, 255, 255, 0.03) !important;
+    border: 1px solid rgba(255, 255, 255, 0.07) !important;
+    border-radius: var(--tool-radius-sm) !important;
+    padding: 1.25rem 1.5rem !important;
+    transition: all var(--tool-transition) !important;
+}
+
+/* ── Buttons ───────────────────────────────────────────── */
+button[type="submit"],
+button[type="button"].primary-btn,
+.calculate-btn,
+button.calculate,
+button.btn-primary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.75rem 2rem;
+    background: linear-gradient(135deg, #6366f1, #4f46e5);
+    color: #fff;
+    border: none;
+    border-radius: var(--tool-radius-sm);
+    font-size: 0.9rem;
+    font-weight: 700;
+    letter-spacing: 0.03em;
+    cursor: pointer;
+    transition: all var(--tool-transition);
+    box-shadow: 0 4px 16px rgba(99, 102, 241, 0.35);
+    font-family: 'Inter', sans-serif;
+}
+
+button[type="submit"]:hover,
+button.calculate:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(99, 102, 241, 0.5);
+}
+
+/* ── Tables ────────────────────────────────────────────── */
+table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+}
+
+thead th {
+    background: rgba(99, 102, 241, 0.08) !important;
+    color: #94a3b8 !important;
+    font-size: 0.72rem !important;
+    font-weight: 700 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.08em !important;
+    padding: 0.85rem 1.25rem !important;
+}
+
+thead th:first-child {
+    border-radius: var(--tool-radius-xs) 0 0 0 !important;
+}
+
+thead th:last-child {
+    border-radius: 0 var(--tool-radius-xs) 0 0 !important;
+}
+
+tbody tr {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.04) !important;
+    transition: background var(--tool-transition);
+}
+
+tbody tr:hover {
+    background: rgba(99, 102, 241, 0.05) !important;
+}
+
+tbody td {
+    padding: 0.75rem 1.25rem !important;
+    color: #cbd5e1 !important;
+    font-size: 0.85rem !important;
+}
+
+/* ── Section Headers ───────────────────────────────────── */
+.tool-section-title,
+h1.tool-title {
+    font-size: clamp(1.75rem, 3.5vw, 2.5rem);
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    line-height: 1.15;
+}
+
+.tool-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.3rem 0.9rem;
+    background: rgba(99, 102, 241, 0.12);
+    border: 1px solid rgba(99, 102, 241, 0.25);
+    border-radius: 999px;
+    color: #818cf8;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 1rem;
+}
+
+/* ── Labels ────────────────────────────────────────────── */
+label {
+    display: block;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--tool-text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 0.4rem;
+}
+
+/* ── Tooltips / Value Display ──────────────────────────── */
+.value-display {
+    font-size: 1.75rem;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    line-height: 1;
+}
+
+/* ── Scrollbar ─────────────────────────────────────────── */
+::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+    background: rgba(99, 102, 241, 0.3);
+    border-radius: 999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: rgba(99, 102, 241, 0.5);
+}
+
+/* ── Gradient Accent Helpers ───────────────────────────── */
+.text-gradient {
+    background: linear-gradient(135deg, #818cf8, #a78bfa);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.accent-indigo {
+    color: var(--tool-indigo);
+}
+
+.accent-emerald {
+    color: var(--tool-emerald);
+}
+
+.accent-rose {
+    color: var(--tool-rose);
+}
+
+.accent-amber {
+    color: var(--tool-amber);
+}
+
+/* ── Utility overrides ─────────────────────────────────── */
+.p-6 {
+    padding: 1.5rem !important;
+}
+
+.p-8 {
+    padding: 2rem !important;
+}
+
+.mt-6 {
+    margin-top: 1.5rem !important;
+}
+
+.mb-4 {
+    margin-bottom: 1rem !important;
+}
+
+/* ── Responsive ────────────────────────────────────────── */
+@media (max-width: 768px) {
+    .glass-panel {
+        border-radius: 1rem !important;
+    }
+
+    .glass-card {
+        border-radius: 0.75rem !important;
+    }
+}

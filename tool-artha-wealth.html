@@ -31,15 +31,9 @@
     }
     </script>
 
-    <!-- Google Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&display=swap"
-        rel="stylesheet">
-
-    <!-- Styles -->
     <link rel="stylesheet" href="styles.css">
-
+  <link rel="stylesheet" href="tool-shared.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
@@ -66,30 +60,256 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <style>
+        body {
+            background-color: #0f172a;
+            color: #ffffff;
+            overflow-x: hidden;
+            margin: 0;
+        }
+
         .tool-container {
-            padding-top: 120px;
+            padding-top: 40px;
+        }
+
+        .nav-ctx {
+            background: rgba(0, 0, 0, 0.3);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 0.75rem 1.5rem;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            backdrop-filter: blur(10px);
+        }
+
+        .share-bar {
+            position: fixed;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 1rem;
+            padding: 0.75rem 1.5rem;
+            background: rgba(15, 23, 42, 0.8);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 999px;
+            z-index: 1000;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+        }
+
+        .share-btn {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            transition: transform 0.3s ease;
         }
     </style>
+
+    <style>
+        /* Hide floating share bar - use inline share section instead */
+        .share-bar { display: none !important; }
+    </style>
+    <script id="qs-telemetry">
+(function(){
+    // Collect browser-side telemetry immediately
+    function getDeviceType() {
+        var ua = navigator.userAgent;
+        if (/tablet|ipad|playbook|silk/i.test(ua)) return 'Tablet';
+        if (/mobi|android|iphone|ipod|windows phone|blackberry|opera mini/i.test(ua)) return 'Mobile';
+        return 'Desktop';
+    }
+    function getOS() {
+        var ua = navigator.userAgent;
+        if (/Windows NT 10/.test(ua)) return 'Windows 10/11';
+        if (/Windows NT 6.3/.test(ua)) return 'Windows 8.1';
+        if (/Windows NT 6.1/.test(ua)) return 'Windows 7';
+        if (/Windows/.test(ua)) return 'Windows';
+        if (/Mac OS X ([\d_]+)/.test(ua)) return 'macOS ' + ua.match(/Mac OS X ([\d_]+)/)[1].replace(/_/g,'.');
+        if (/iPhone OS ([\d_]+)/.test(ua)) return 'iOS ' + ua.match(/iPhone OS ([\d_]+)/)[1].replace(/_/g,'.');
+        if (/Android ([\d.]+)/.test(ua)) return 'Android ' + ua.match(/Android ([\d.]+)/)[1];
+        if (/Linux/.test(ua)) return 'Linux';
+        return 'Unknown';
+    }
+    function getBrowser() {
+        var ua = navigator.userAgent;
+        if (/Edg\//.test(ua)) return 'Edge ' + (ua.match(/Edg\/(\d+)/)||['','?'])[1];
+        if (/OPR\/|Opera/.test(ua)) return 'Opera';
+        if (/Chrome\/(\d+)/.test(ua) && !/Chromium/.test(ua)) return 'Chrome ' + ua.match(/Chrome\/(\d+)/)[1];
+        if (/Firefox\/(\d+)/.test(ua)) return 'Firefox ' + ua.match(/Firefox\/(\d+)/)[1];
+        if (/Safari\/(\d+)/.test(ua) && !/Chrome/.test(ua)) return 'Safari';
+        if (/MSIE|Trident/.test(ua)) return 'Internet Explorer';
+        return 'Other';
+    }
+    function getUTM() {
+        var p = new URLSearchParams(location.search);
+        return {
+            source: p.get('utm_source') || '',
+            medium: p.get('utm_medium') || '',
+            campaign: p.get('utm_campaign') || ''
+        };
+    }
+    var utm = getUTM();
+    var tel = {
+        device_type: getDeviceType(),
+        os: getOS(),
+        browser: getBrowser(),
+        user_agent: navigator.userAgent,
+        screen: screen.width + 'x' + screen.height,
+        viewport: window.innerWidth + 'x' + window.innerHeight,
+        language: navigator.language || '',
+        timezone: Intl && Intl.DateTimeFormat ? Intl.DateTimeFormat().resolvedOptions().timeZone : '',
+        connection: (navigator.connection && navigator.connection.effectiveType) || '',
+        referrer: document.referrer || 'direct',
+        landing_url: location.href,
+        utm_source: utm.source,
+        utm_medium: utm.medium,
+        utm_campaign: utm.campaign,
+        ip: '', city: '', region: '', country: '', isp: '', lat: '', lon: ''
+    };
+
+    // Fetch IP + geo from free API (1000 req/day free)
+    fetch('https://ipapi.co/json/')
+        .then(function(r){ return r.json(); })
+        .then(function(d){
+            tel.ip      = d.ip || '';
+            tel.city    = d.city || '';
+            tel.region  = d.region || '';
+            tel.country = d.country_name || '';
+            tel.isp     = d.org || '';
+            tel.lat     = d.latitude || '';
+            tel.lon     = d.longitude || '';
+        })
+        .catch(function(){}) // Silently fail if blocked
+        .finally(function(){
+            sessionStorage.setItem('qs_telemetry', JSON.stringify(tel));
+        });
+
+    // Store immediately even without geo (geo updates async)
+    sessionStorage.setItem('qs_telemetry', JSON.stringify(tel));
+
+    // Expose for use by loggers
+    window.qsGetTelemetry = function() {
+        try { return JSON.parse(sessionStorage.getItem('qs_telemetry') || '{}'); }
+        catch(e) { return {}; }
+    };
+})();
+</script>
 </head>
 
 <body class="bg-slate-900 text-slate-50 aurora-bg">
-
-    <!-- Navigation -->
-    <nav id="main-nav" class="main-nav">
-        <div class="nav-container">
-            <a href="index.html" class="logo">
-                <img src="logo-light.png" alt="Quantum Step" class="logo-image">
-                <span class="logo-text">Quantum Step</span>
+    <!-- QS Name Capture Modal -->
+    <div id="qs-capture-overlay" style="position:fixed;inset:0;z-index:9999;background:rgba(2,6,23,0.93);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);display:flex;align-items:center;justify-content:center;padding:1rem;">
+        <div style="width:100%;max-width:420px;background:rgba(15,23,42,0.97);border:1px solid rgba(255,255,255,0.09);border-radius:1.75rem;padding:2.25rem;box-shadow:0 32px 80px rgba(0,0,0,0.7);">
+            <div style="display:flex;align-items:center;gap:.65rem;margin-bottom:1.75rem;">
+                <div style="width:36px;height:36px;border-radius:.65rem;background:rgba(251,191,36,.12);border:1px solid #fbbf2444;display:flex;align-items:center;justify-content:center;">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fbbf24" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+                </div>
+                <span style="font-size:.85rem;font-weight:700;color:#e2e8f0;">Quantum Step Tools</span>
+            </div>
+            <h2 style="font-size:1.4rem;font-weight:800;color:#f1f5f9;margin:0 0 .4rem;letter-spacing:-.02em;">ArthaWealth Calculator</h2>
+            <p style="font-size:.82rem;color:#475569;margin:0 0 1.75rem;line-height:1.55;">Project your wealth with SIP, SWP & compound growth.</p>
+            <form onsubmit="qsCapture(event)">
+                <label style="display:block;font-size:.7rem;font-weight:700;color:#475569;text-transform:uppercase;letter-spacing:.07em;margin-bottom:.35rem;">Your Name</label>
+                <input id="qs-name" type="text" placeholder="e.g. Rahul Sharma" required autocomplete="name"
+                    style="width:100%;box-sizing:border-box;padding:.65rem .9rem;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.09);border-radius:.85rem;color:#f1f5f9;font-size:.88rem;font-family:inherit;margin-bottom:.9rem;outline:none;transition:border-color .2s;"
+                    onfocus="this.style.borderColor='#fbbf2480'" onblur="this.style.borderColor='rgba(255,255,255,.09)'">
+                <label style="display:block;font-size:.7rem;font-weight:700;color:#475569;text-transform:uppercase;letter-spacing:.07em;margin-bottom:.35rem;">Work Email <span style="font-weight:400;text-transform:none;">(optional)</span></label>
+                <input id="qs-email" type="email" placeholder="you@company.com" autocomplete="email"
+                    style="width:100%;box-sizing:border-box;padding:.65rem .9rem;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.09);border-radius:.85rem;color:#f1f5f9;font-size:.88rem;font-family:inherit;margin-bottom:1.4rem;outline:none;transition:border-color .2s;"
+                    onfocus="this.style.borderColor='#fbbf2480'" onblur="this.style.borderColor='rgba(255,255,255,.09)'">
+                <button type="submit" style="width:100%;padding:.75rem 1.25rem;background:linear-gradient(135deg,#fbbf24,#fbbf24aa);border:none;border-radius:.85rem;color:#fff;font-size:.88rem;font-weight:700;cursor:pointer;font-family:inherit;display:flex;align-items:center;justify-content:center;gap:.45rem;transition:opacity .2s;" onmouseover="this.style.opacity='.85'" onmouseout="this.style.opacity='1'">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+                    Start Exploring
+                </button>
+            </form>
+            <p style="text-align:center;font-size:.68rem;color:#1e293b;margin-top:1rem;">Your information is never shared or sold.</p>
+            <a href="tool-buy-vs-rent.html" onmouseover="this.style.background='rgba(99,102,241,.1)';this.style.color='#a5b4fc'" onmouseout="this.style.background='rgba(255,255,255,.04)';this.style.color='#94a3b8'" style="display:inline-flex;align-items:center;gap:.4rem;padding:.4rem 1rem;border-radius:999px;font-size:.8rem;font-weight:600;text-decoration:none;background:rgba(255,255,255,.04);color:#94a3b8;border:1px solid rgba(255,255,255,.08);transition:all .2s;">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><line x1="12" y1="22" x2="12" y2="12"/></svg> Buy vs Rent
             </a>
-            <ul id="nav-menu" class="nav-menu">
-                <li><a href="index.html#hero" class="nav-link">Home</a></li>
-                <li><a href="index.html#services" class="nav-link">Services</a></li>
-                <li><a href="index.html#tools" class="nav-link active">Tools</a></li>
-                <li><a href="index.html#portfolio" class="nav-link">Portfolio</a></li>
-                <li><a href="index.html#contact" class="nav-link">Contact</a></li>
-            </ul>
+        </div>
+    </div>
+
+    <!-- QS Corner Share Icons -->
+    <div style="position:fixed;top:130px;right:1.25rem;z-index:490;display:flex;flex-direction:column;gap:.45rem;align-items:center;">
+        <span style="font-size:.58rem;color:#334155;text-transform:uppercase;letter-spacing:.09em;font-weight:700;writing-mode:vertical-rl;margin-bottom:.2rem;">Share</span>
+        <button title="WhatsApp" onclick="(function(){var u=encodeURIComponent(location.href),t=encodeURIComponent('Plan your wealth with SIP and SWP projections — by Quantum Step');window.open('https://wa.me/?text='+t+'%20'+u,'_blank')})()" style="width:34px;height:34px;border-radius:50%;background:rgba(37,211,102,.1);border:1px solid rgba(37,211,102,.2);display:flex;align-items:center;justify-content:center;color:#25D166;cursor:pointer;transition:all .2s;padding:0;" onmouseover="this.style.background='rgba(37,211,102,.22)';this.style.transform='scale(1.1)'" onmouseout="this.style.background='rgba(37,211,102,.1)';this.style.transform=''"><svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.348z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.085.54 4.043 1.481 5.749L.073 23.925l6.345-1.384A11.93 11.93 0 0 0 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.818a9.818 9.818 0 0 1-5.012-1.37l-.358-.213-3.747.817.848-3.651-.234-.372A9.818 9.818 0 1 1 12 21.818z"/></svg></button>
+        <button title="LinkedIn" onclick="(function(){window.open('https://www.linkedin.com/sharing/share-offsite/?url='+encodeURIComponent(location.href),'_blank')})()" style="width:34px;height:34px;border-radius:50%;background:rgba(10,102,194,.1);border:1px solid rgba(10,102,194,.2);display:flex;align-items:center;justify-content:center;color:#0A66C2;cursor:pointer;transition:all .2s;padding:0;" onmouseover="this.style.background='rgba(10,102,194,.22)';this.style.transform='scale(1.1)'" onmouseout="this.style.background='rgba(10,102,194,.1)';this.style.transform=''"><svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6zM2 9h4v12H2zm2-3a2 2 0 1 1 0-4 2 2 0 0 1 0 4z"/></svg></button>
+        <button title="X / Twitter" onclick="(function(){var u=encodeURIComponent(location.href),t=encodeURIComponent('Plan your wealth with SIP and SWP projections');window.open('https://twitter.com/intent/tweet?text='+t+'&url='+u,'_blank')})()" style="width:34px;height:34px;border-radius:50%;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);display:flex;align-items:center;justify-content:center;color:#cbd5e1;cursor:pointer;transition:all .2s;padding:0;" onmouseover="this.style.background='rgba(255,255,255,.12)';this.style.transform='scale(1.1)'" onmouseout="this.style.background='rgba(255,255,255,.05)';this.style.transform=''"><svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.73-8.835L1.254 2.25H8.08l4.277 5.653zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg></button>
+    </div>
+
+    <script>
+    (function() {
+        var TOOL = 'artha_wealth';
+        var WEBHOOK = 'https://script.google.com/macros/s/AKfycbwiYK9LDhZdbx3-r66rgRmfTClEyfH0VOWMFtKPw5nSzd_YRV7YETaqTVrOCaxpn7zNtg/exec';
+        var KEY = 'qs_user_' + TOOL;
+
+        function welcome(name) {
+            var g = document.getElementById('qs-welcome-greet');
+            if (g) g.textContent = 'Welcome back, ' + name + '.';
+            document.title = name + ' — ' + document.title;
+        }
+
+        window.qsCapture = function(e) {
+            e.preventDefault();
+            var name = document.getElementById('qs-name').value.trim();
+            var email = (document.getElementById('qs-email') || {}).value || '';
+            if (!name) return;
+            sessionStorage.setItem(KEY, JSON.stringify({name: name, email: email}));
+            var ov = document.getElementById('qs-capture-overlay');
+            if (ov) { ov.style.opacity = '0'; ov.style.transition = 'opacity .35s'; setTimeout(function() { ov.remove(); }, 350); }
+            welcome(name);
+            var payload = JSON.stringify({name: name, email: email, tool: TOOL, timestamp: new Date().toISOString(), url: location.href, referrer: document.referrer || 'direct'});
+            try { navigator.sendBeacon(WEBHOOK, payload); } catch(e2) { fetch(WEBHOOK, {method:'POST', body: payload, mode:'no-cors'}).catch(function(){}); }
+        };
+
+        var existing = sessionStorage.getItem(KEY);
+        if (existing) {
+            var data = JSON.parse(existing);
+            var ov = document.getElementById('qs-capture-overlay');
+            if (ov) ov.remove();
+            setTimeout(function() { welcome(data.name); }, 200);
+        }
+    })();
+    </script>
+
+
+    <!-- Nav Context -->
+    <nav class="nav-ctx flex justify-between items-center text-sm">
+        <div class="flex items-center gap-4">
+            <a href="index.html" class="font-bold text-indigo-400 hover:text-indigo-300 transition-colors">Quantum
+                Step</a>
+            <span class="text-slate-700">|</span>
+            <span class="font-medium text-slate-300">ArthaWealth Planner</span>
+        </div>
+        <div class="flex items-center gap-2">
+            <span
+                class="bg-emerald-600/20 text-emerald-400 border border-emerald-600/30 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider">Wealth
+                Planner</span>
         </div>
     </nav>
+    <!-- Tool Navigation Bar -->
+    <div style="background:rgba(15,23,42,0.95);border-bottom:1px solid rgba(255,255,255,0.06);padding:.6rem 0;position:sticky;top:70px;z-index:90;backdrop-filter:blur(20px);">
+        <div style="max-width:1200px;margin:0 auto;padding:0 1.5rem;display:flex;align-items:center;gap:.5rem;justify-content:center;flex-wrap:wrap;">
+            
+            <a href="index.html" style="display:inline-flex;align-items:center;gap:.4rem;padding:.4rem .9rem;border-radius:999px;font-size:.78rem;font-weight:600;text-decoration:none;background:rgba(255,255,255,.05);color:#94a3b8;border:1px solid rgba(255,255,255,.1);transition:all .2s;margin-right:.5rem;" onmouseover="this.style.color='#f1f5f9';this.style.background='rgba(255,255,255,.1)'" onmouseout="this.style.color='#94a3b8';this.style.background='rgba(255,255,255,.05)'">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+                quantumstep.in
+            </a>
+            <span style="color:#344e70;font-size:.7rem;margin:0 .25rem;">|</span>
+            <span style="color:#64748b;font-size:.7rem;text-transform:uppercase;letter-spacing:.1em;font-weight:600;margin-right:.25rem;">Switch Tool</span>
+            <a href="tool-salary-calculator.html" onmouseover="this.style.background='rgba(99,102,241,.1)';this.style.color='#a5b4fc'" onmouseout="this.style.background='rgba(255,255,255,.04)';this.style.color='#94a3b8'" style="display:inline-flex;align-items:center;gap:.4rem;padding:.4rem 1rem;border-radius:999px;font-size:.8rem;font-weight:600;text-decoration:none;background:rgba(255,255,255,.04);color:#94a3b8;border:1px solid rgba(255,255,255,.08);transition:all .2s;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg> Salary Decoder</a>
+            <a href="tool-home-loan-calculator.html" onmouseover="this.style.background='rgba(99,102,241,.1)';this.style.color='#a5b4fc'" onmouseout="this.style.background='rgba(255,255,255,.04)';this.style.color='#94a3b8'" style="display:inline-flex;align-items:center;gap:.4rem;padding:.4rem 1rem;border-radius:999px;font-size:.8rem;font-weight:600;text-decoration:none;background:rgba(255,255,255,.04);color:#94a3b8;border:1px solid rgba(255,255,255,.08);transition:all .2s;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg> Home Loan</a>
+            <a href="tool-artha-wealth.html" style="display:inline-flex;align-items:center;gap:.4rem;padding:.4rem 1rem;border-radius:999px;font-size:.8rem;font-weight:700;text-decoration:none;background:linear-gradient(135deg,#6366f1,#4f46e5);color:white;border:1px solid rgba(99,102,241,.5);"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg> ArthaWealth</a>
+            <a href="tool-job-transition.html" onmouseover="this.style.background='rgba(99,102,241,.1)';this.style.color='#a5b4fc'" onmouseout="this.style.background='rgba(255,255,255,.04)';this.style.color='#94a3b8'" style="display:inline-flex;align-items:center;gap:.4rem;padding:.4rem 1rem;border-radius:999px;font-size:.8rem;font-weight:600;text-decoration:none;background:rgba(255,255,255,.04);color:#94a3b8;border:1px solid rgba(255,255,255,.08);transition:all .2s;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/><line x1="12" y1="12" x2="12" y2="16"/><line x1="10" y1="14" x2="14" y2="14"/></svg> Job Transition</a>
+        </div>
+    </div>
+
+    </div>
+
 
     <div class="tool-container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-12">
 
@@ -103,7 +323,8 @@
                 <div>
                     <h1 class="text-3xl font-bold text-white tracking-tight">Artha<span
                             class="text-emerald-400">Wealth</span></h1>
-                    <p class="mt-1 text-gray-400">Financial Freedom Roadmap • SIP & SWP Planner</p>
+                    <p id="qs-welcome-greet" style="font-size:.9rem;color:#64748b;margin:.25rem 0 0;font-weight:500;letter-spacing:-.01em;"></p>
+<p class="mt-1 text-gray-400">Financial Freedom Roadmap • SIP & SWP Planner</p>
                 </div>
             </div>
             <div class="mt-4 sm:mt-0 flex gap-4 items-center">
@@ -241,55 +462,26 @@
                     </div>
                 </div>
 
-                <!-- Share Section -->
-                <div class="glass-panel rounded-2xl p-6 mt-6">
-                    <h3 class="font-semibold text-gray-300 mb-4 flex items-center gap-2">
-                        <span>🚀 Share this Tool</span>
-                    </h3>
-                    <div class="flex gap-3 flex-wrap">
-                        <button onclick="shareTool('whatsapp')"
-                            class="flex items-center gap-2 px-4 py-2 bg-[#25D366]/20 text-[#25D366] rounded-lg hover:bg-[#25D366]/30 transition-colors font-medium text-sm border border-[#25D366]/30">
-                            WhatsApp
-                        </button>
-                        <button onclick="shareTool('linkedin')"
-                            class="flex items-center gap-2 px-4 py-2 bg-[#0A66C2]/20 text-[#0A66C2] rounded-lg hover:bg-[#0A66C2]/30 transition-colors font-medium text-sm border border-[#0A66C2]/30">
-                            LinkedIn
-                        </button>
-                        <button onclick="shareTool('facebook')"
-                            class="flex items-center gap-2 px-4 py-2 bg-[#1877F2]/20 text-[#1877F2] rounded-lg hover:bg-[#1877F2]/30 transition-colors font-medium text-sm border border-[#1877F2]/30">
-                            Facebook
-                        </button>
-                        <button onclick="shareTool('twitter')"
-                            class="flex items-center gap-2 px-4 py-2 bg-[#1DA1F2]/20 text-[#1DA1F2] rounded-lg hover:bg-[#1DA1F2]/30 transition-colors font-medium text-sm border border-[#1DA1F2]/30">
-                            Twitter
-                        </button>
-                    </div>
-                </div>
 
+                <!-- Export Panel -->
+                <div style="display:flex;align-items:center;gap:.75rem;flex-wrap:wrap;margin-top:1.5rem;padding:1rem 1.5rem;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);border-radius:1rem;">
+                    <span style="display:flex;align-items:center;gap:.4rem;color:#94a3b8;font-size:.78rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;">
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                        Export
+                    </span>
+                    <button onclick="exportToExcel()" style="display:inline-flex;align-items:center;gap:.45rem;padding:.5rem 1.1rem;background:rgba(16,185,129,.1);border:1px solid rgba(16,185,129,.25);border-radius:.65rem;color:#34d399;font-size:.82rem;font-weight:600;cursor:pointer;transition:all .2s;font-family:inherit;" onmouseover="this.style.background='rgba(16,185,129,.2)'" onmouseout="this.style.background='rgba(16,185,129,.1)'">
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+                        Excel
+                    </button>
+                    <button id="pdf-export-btn" onclick="exportToPDF()" style="display:inline-flex;align-items:center;gap:.45rem;padding:.5rem 1.1rem;background:rgba(244,63,94,.1);border:1px solid rgba(244,63,94,.25);border-radius:.65rem;color:#fb7185;font-size:.82rem;font-weight:600;cursor:pointer;transition:all .2s;font-family:inherit;" onmouseover="this.style.background='rgba(244,63,94,.2)'" onmouseout="this.style.background='rgba(244,63,94,.1)'">
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><path d="M9 13h6M9 17h4"/></svg>
+                        PDF
+                    </button>
+                </div>
             </div>
         </div>
+        </div>
     </div>
-
-    <!-- Social Share Script -->
-    <script>
-        function shareTool(platform) {
-            const url = encodeURIComponent(window.location.href);
-            const text = encodeURIComponent("Plan your financial freedom with ArthaWealth! Smart SIP & SWP Calculator.");
-            let link = "";
-
-            if (platform === 'whatsapp') {
-                link = `https://wa.me/?text=${text}%20${url}`;
-            } else if (platform === 'linkedin') {
-                link = `https://www.linkedin.com/sharing/share-offsite/?url=${url}`;
-            } else if (platform === 'facebook') {
-                link = `https://www.facebook.com/sharer/sharer.php?u=${url}`;
-            } else if (platform === 'twitter') {
-                link = `https://twitter.com/intent/tweet?text=${text}&url=${url}`;
-            }
-
-            if (link) window.open(link, '_blank');
-        }
-    </script>
 
     <script>
         // --- Logic Port (from finance.ts) ---
@@ -502,18 +694,137 @@
             els.tblBody.innerHTML = html;
         }
 
+        // =========================================================
+        // SILENT TELEMETRY (Silent User Study)
+        // =========================================================
+        const STUDY_STATE = {
+            visitorInfo: 'Unknown',
+            tool: 'ArthaWealth_V2'
+        };
+
+        async function logStudyData(action, details) {
+            try {
+                const telemetry = {
+                    tool: STUDY_STATE.tool,
+                    action,
+                    timestamp: new Date().toISOString(),
+                    os: navigator.platform,
+                    browser: navigator.userAgent,
+                    location: STUDY_STATE.visitorInfo,
+                    details: details || {}
+                };
+                await fetch('logger.php', {
+                    method: 'POST',
+                    body: JSON.stringify(telemetry),
+                    headers: { 'Content-Type': 'application/json' }
+                });
+            } catch (e) { }
+        }
+
+        async function fetchVisitorInfo() {
+            try {
+                const res = await fetch('https://ipapi.co/json/');
+                const data = await res.json();
+                STUDY_STATE.visitorInfo = `${data.city}, ${data.country_name} (${data.ip})`;
+                logStudyData('visit', null);
+            } catch (e) { }
+        }
+
         // Listeners
         Object.values(els).forEach(el => {
             if (el && (el.tagName === 'INPUT' || el.tagName === 'SELECT')) {
-                el.addEventListener('input', update);
-                el.addEventListener('change', update);
+                el.addEventListener('input', () => {
+                    update();
+                });
+                el.addEventListener('change', () => {
+                    update();
+                    logStudyData('input_change', { field: el.id, value: el.value });
+                });
             }
         });
 
         // Init
+        fetchVisitorInfo();
         update();
 
     </script>
+    <!-- Social Share Bar -->
+<script>
+        function share(platform) {
+            const text = encodeURIComponent("Check out ArthaWealth Planner on Quantum Step!");
+            const url = encodeURIComponent(window.location.href);
+            let link = "";
+            if (platform === 'whatsapp') link = `https://api.whatsapp.com/send?text=${text}%20${url}`;
+            if (platform === 'facebook') link = `https://www.facebook.com/sharer/sharer.php?u=${url}`;
+            if (platform === 'linkedin') link = `https://www.linkedin.com/sharing/share-offsite/?url=${url}`;
+            window.open(link, '_blank');
+        }
+    </script>
+
+    <script>
+        if (typeof window.getExportData === 'undefined') {
+            window.getExportData = function() {
+                const rows = [['Quantum Step Creations - ArthaWealth Report'], ['Generated: ' + new Date().toLocaleDateString('en-IN')], ['']];
+                document.querySelectorAll('table').forEach(table => {
+                    const headers = [];
+                    table.querySelectorAll('thead th').forEach(th => headers.push(th.textContent.trim()));
+                    if (headers.length) rows.push(headers);
+                    table.querySelectorAll('tbody tr').forEach(tr => {
+                        const row = [];
+                        tr.querySelectorAll('td').forEach(td => row.push(td.textContent.trim()));
+                        if (row.some(c => c)) rows.push(row);
+                    });
+                    rows.push([]);
+                });
+                return { rows, sheetName: 'ArthaWealth', fileName: 'ArthaWealth_Calculator.xlsx' };
+            };
+        }
+    </script>
+
+    <!-- Export Libraries -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script>
+        function exportToExcel() {
+            const exportData = window.getExportData ? window.getExportData() : null;
+            if (!exportData) { alert('Calculate results first.'); return; }
+            const wb = XLSX.utils.book_new();
+            const ws = XLSX.utils.aoa_to_sheet(exportData.rows);
+            XLSX.utils.book_append_sheet(wb, ws, exportData.sheetName || 'Results');
+            XLSX.writeFile(wb, exportData.fileName || 'QuantumStep_Export.xlsx');
+        }
+        async function exportToPDF() {
+            const { jsPDF } = window.jspdf;
+            const target = document.getElementById('results-section') || document.getElementById('export-target') || document.querySelector('.glass-panel');
+            if (!target) { alert('Calculate results first.'); return; }
+            const btn = document.getElementById('pdf-export-btn');
+            if (btn) { btn.disabled = true; btn.textContent = 'Generating...'; }
+            const canvas = await html2canvas(target, { scale: 2, backgroundColor: '#0f172a', useCORS: true });
+            const imgData = canvas.toDataURL('image/png');
+            const pdf = new jsPDF({ orientation: 'landscape', unit: 'px', format: [canvas.width/2, canvas.height/2] });
+            pdf.addImage(imgData, 'PNG', 0, 0, canvas.width/2, canvas.height/2);
+            const fname = window.getExportData ? (window.getExportData().fileName || 'QS').replace('.xlsx','')+'.pdf' : 'QuantumStep.pdf';
+            pdf.save(fname);
+            if (btn) { btn.disabled = false; btn.innerHTML = btn._origHTML || 'Export PDF'; }
+        }
+    </script>
+<script id="qs-calc-logger">
+(function(){
+var WEBHOOK="https://script.google.com/macros/s/AKfycbwiYK9LDhZdbx3-r66rgRmfTClEyfH0VOWMFtKPw5nSzd_YRV7YETaqTVrOCaxpn7zNtg/exec",_t=null;
+window.qsLogCalc=function(tool,data){
+    clearTimeout(_t);
+    _t=setTimeout(function(){
+        var s=sessionStorage.getItem("qs_user_"+tool),name="",email="";
+        if(s){try{var d=JSON.parse(s);name=d.name||"";email=d.email||"";}catch(e){}}
+        if(!name)return;
+        var p={type:"calculation",name:name,email:email,tool:tool,timestamp:new Date().toISOString(),url:location.href,data:data};
+        try{navigator.sendBeacon(WEBHOOK,JSON.stringify(p));}catch(e){}
+    },2000);
+};
+})();
+</script>
+<script id=artha_wealth_input_logger>document.addEventListener(DOMContentLoaded,function(){var _at=null;document.querySelectorAll(input,select).forEach(function(el){el.addEventListener(change,function(){clearTimeout(_at);_at=setTimeout(function(){if(window.qsLogCalc)qsLogCalc(artha_wealth,{inputs:Array.from(document.querySelectorAll(input[id],select[id])).reduce(function(a,el){a[el.id]=el.value;return a;},{}),results:Array.from(document.querySelectorAll([id^=r-],[id*=total],[id*=Total],[id*=wealth],[id*=corpus],[id*=Result])).reduce(function(a,el){a[el.id]=el.textContent.trim();return a;},{})});},2000);});});});</script>
 </body>
 
 </html>

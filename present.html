@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Live Presentation | EngageIQ</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&display=swap"
+        rel="stylesheet">
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        violet: { 500: '#7C3AED', 600: '#6D28D9', 950: '#2e1065' },
+                        slate: { 950: '#020617' }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- GSAP -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #020617;
+            color: white;
+            overflow: hidden;
+        }
+
+        .slide-container {
+            height: calc(100vh - 80px);
+        }
+
+        .slide {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            opacity: 0;
+            pointer-events: none;
+            transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .slide.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .glass-header {
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .qr-mini {
+            background: white;
+            padding: 4px;
+            border-radius: 8px;
+        }
+
+        .vote-bar {
+            height: 60px;
+            border-radius: 12px;
+            background: rgba(124, 58, 237, 0.1);
+            border: 1px solid rgba(124, 58, 237, 0.2);
+            position: relative;
+            overflow: hidden;
+            transition: all 0.5s ease;
+        }
+
+        .vote-fill {
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            background: linear-gradient(90deg, #7C3AED, #60a5fa);
+            width: 0%;
+            transition: width 1s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .word-cloud-item {
+            position: absolute;
+            transition: all 0.5s ease;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Live Header -->
+    <header class="glass-header h-20 fixed top-0 w-full flex items-center justify-between px-10 z-50">
+        <div class="flex items-center gap-6">
+            <div class="flex items-center gap-3">
+                <div class="w-8 h-8 bg-violet-600 rounded-lg flex items-center justify-center">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5">
+                        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+                    </svg>
+                </div>
+                <span class="font-black text-xs uppercase tracking-tighter">EngageIQ</span>
+            </div>
+            <div class="h-8 w-[1px] bg-white/10"></div>
+            <div class="text-sm font-medium text-slate-400">Annual Strategy Meet 2026</div>
+        </div>
+
+        <div class="flex items-center gap-8">
+            <div class="flex items-center gap-4">
+                <div class="text-right">
+                    <div
+                        class="text-[10px] font-black tracking-widest text-slate-500 uppercase header-instruction-text">
+                        Join at ...</div>
+                    <div class="text-xl font-black text-violet-400 header-session-id">--- ---</div>
+                </div>
+                <div id="qrcode-mini"
+                    class="qr-mini w-12 h-12 flex items-center justify-center text-[8px] text-slate-400">...</div>
+            </div>
+            <div
+                class="flex items-center gap-2 bg-emerald-500/10 text-emerald-500 px-3 py-1 rounded-full text-[10px] font-black border border-emerald-500/20">
+                <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                LIVE • 452
+            </div>
+        </div>
+    </header>
+
+    <!-- Slide Container -->
+    <div id="slide-container" class="slide-container mt-20 relative">
+        <div class="flex flex-col items-center justify-center h-full space-y-4">
+            <div class="w-12 h-12 border-4 border-violet-500/20 border-t-violet-500 rounded-full animate-spin"></div>
+            <p class="text-slate-500 font-bold animate-pulse">Connecting to session...</p>
+        </div>
+    </div>
+
+    <!-- Controls -->
+    <div id="controls" class="fixed bottom-10 left-1/2 -translate-x-1/2 flex items-center gap-6 z-50 hidden">
+        <button onclick="prevSlide()"
+            class="w-12 h-12 rounded-full glass-header flex items-center justify-center text-slate-500 hover:text-white transition-all">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <polyline points="15 18 9 12 15 6" />
+            </svg>
+        </button>
+        <div class="glass-header px-6 py-2 rounded-full font-black text-sm tracking-widest text-slate-500">
+            <span id="current-slide">1</span> / <span id="total-slides">1</span>
+        </div>
+        <button onclick="nextSlide()"
+            class="w-12 h-12 rounded-full glass-header flex items-center justify-center text-slate-500 hover:text-white transition-all">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <polyline points="9 18 15 12 9 6" />
+            </svg>
+        </button>
+    </div>
+
+    <!-- QR Code Library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
+    <!-- Firebase & Custom Logic -->
+    <script type="module">
+        import { db, ref, onValue, update } from './firebase-config.js';
+
+        const urlParams = new URLSearchParams(window.location.search);
+        let currentSlide = 1;
+        let sessionData = null;
+        const sessionId = urlParams.get('id') || "582914";
+        const sessionRef = ref(db, `sessions/${sessionId}`);
+        const isEmbed = urlParams.get('embed') === 'true';
+        let timerInterval = null;
+
+        if (isEmbed) {
+            // Add a style tag immediately to hide UI
+            const style = document.createElement('style');
+            style.innerHTML = `
+                header, #controls, #quiz-controls { display: none !important; }
+                #slide-container { margin-top: 0 !important; height: 100vh !important; }
+                body { background: transparent !important; }
+            `;
+            document.head.appendChild(style);
+        }
+
+        // Add Quiz Controls UI element
+        const quizControlsHtml = `
+            <div id="quiz-controls" class="fixed bottom-32 left-1/2 -translate-x-1/2 flex items-center gap-4 z-50 hidden">
+                <button id="reveal-btn" onclick="revealAnswer()" class="bg-violet-600 hover:bg-violet-700 text-white px-8 py-3 rounded-2xl font-black shadow-xl shadow-violet-900/20 transition-all flex items-center gap-2">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                    REVEAL ANSWER
+                </button>
+                <div id="timer-display" class="bg-slate-900/80 border border-white/10 px-6 py-3 rounded-2xl font-black text-2xl text-violet-400 min-w-[80px] text-center hidden">
+                    00
+                </div>
+            </div>
+        `;
+        document.body.insertAdjacentHTML('beforeend', quizControlsHtml);
+
+        function renderSlides(data) {
+            const container = document.getElementById('slide-container');
+            container.innerHTML = '';
+
+            // Slide 1: Welcome (Universal)
+            const welcomeSlide = `
+                <div id="slide-1" class="slide ${currentSlide === 1 ? 'active' : ''}">
+                    <div class="text-center">
+                        <div class="mb-12 inline-block bg-white p-8 rounded-[3rem] shadow-2xl shadow-violet-500/30">
+                            <div id="qrcode-large"></div>
+                        </div>
+                        <h1 class="text-6xl font-black mb-6">Join the Conversation</h1>
+                        <p class="text-2xl text-slate-400 mb-12">Scan the QR code or go to <span class="text-white font-bold underline instruction-url">${window.location.host}</span> and enter code <span class="text-violet-400 font-bold">${sessionId}</span></p>
+                    </div>
+                </div>
+            `;
+            container.insertAdjacentHTML('beforeend', welcomeSlide);
+
+            // Dynamic Interaction Slides
+            (data.slides || []).forEach((slide, index) => {
+                const slideNum = index + 2;
+                const type = slide.type || 'POLL';
+                const icon = {
+                    POLL: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10" /><line x1="12" y1="8" x2="12" y2="16" /><line x1="8" y1="12" x2="16" y2="12" /></svg>',
+                    WORD_CLOUD: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M17.5 19a3.5 3.5 0 1 1 0-7c.1 0 .3 0 .4.1A6.5 6.5 0 1 1 8 13.5c0-.1 0-.3.1-.4A4.5 4.5 0 1 1 5 19h12.5z"/></svg>',
+                    QA: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>',
+                    SLIDER: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="4" y1="9" x2="20" y2="9"/><line x1="4" y1="15" x2="20" y2="15"/><path d="M8 6v6"/><path d="M16 12v6"/></svg>'
+                }[type];
+
+                let contentHtml = '';
+                if (type === 'POLL') {
+                    contentHtml = `
+                        <div class="space-y-6 w-full vote-options-container">
+                            ${(slide.options || []).map((opt, optIndex) => `
+                                <div class="relative option-wrapper" data-index="${optIndex}">
+                                    <div class="flex justify-between items-center mb-2 px-2">
+                                        <span class="text-xl font-bold option-text">${opt}</span>
+                                        <span class="text-xl font-black text-violet-400 percent-label">0%</span>
+                                    </div>
+                                    <div class="vote-bar relative">
+                                        <div class="vote-fill" style="width: 0%"></div>
+                                        <div class="correct-indicator absolute right-4 top-1/2 -translate-y-1/2 opacity-0 hidden">
+                                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="4"><polyline points="20 6 9 17 4 12" /></svg>
+                                        </div>
+                                    </div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    `;
+                } else if (type === 'WORD_CLOUD') {
+                    contentHtml = `<div class="word-cloud-container flex flex-wrap justify-center items-center gap-6 min-h-[300px] border border-white/5 bg-white/5 rounded-[2rem] p-10"></div>`;
+                } else if (type === 'QA') {
+                    contentHtml = `<div class="qa-container space-y-4 max-h-[500px] overflow-y-auto px-4 custom-scrollbar"></div>`;
+                } else if (type === 'SLIDER') {
+                    contentHtml = `
+                        <div class="slider-result-container py-12 px-6 bg-white/5 rounded-[2rem] border border-white/5 text-center">
+                            <div class="text-8xl font-black text-violet-400 mb-6 average-value">0.0</div>
+                            <div class="flex justify-between items-center max-w-2xl mx-auto px-4">
+                                <span class="text-slate-500 font-bold uppercase tracking-wider">${slide.minLabel}</span>
+                                <div class="h-2 flex-1 mx-8 bg-slate-800 rounded-full relative overflow-hidden">
+                                    <div class="h-full bg-violet-500 absolute average-bar transition-all" style="width: 0%"></div>
+                                </div>
+                                <span class="text-slate-500 font-bold uppercase tracking-wider">${slide.maxLabel}</span>
+                            </div>
+                        </div>
+                    `;
+                }
+
+                const slideHtml = `
+                    <div id="slide-${slideNum}" class="slide ${currentSlide === slideNum ? 'active' : ''}" data-type="${type}" data-quiz="${slide.quizMode || false}">
+                        <div class="w-full max-w-4xl">
+                            <div class="flex justify-between items-end mb-12">
+                                <div>
+                                    <div class="text-violet-500 font-black mb-2 flex items-center gap-2 uppercase tracking-tighter">
+                                        ${icon}
+                                        ${type.replace('_', ' ')}
+                                    </div>
+                                    <h2 class="text-5xl font-black">${slide.question}</h2>
+                                </div>
+                                <div class="vote-count-text text-4xl font-black text-slate-700">0 Responses</div>
+                            </div>
+                            ${contentHtml}
+                        </div>
+                    </div>
+                `;
+                container.insertAdjacentHTML('beforeend', slideHtml);
+            });
+
+            document.getElementById('total-slides').innerText = (data.slides?.length || 0) + 1;
+            if (!isEmbed) {
+                document.getElementById('controls').classList.remove('hidden');
+            }
+
+            // Re-generate QR
+            const qrContainer = document.getElementById('qrcode-large');
+            if (qrContainer) {
+                qrContainer.innerHTML = '';
+                const localIp = "192.168.3.109";
+                const origin = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
+                    ? `http://${localIp}:${window.location.port}`
+                    : window.location.origin;
+                const liveUrl = `${origin}/live-interaction.html?id=${sessionId}`;
+                new QRCode(qrContainer, {
+                    text: liveUrl,
+                    width: 250,
+                    height: 250,
+                    colorDark: "#020617",
+                    colorLight: "#ffffff"
+                });
+            }
+        }
+
+        function updateSlide() {
+            document.querySelectorAll('.slide').forEach(s => s.classList.remove('active'));
+            const slideEl = document.getElementById(`slide-${currentSlide}`);
+            if (slideEl) slideEl.classList.add('active');
+            document.getElementById('current-slide').innerText = currentSlide;
+            update(sessionRef, { activeSlide: currentSlide });
+            handleQuizLogic();
+        }
+
+        function handleQuizLogic() {
+            if (currentSlide === 1 || !sessionData) {
+                document.getElementById('quiz-controls').classList.add('hidden');
+                clearInterval(timerInterval);
+                return;
+            }
+
+            const slideIdx = currentSlide - 2;
+            const slide = sessionData.slides[slideIdx];
+            const quizElement = document.getElementById('quiz-controls');
+            const revealBtn = document.getElementById('reveal-btn');
+            const timerDisplay = document.getElementById('timer-display');
+
+            clearInterval(timerInterval);
+
+            if (slide && slide.type === 'POLL' && slide.quizMode) {
+                quizElement.classList.remove('hidden');
+                revealBtn.classList.remove('hidden');
+                revealBtn.disabled = false;
+                revealBtn.innerText = "REVEAL ANSWER";
+                revealBtn.classList.remove('bg-emerald-600');
+                revealBtn.classList.add('bg-violet-600');
+
+                // Show timer if set
+                if (slide.timer > 0) {
+                    timerDisplay.classList.remove('hidden');
+                    let timeLeft = slide.timer;
+                    timerDisplay.innerText = timeLeft.toString().padStart(2, '0');
+
+                    timerInterval = setInterval(() => {
+                        timeLeft--;
+                        timerDisplay.innerText = timeLeft.toString().padStart(2, '0');
+                        if (timeLeft <= 0) {
+                            clearInterval(timerInterval);
+                            revealAnswer();
+                        }
+                    }, 1000);
+                } else {
+                    timerDisplay.classList.add('hidden');
+                }
+            } else if (slide && slide.timer > 0) {
+                // Non-quiz timer
+                quizElement.classList.remove('hidden');
+                revealBtn.classList.add('hidden');
+                timerDisplay.classList.remove('hidden');
+
+                let timeLeft = slide.timer;
+                timerDisplay.innerText = timeLeft.toString().padStart(2, '0');
+                timerInterval = setInterval(() => {
+                    timeLeft--;
+                    timerDisplay.innerText = timeLeft.toString().padStart(2, '0');
+                    if (timeLeft <= 0) clearInterval(timerInterval);
+                }, 1000);
+            } else {
+                quizElement.classList.add('hidden');
+            }
+        }
+
+        window.revealAnswer = function () {
+            const slideIdx = currentSlide - 2;
+            update(sessionRef, { [`revealed/${slideIdx}`]: true });
+
+            const revealBtn = document.getElementById('reveal-btn');
+            if (revealBtn) {
+                revealBtn.disabled = true;
+                revealBtn.innerText = "ANSWER REVEALED";
+                revealBtn.classList.add('bg-emerald-600');
+                revealBtn.classList.remove('bg-violet-600');
+            }
+            clearInterval(timerInterval);
+
+            // On screen visual highlights
+            highlightCorrectAnswer();
+        }
+
+        function highlightCorrectAnswer() {
+            const slideIdx = currentSlide - 2;
+            const slide = sessionData.slides[slideIdx];
+            if (!slide || slide.type !== 'POLL' || !slide.quizMode) return;
+
+            const correctIdx = Number(slide.correctAnswer) - 1;
+            const slideEl = document.getElementById(`slide-${currentSlide}`);
+            if (!slideEl) return;
+
+            slideEl.querySelectorAll('.option-wrapper').forEach((wrapper, idx) => {
+                const bar = wrapper.querySelector('.vote-bar');
+                const indicator = wrapper.querySelector('.correct-indicator');
+                if (idx === correctIdx) {
+                    bar.style.borderColor = '#10b981';
+                    bar.style.background = 'rgba(16, 185, 129, 0.1)';
+                    indicator.classList.remove('hidden');
+                    indicator.classList.add('opacity-100');
+                    wrapper.querySelector('.option-text').classList.add('text-emerald-400');
+                } else {
+                    bar.style.opacity = '0.4';
+                }
+            });
+        }
+
+        window.nextSlide = function () {
+            const total = (sessionData?.slides?.length || 0) + 1;
+            if (currentSlide < total) {
+                currentSlide++;
+                updateSlide();
+            }
+        };
+
+        window.prevSlide = function () {
+            if (currentSlide > 1) {
+                currentSlide--;
+                updateSlide();
+            }
+        };
+
+        function updateVoteDisplay(votes) {
+            if (!votes || !sessionData) return;
+
+            document.querySelectorAll('.slide').forEach((slideEl, sIdx) => {
+                if (sIdx === 0) return; // Skip welcome slide
+                const slideIdx = sIdx - 1;
+                const slideData = sessionData.slides[slideIdx];
+                const slideVotes = votes[slideIdx] || {};
+                const type = slideEl.dataset.type;
+
+                // Update response count
+                const totalResponses = Object.keys(slideVotes).length;
+                const voteCountText = slideEl.querySelector('.vote-count-text');
+                if (voteCountText) voteCountText.innerText = `${totalResponses} Responses`;
+
+                if (type === 'POLL') {
+                    const optionCounts = {};
+                    Object.values(slideVotes).forEach(v => optionCounts[v] = (optionCounts[v] || 0) + 1);
+
+                    slideEl.querySelectorAll('.vote-fill').forEach((fill, optIndex) => {
+                        const count = optionCounts[optIndex] || 0;
+                        const percent = totalResponses > 0 ? Math.round((count / totalResponses) * 100) : 0;
+                        fill.style.width = `${percent}%`;
+                        const percentLabel = fill.closest('.relative').querySelector('.percent-label');
+                        if (percentLabel) percentLabel.innerText = `${percent}%`;
+                    });
+                } else if (type === 'QA') {
+                    const qaContainer = slideEl.querySelector('.qa-container');
+                    qaContainer.innerHTML = Object.values(slideVotes).map(text => `
+                        <div class="bg-white/5 border border-white/10 p-5 rounded-2xl text-xl animate-scale-in">
+                            ${text}
+                        </div>
+                    `).join('');
+                } else if (type === 'WORD_CLOUD') {
+                    const cloudContainer = slideEl.querySelector('.word-cloud-container');
+                    const wordCounts = {};
+                    Object.values(slideVotes).forEach(phrase => {
+                        const words = phrase.toLowerCase().trim().split(/\s+/);
+                        words.forEach(w => wordCounts[w] = (wordCounts[w] || 0) + 1);
+                    });
+
+                    const palette = [
+                        '#7C3AED', '#60a5fa', '#34d399', '#f59e0b',
+                        '#f472b6', '#a78bfa', '#38bdf8', '#fb923c',
+                        '#4ade80', '#e879f9', '#facc15', '#2dd4bf'
+                    ];
+
+                    cloudContainer.innerHTML = Object.entries(wordCounts).map(([word, count], i) => {
+                        const size = Math.min(6, 1.5 + (count * 0.5));
+                        const color = palette[i % palette.length];
+                        return `<span style="font-size: ${size}rem; color: ${color};" class="font-black capitalize transition-all duration-500">${word}</span>`;
+                    }).join('');
+                } else if (type === 'SLIDER') {
+                    const sum = Object.values(slideVotes).reduce((a, b) => a + Number(b), 0);
+                    const avg = totalResponses > 0 ? (sum / totalResponses).toFixed(1) : "0.0";
+
+                    slideEl.querySelector('.average-value').innerText = avg;
+                    slideEl.querySelector('.average-bar').style.width = `${avg}%`;
+                }
+
+                // If revealed, highlight correct answer
+                if (sessionData.revealed && sessionData.revealed[slideIdx] && slideIdx === (currentSlide - 2)) {
+                    highlightCorrectAnswer();
+                    const revealBtn = document.getElementById('reveal-btn');
+                    if (revealBtn) {
+                        revealBtn.disabled = true;
+                        revealBtn.innerText = "ANSWER REVEALED";
+                        revealBtn.classList.add('bg-emerald-600');
+                        revealBtn.classList.remove('bg-violet-600');
+                    }
+                }
+            });
+        }
+
+        // Global Error Handler for better debugging
+        window.addEventListener('error', (event) => {
+            const container = document.getElementById('slide-container');
+            if (container) {
+                container.innerHTML = `
+                    <div class="flex items-center justify-center h-full">
+                        <div class="p-10 text-red-500 bg-red-500/10 rounded-2xl border border-red-500/20 max-w-lg">
+                            <h2 class="text-xl font-bold mb-2">Application Error</h2>
+                            <p class="text-sm opacity-80">${event.message}</p>
+                            <p class="text-[10px] mt-2 opacity-50 font-mono">${event.filename}:${event.lineno}</p>
+                            <button onclick="window.location.reload()" class="mt-6 bg-red-500 text-white px-4 py-2 rounded-lg text-xs font-bold">Reload Page</button>
+                        </div>
+                    </div>
+                `;
+            }
+        });
+
+        // Initialize the presentation
+        function init() {
+            // Set initial header info even before Firebase loads
+            const instructionEl = document.querySelector('.header-instruction-text');
+            if (instructionEl) instructionEl.innerText = `Join at ${window.location.host}`;
+
+            const codeDisplay = document.querySelector('.header-session-id');
+            if (codeDisplay) codeDisplay.innerText = sessionId.substring(0, 3) + " " + sessionId.substring(3);
+
+            onValue(sessionRef, (snapshot) => {
+                const data = snapshot.val();
+                if (data) {
+                    if (!sessionData) {
+                        sessionData = data;
+                        renderSlides(data);
+
+                        // Header info
+                        const titleEl = document.querySelector('.text-slate-400');
+                        if (titleEl) titleEl.innerText = data.title || 'Untitled Session';
+
+                        // Mini QR
+                        const qrMiniContainer = document.getElementById('qrcode-mini');
+                        if (qrMiniContainer) {
+                            try {
+                                qrMiniContainer.innerHTML = '';
+                                const liveUrl = `${window.location.origin}/live-interaction.html?id=${sessionId}`;
+                                new QRCode(qrMiniContainer, {
+                                    text: liveUrl,
+                                    width: 40,
+                                    height: 40,
+                                    colorDark: "#020617",
+                                    colorLight: "#ffffff",
+                                    correctLevel: QRCode.CorrectLevel.L
+                                });
+                            } catch (e) {
+                                console.error("QR Mini failed:", e);
+                                qrMiniContainer.innerText = "QR FAIL";
+                            }
+                        }
+                    }
+
+                    if (data.activeSlide !== undefined && data.activeSlide !== currentSlide) {
+                        currentSlide = data.activeSlide;
+                        updateSlide();
+                    }
+                    if (data.votes) {
+                        updateVoteDisplay(data.votes);
+                    }
+                } else {
+                    // Session not found
+                    document.getElementById('slide-container').innerHTML = `
+                        <div class="flex flex-col items-center justify-center h-full text-center p-10">
+                            <div class="w-20 h-20 bg-red-500/10 text-red-500 rounded-full flex items-center justify-center mb-6">
+                                <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+                                </svg>
+                            </div>
+                            <h2 class="text-3xl font-black mb-4">Session Not Found</h2>
+                            <p class="text-slate-400 mb-8 text-lg">We couldn't find a session with ID: <span class="text-white font-mono">${sessionId}</span></p>
+                            <a href="dashboard.html" class="bg-violet-600 px-8 py-3 rounded-xl font-bold">Return to Dashboard</a>
+                        </div>
+                    `;
+                }
+            }, (error) => {
+                console.error("Firebase error:", error);
+                document.getElementById('slide-container').innerHTML = `<div class="p-10 text-red-500">Connection Error: ${error.message}</div>`;
+            });
+        }
+
+        // Run init immediately (module scripts are deferred)
+        init();
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight' || e.key === ' ') nextSlide();
+            if (e.key === 'ArrowLeft') prevSlide();
+        });
+    </script>
+</body>
+
+</html>

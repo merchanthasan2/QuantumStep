@@ -1,0 +1,793 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Job Transition Financial Calculator | Quantum Step</title>
+    <meta name="description"
+        content="Calculate Resignation Buyouts, Gratuity, Leave Encashment & transition tax impacts. Built for Indian Professionals.">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.9.0/d3.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --glass-bg: rgba(15, 23, 42, 0.7);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --accent-indigo: #818cf8;
+            --accent-emerald: #10b981;
+            --accent-rose: #f43f5e;
+            --accent-amber: #fbbf24;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #020617;
+            color: #f1f5f9;
+            margin: 0;
+            overflow-x: hidden;
+        }
+
+        /* Glassmorphism */
+        .glass-panel {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 1.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 1rem;
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .glass-card:hover {
+            border-color: rgba(255, 255, 255, 0.15);
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        /* Inputs */
+        input[type="text"],
+        input[type="number"],
+        select {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: white;
+            padding: 0.75rem 1rem;
+            border-radius: 0.75rem;
+            outline: none;
+            transition: all 0.3s ease;
+            width: 100%;
+        }
+
+        input:focus {
+            border-color: var(--accent-indigo);
+            box-shadow: 0 0 0 2px rgba(129, 140, 248, 0.3);
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        /* Nav Context */
+        .nav-ctx {
+            background: rgba(0, 0, 0, 0.3);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 0.75rem 1.5rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(10px);
+        }
+
+        /* Social Share Bar */
+        .share-bar {
+            position: fixed;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 1rem;
+            padding: 0.75rem 1.5rem;
+            background: rgba(15, 23, 42, 0.8);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 999px;
+            z-index: 1000;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+        }
+
+        .share-btn {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            transition: transform 0.3s ease;
+        }
+
+        .share-btn:hover {
+            transform: translateY(-3px);
+        }
+
+        .gradient-text {
+            background: linear-gradient(135deg, #818cf8, #34d399);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+    </style>
+
+    <style>
+        /* Hide floating share bar - use inline share section instead */
+        .share-bar {
+            display: none !important;
+        }
+    </style>
+    <script id="qs-telemetry">
+        (function () {
+            // Collect browser-side telemetry immediately
+            function getDeviceType() {
+                var ua = navigator.userAgent;
+                if (/tablet|ipad|playbook|silk/i.test(ua)) return 'Tablet';
+                if (/mobi|android|iphone|ipod|windows phone|blackberry|opera mini/i.test(ua)) return 'Mobile';
+                return 'Desktop';
+            }
+            function getOS() {
+                var ua = navigator.userAgent;
+                if (/Windows NT 10/.test(ua)) return 'Windows 10/11';
+                if (/Windows NT 6.3/.test(ua)) return 'Windows 8.1';
+                if (/Windows NT 6.1/.test(ua)) return 'Windows 7';
+                if (/Windows/.test(ua)) return 'Windows';
+                if (/Mac OS X ([\d_]+)/.test(ua)) return 'macOS ' + ua.match(/Mac OS X ([\d_]+)/)[1].replace(/_/g, '.');
+                if (/iPhone OS ([\d_]+)/.test(ua)) return 'iOS ' + ua.match(/iPhone OS ([\d_]+)/)[1].replace(/_/g, '.');
+                if (/Android ([\d.]+)/.test(ua)) return 'Android ' + ua.match(/Android ([\d.]+)/)[1];
+                if (/Linux/.test(ua)) return 'Linux';
+                return 'Unknown';
+            }
+            function getBrowser() {
+                var ua = navigator.userAgent;
+                if (/Edg\//.test(ua)) return 'Edge ' + (ua.match(/Edg\/(\d+)/) || ['', '?'])[1];
+                if (/OPR\/|Opera/.test(ua)) return 'Opera';
+                if (/Chrome\/(\d+)/.test(ua) && !/Chromium/.test(ua)) return 'Chrome ' + ua.match(/Chrome\/(\d+)/)[1];
+                if (/Firefox\/(\d+)/.test(ua)) return 'Firefox ' + ua.match(/Firefox\/(\d+)/)[1];
+                if (/Safari\/(\d+)/.test(ua) && !/Chrome/.test(ua)) return 'Safari';
+                if (/MSIE|Trident/.test(ua)) return 'Internet Explorer';
+                return 'Other';
+            }
+            function getUTM() {
+                var p = new URLSearchParams(location.search);
+                return {
+                    source: p.get('utm_source') || '',
+                    medium: p.get('utm_medium') || '',
+                    campaign: p.get('utm_campaign') || ''
+                };
+            }
+            var utm = getUTM();
+            var tel = {
+                device_type: getDeviceType(),
+                os: getOS(),
+                browser: getBrowser(),
+                user_agent: navigator.userAgent,
+                screen: screen.width + 'x' + screen.height,
+                viewport: window.innerWidth + 'x' + window.innerHeight,
+                language: navigator.language || '',
+                timezone: Intl && Intl.DateTimeFormat ? Intl.DateTimeFormat().resolvedOptions().timeZone : '',
+                connection: (navigator.connection && navigator.connection.effectiveType) || '',
+                referrer: document.referrer || 'direct',
+                landing_url: location.href,
+                utm_source: utm.source,
+                utm_medium: utm.medium,
+                utm_campaign: utm.campaign,
+                ip: '', city: '', region: '', country: '', isp: '', lat: '', lon: ''
+            };
+
+            // Fetch IP + geo from free API (1000 req/day free)
+            fetch('https://ipapi.co/json/')
+                .then(function (r) { return r.json(); })
+                .then(function (d) {
+                    tel.ip = d.ip || '';
+                    tel.city = d.city || '';
+                    tel.region = d.region || '';
+                    tel.country = d.country_name || '';
+                    tel.isp = d.org || '';
+                    tel.lat = d.latitude || '';
+                    tel.lon = d.longitude || '';
+                })
+                .catch(function () { }) // Silently fail if blocked
+                .finally(function () {
+                    sessionStorage.setItem('qs_telemetry', JSON.stringify(tel));
+                });
+
+            // Store immediately even without geo (geo updates async)
+            sessionStorage.setItem('qs_telemetry', JSON.stringify(tel));
+
+            // Expose for use by loggers
+            window.qsGetTelemetry = function () {
+                try { return JSON.parse(sessionStorage.getItem('qs_telemetry') || '{}'); }
+                catch (e) { return {}; }
+            };
+        })();
+    </script>
+</head>
+
+<body class="min-h-screen">
+    <!-- QS Name Capture Modal -->
+    <div id="qs-capture-overlay"
+        style="position:fixed;inset:0;z-index:9999;background:rgba(2,6,23,0.93);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);display:flex;align-items:center;justify-content:center;padding:1rem;">
+        <div
+            style="width:100%;max-width:420px;background:rgba(15,23,42,0.97);border:1px solid rgba(255,255,255,0.09);border-radius:1.75rem;padding:2.25rem;box-shadow:0 32px 80px rgba(0,0,0,0.7);">
+            <div style="display:flex;align-items:center;gap:.65rem;margin-bottom:1.75rem;">
+                <div
+                    style="width:36px;height:36px;border-radius:.65rem;background:rgba(244,63,94,.12);border:1px solid #fb718544;display:flex;align-items:center;justify-content:center;">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fb7185" stroke-width="2.5"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
+                    </svg>
+                </div>
+                <span style="font-size:.85rem;font-weight:700;color:#e2e8f0;">Quantum Step Tools</span>
+            </div>
+            <h2 style="font-size:1.4rem;font-weight:800;color:#f1f5f9;margin:0 0 .4rem;letter-spacing:-.02em;">Job
+                Transition Calculator</h2>
+            <p style="font-size:.82rem;color:#475569;margin:0 0 1.75rem;line-height:1.55;">Financially plan your career
+                move — compare offers & bridge gaps.</p>
+            <form onsubmit="qsCapture(event)">
+                <label
+                    style="display:block;font-size:.7rem;font-weight:700;color:#475569;text-transform:uppercase;letter-spacing:.07em;margin-bottom:.35rem;">Your
+                    Name</label>
+                <input id="qs-name" type="text" placeholder="e.g. Rahul Sharma" required autocomplete="name"
+                    style="width:100%;box-sizing:border-box;padding:.65rem .9rem;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.09);border-radius:.85rem;color:#f1f5f9;font-size:.88rem;font-family:inherit;margin-bottom:.9rem;outline:none;transition:border-color .2s;"
+                    onfocus="this.style.borderColor='#fb718580'"
+                    onblur="this.style.borderColor='rgba(255,255,255,.09)'">
+                <label
+                    style="display:block;font-size:.7rem;font-weight:700;color:#475569;text-transform:uppercase;letter-spacing:.07em;margin-bottom:.35rem;">Work
+                    Email <span style="font-weight:400;text-transform:none;">(optional)</span></label>
+                <input id="qs-email" type="email" placeholder="you@company.com" autocomplete="email"
+                    style="width:100%;box-sizing:border-box;padding:.65rem .9rem;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.09);border-radius:.85rem;color:#f1f5f9;font-size:.88rem;font-family:inherit;margin-bottom:1.4rem;outline:none;transition:border-color .2s;"
+                    onfocus="this.style.borderColor='#fb718580'"
+                    onblur="this.style.borderColor='rgba(255,255,255,.09)'">
+                <button type="submit"
+                    style="width:100%;padding:.75rem 1.25rem;background:linear-gradient(135deg,#fb7185,#fb7185aa);border:none;border-radius:.85rem;color:#fff;font-size:.88rem;font-weight:700;cursor:pointer;font-family:inherit;display:flex;align-items:center;justify-content:center;gap:.45rem;transition:opacity .2s;"
+                    onmouseover="this.style.opacity='.85'" onmouseout="this.style.opacity='1'">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="9 18 15 12 9 6" />
+                    </svg>
+                    Start Exploring
+                </button>
+            </form>
+            <p style="text-align:center;font-size:.68rem;color:#1e293b;margin-top:1rem;">Your information is never
+                shared or sold.</p>
+            <a href="tool-buy-vs-rent.html"
+                onmouseover="this.style.background='rgba(99,102,241,.1)';this.style.color='#a5b4fc'"
+                onmouseout="this.style.background='rgba(255,255,255,.04)';this.style.color='#94a3b8'"
+                style="display:inline-flex;align-items:center;gap:.4rem;padding:.4rem 1rem;border-radius:999px;font-size:.8rem;font-weight:600;text-decoration:none;background:rgba(255,255,255,.04);color:#94a3b8;border:1px solid rgba(255,255,255,.08);transition:all .2s;">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+                    <line x1="12" y1="22" x2="12" y2="12" />
+                </svg> Buy vs Rent
+            </a>
+        </div>
+    </div>
+
+    <!-- QS Corner Share Icons -->
+    <div
+        style="position:fixed;top:130px;right:1.25rem;z-index:490;display:flex;flex-direction:column;gap:.45rem;align-items:center;">
+        <span
+            style="font-size:.58rem;color:#334155;text-transform:uppercase;letter-spacing:.09em;font-weight:700;writing-mode:vertical-rl;margin-bottom:.2rem;">Share</span>
+        <button title="WhatsApp"
+            onclick="(function(){var u=encodeURIComponent(location.href),t=encodeURIComponent('Financially plan your job transition — by Quantum Step');window.open('https://wa.me/?text='+t+'%20'+u,'_blank')})()"
+            style="width:34px;height:34px;border-radius:50%;background:rgba(37,211,102,.1);border:1px solid rgba(37,211,102,.2);display:flex;align-items:center;justify-content:center;color:#25D166;cursor:pointer;transition:all .2s;padding:0;"
+            onmouseover="this.style.background='rgba(37,211,102,.22)';this.style.transform='scale(1.1)'"
+            onmouseout="this.style.background='rgba(37,211,102,.1)';this.style.transform=''"><svg width="15" height="15"
+                viewBox="0 0 24 24" fill="currentColor">
+                <path
+                    d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.348z" />
+                <path
+                    d="M12 0C5.373 0 0 5.373 0 12c0 2.085.54 4.043 1.481 5.749L.073 23.925l6.345-1.384A11.93 11.93 0 0 0 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.818a9.818 9.818 0 0 1-5.012-1.37l-.358-.213-3.747.817.848-3.651-.234-.372A9.818 9.818 0 1 1 12 21.818z" />
+            </svg></button>
+        <button title="LinkedIn"
+            onclick="(function(){window.open('https://www.linkedin.com/sharing/share-offsite/?url='+encodeURIComponent(location.href),'_blank')})()"
+            style="width:34px;height:34px;border-radius:50%;background:rgba(10,102,194,.1);border:1px solid rgba(10,102,194,.2);display:flex;align-items:center;justify-content:center;color:#0A66C2;cursor:pointer;transition:all .2s;padding:0;"
+            onmouseover="this.style.background='rgba(10,102,194,.22)';this.style.transform='scale(1.1)'"
+            onmouseout="this.style.background='rgba(10,102,194,.1)';this.style.transform=''"><svg width="13" height="13"
+                viewBox="0 0 24 24" fill="currentColor">
+                <path
+                    d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6zM2 9h4v12H2zm2-3a2 2 0 1 1 0-4 2 2 0 0 1 0 4z" />
+            </svg></button>
+        <button title="X / Twitter"
+            onclick="(function(){var u=encodeURIComponent(location.href),t=encodeURIComponent('Financially plan your job transition');window.open('https://twitter.com/intent/tweet?text='+t+'&url='+u,'_blank')})()"
+            style="width:34px;height:34px;border-radius:50%;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);display:flex;align-items:center;justify-content:center;color:#cbd5e1;cursor:pointer;transition:all .2s;padding:0;"
+            onmouseover="this.style.background='rgba(255,255,255,.12)';this.style.transform='scale(1.1)'"
+            onmouseout="this.style.background='rgba(255,255,255,.05)';this.style.transform=''"><svg width="12"
+                height="12" viewBox="0 0 24 24" fill="currentColor">
+                <path
+                    d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.73-8.835L1.254 2.25H8.08l4.277 5.653zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+            </svg></button>
+    </div>
+
+    <script>
+        (function () {
+            var TOOL = 'job_transition';
+            var WEBHOOK = 'https://script.google.com/macros/s/AKfycbwiYK9LDhZdbx3-r66rgRmfTClEyfH0VOWMFtKPw5nSzd_YRV7YETaqTVrOCaxpn7zNtg/exec';
+            var KEY = 'qs_user_' + TOOL;
+
+            function welcome(name) {
+                var g = document.getElementById('qs-welcome-greet');
+                if (g) g.textContent = 'Welcome back, ' + name + '.';
+                document.title = name + ' — ' + document.title;
+            }
+
+            window.qsCapture = function (e) {
+                e.preventDefault();
+                var name = document.getElementById('qs-name').value.trim();
+                var email = (document.getElementById('qs-email') || {}).value || '';
+                if (!name) return;
+                sessionStorage.setItem(KEY, JSON.stringify({ name: name, email: email }));
+                var ov = document.getElementById('qs-capture-overlay');
+                if (ov) { ov.style.opacity = '0'; ov.style.transition = 'opacity .35s'; setTimeout(function () { ov.remove(); }, 350); }
+                welcome(name);
+                var payload = JSON.stringify({ name: name, email: email, tool: TOOL, timestamp: new Date().toISOString(), url: location.href, referrer: document.referrer || 'direct' });
+                try { navigator.sendBeacon(WEBHOOK, payload); } catch (e2) { fetch(WEBHOOK, { method: 'POST', body: payload, mode: 'no-cors' }).catch(function () { }); }
+            };
+
+            var existing = sessionStorage.getItem(KEY);
+            if (existing) {
+                var data = JSON.parse(existing);
+                var ov = document.getElementById('qs-capture-overlay');
+                if (ov) ov.remove();
+                setTimeout(function () { welcome(data.name); }, 200);
+            }
+        })();
+    </script>
+
+
+    <!-- Nav Context -->
+    <nav class="nav-ctx flex justify-between items-center text-sm">
+        <div class="flex items-center gap-4">
+            <a href="index.html" class="font-bold text-indigo-400 hover:text-indigo-300 transition-colors">Quantum
+                Step</a>
+            <span class="text-slate-700">|</span>
+            <span class="font-medium text-slate-300">Job Transition Tracker</span>
+        </div>
+        <div class="flex items-center gap-2">
+            <span
+                class="bg-amber-600/20 text-amber-400 border border-amber-600/30 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider">Career
+                Finance</span>
+        </div>
+    </nav>
+    <!-- Tool Navigation Bar -->
+    <div
+        style="background:rgba(15,23,42,0.95);border-bottom:1px solid rgba(255,255,255,0.06);padding:.6rem 0;position:sticky;top:70px;z-index:90;backdrop-filter:blur(20px);">
+        <div
+            style="max-width:1200px;margin:0 auto;padding:0 1.5rem;display:flex;align-items:center;gap:.5rem;justify-content:center;flex-wrap:wrap;">
+
+            <a href="index.html"
+                style="display:inline-flex;align-items:center;gap:.4rem;padding:.4rem .9rem;border-radius:999px;font-size:.78rem;font-weight:600;text-decoration:none;background:rgba(255,255,255,.05);color:#94a3b8;border:1px solid rgba(255,255,255,.1);transition:all .2s;margin-right:.5rem;"
+                onmouseover="this.style.color='#f1f5f9';this.style.background='rgba(255,255,255,.1)'"
+                onmouseout="this.style.color='#94a3b8';this.style.background='rgba(255,255,255,.05)'">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="15 18 9 12 15 6" />
+                </svg>
+                quantumstep.in
+            </a>
+            <span style="color:#344e70;font-size:.7rem;margin:0 .25rem;">|</span>
+            <span
+                style="color:#64748b;font-size:.7rem;text-transform:uppercase;letter-spacing:.1em;font-weight:600;margin-right:.25rem;">Switch
+                Tool</span>
+            <a href="tool-salary-calculator.html"
+                onmouseover="this.style.background='rgba(99,102,241,.1)';this.style.color='#a5b4fc'"
+                onmouseout="this.style.background='rgba(255,255,255,.04)';this.style.color='#94a3b8'"
+                style="display:inline-flex;align-items:center;gap:.4rem;padding:.4rem 1rem;border-radius:999px;font-size:.8rem;font-weight:600;text-decoration:none;background:rgba(255,255,255,.04);color:#94a3b8;border:1px solid rgba(255,255,255,.08);transition:all .2s;"><svg
+                    width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="12" y1="1" x2="12" y2="23" />
+                    <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
+                </svg> Salary Decoder</a>
+            <a href="tool-home-loan-calculator.html"
+                onmouseover="this.style.background='rgba(99,102,241,.1)';this.style.color='#a5b4fc'"
+                onmouseout="this.style.background='rgba(255,255,255,.04)';this.style.color='#94a3b8'"
+                style="display:inline-flex;align-items:center;gap:.4rem;padding:.4rem 1rem;border-radius:999px;font-size:.8rem;font-weight:600;text-decoration:none;background:rgba(255,255,255,.04);color:#94a3b8;border:1px solid rgba(255,255,255,.08);transition:all .2s;"><svg
+                    width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+                    <polyline points="9 22 9 12 15 12 15 22" />
+                </svg> Home Loan</a>
+            <a href="tool-artha-wealth.html"
+                onmouseover="this.style.background='rgba(99,102,241,.1)';this.style.color='#a5b4fc'"
+                onmouseout="this.style.background='rgba(255,255,255,.04)';this.style.color='#94a3b8'"
+                style="display:inline-flex;align-items:center;gap:.4rem;padding:.4rem 1rem;border-radius:999px;font-size:.8rem;font-weight:600;text-decoration:none;background:rgba(255,255,255,.04);color:#94a3b8;border:1px solid rgba(255,255,255,.08);transition:all .2s;"><svg
+                    width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="23 6 13.5 15.5 8.5 10.5 1 18" />
+                    <polyline points="17 6 23 6 23 12" />
+                </svg> ArthaWealth</a>
+            <a href="tool-job-transition.html"
+                style="display:inline-flex;align-items:center;gap:.4rem;padding:.4rem 1rem;border-radius:999px;font-size:.8rem;font-weight:700;text-decoration:none;background:linear-gradient(135deg,#6366f1,#4f46e5);color:white;border:1px solid rgba(99,102,241,.5);"><svg
+                    width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="2" y="7" width="20" height="14" rx="2" />
+                    <path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2" />
+                    <line x1="12" y1="12" x2="12" y2="16" />
+                    <line x1="10" y1="14" x2="14" y2="14" />
+                </svg> Job Transition</a>
+        </div>
+    </div>
+
+    </div>
+
+
+    <div class="max-w-[1200px] mx-auto p-4 md:p-8">
+        <header class="mb-12 text-center">
+            <h1 class="text-4xl md:text-5xl font-black tracking-tighter mb-4">Job <span
+                    class="text-amber-500">Transition</span> Tracker</h1>
+            <p id="qs-welcome-greet"
+                style="font-size:.9rem;color:#64748b;margin:.25rem 0 0;font-weight:500;letter-spacing:-.01em;"></p>
+            <p class="text-slate-400 max-w-2xl mx-auto">Analyze the financial impact of your career move. Calculate
+                buyout
+                costs, gratuity eligibility, and final settlements.</p>
+        </header>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+            <!-- Inputs -->
+            <div class="lg:col-span-5 space-y-6">
+                <div class="glass-panel p-6">
+                    <h2 class="text-xl font-bold mb-6 flex items-center gap-2">
+                        <i class="fas fa-calculator text-amber-500"></i>
+                        Current Employment
+                    </h2>
+
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-sm font-medium text-slate-400 mb-2">Monthly Take-home Salary (After
+                                Tax)</label>
+                            <input type="number" id="fixed-pay" value="100000" oninput="calculate()">
+                            <p class="text-[10px] text-slate-500 mt-1 italic">*We'll assume your Basic Pay is 50% of
+                                your total compensation for Gratuity and Leave estimation.</p>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-slate-400 mb-2">Years of Service (for
+                                Gratuity)</label>
+                            <input type="number" id="years-service" value="4" oninput="calculate()">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-slate-400 mb-2">Notice Period (Days)</label>
+                            <input type="number" id="notice-period" value="90" oninput="calculate()">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-slate-400 mb-2">Notice Days Remaining
+                                (Buyout)</label>
+                            <input type="number" id="notice-remaining" value="30" oninput="calculate()">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-slate-400 mb-2">Leave Balance (Days)</label>
+                            <input type="number" id="leave-balance" value="15" oninput="calculate()">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-slate-400 mb-2">Initial Savings / Cash
+                                Reserve</label>
+                            <input type="number" id="initial-savings" value="300000" oninput="calculate()">
+                            <p class="text-[10px] text-slate-500 mt-1 italic">*Your savings to bridge the income gap
+                                between jobs.</p>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-slate-400 mb-2">New Employer Joining
+                                Bonus</label>
+                            <input type="number" id="joining-bonus" value="0" oninput="calculate()">
+                            <p class="text-[10px] text-slate-500 mt-1 italic">*One-time bonus from new employer to
+                                offset buyout cost.</p>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-slate-400 mb-2">FnF Settlement Delay (Days
+                                after LWD)</label>
+                            <input type="number" id="fnf-delay" value="45" oninput="calculate()">
+                            <p class="text-[10px] text-slate-500 mt-1 italic">*Typical 30–60 days for full & final to be
+                                processed.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- AI Insights Sidebar -->
+                <div class="glass-panel p-6 bg-indigo-500/10 border-indigo-500/20">
+                    <h3 class="text-lg font-bold text-indigo-400 mb-4 flex items-center gap-2">
+                        <i class="fas fa-robot"></i> Transition Intelligence
+                    </h3>
+                    <div id="ai-insights" class="text-sm text-slate-300 leading-relaxed space-y-4">
+                        <p>Analyzing your transition data...</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Results -->
+            <div class="lg:col-span-7 space-y-6">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="glass-panel p-6 border-amber-500/30 bg-amber-500/5">
+                        <p class="text-amber-400 text-xs font-bold uppercase tracking-widest mb-1">Net Buyout Cost</p>
+                        <h3 class="text-3xl font-black" id="res-buyout">₹0</h3>
+                        <p class="text-[10px] text-slate-500 mt-2">Recovery for remaining notice days</p>
+                    </div>
+                    <div class="glass-panel p-6 border-emerald-500/30 bg-emerald-500/5">
+                        <p class="text-emerald-400 text-xs font-bold uppercase tracking-widest mb-1">Estimated Gratuity
+                        </p>
+                        <h3 class="text-3xl font-black" id="res-gratuity">₹0</h3>
+                        <p class="text-[10px] text-slate-500 mt-2">Eligibility starts at 5 years</p>
+                    </div>
+                    <div class="glass-panel p-6 border-indigo-500/30 bg-indigo-500/5">
+                        <p class="text-indigo-400 text-xs font-bold uppercase tracking-widest mb-1">Net Buyout After
+                            Bonus</p>
+                        <h3 class="text-3xl font-black" id="res-net-buyout">₹0</h3>
+                        <p class="text-[10px] text-slate-500 mt-2">Buyout minus new employer joining bonus</p>
+                    </div>
+                    <div class="glass-panel p-6 border-violet-500/30 bg-violet-500/5">
+                        <p class="text-violet-400 text-xs font-bold uppercase tracking-widest mb-1">Survival Runway</p>
+                        <h3 class="text-3xl font-black" id="res-runway">0 mo</h3>
+                        <p class="text-[10px] text-slate-500 mt-2">Months savings can sustain you during gap</p>
+                    </div>
+                </div>
+
+                <div class="glass-panel p-8">
+                    <h3 class="text-xl font-bold mb-6">Full & Final (F&F) Projection</h3>
+                    <div class="space-y-4">
+                        <div class="flex justify-between items-center py-3 border-b border-white/5">
+                            <span class="text-slate-400">Notice Buyout (Expense)</span>
+                            <span class="text-rose-400 font-mono" id="ff-buyout">- ₹0</span>
+                        </div>
+                        <div class="flex justify-between items-center py-3 border-b border-white/5">
+                            <span class="text-slate-400">Gratuity (Income)</span>
+                            <span class="text-emerald-400 font-mono" id="ff-gratuity">+ ₹0</span>
+                        </div>
+                        <div id="ff-bonus-row" class="flex justify-between items-center py-3 border-b border-white/5"
+                            style="display:none">
+                            <span class="text-slate-400">Joining Bonus (Income)</span>
+                            <span class="text-emerald-400 font-mono" id="ff-bonus">+ ₹0</span>
+                        </div>
+                        <div class="flex justify-between items-center py-3 border-b border-white/5">
+                            <span class="text-slate-400">Leave Encashment (Income)</span>
+                            <span class="text-emerald-400 font-mono" id="ff-leave">+ ₹0</span>
+                        </div>
+
+                        <div class="flex justify-between items-center py-3 border-b border-white/5">
+                            <span class="text-slate-400">Cash Flow Gap Period</span>
+                            <span class="text-amber-400 font-mono" id="ff-gap">~ 0 days</span>
+                        </div>
+                        <div class="flex justify-between items-center pt-6">
+                            <span class="text-lg font-bold">Net Settlement Impact</span>
+                            <span class="text-2xl font-black gradient-text" id="ff-total">₹0</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="glass-panel p-6 overflow-hidden">
+                    <h3 class="text-sm font-bold text-slate-500 mb-6 uppercase tracking-widest">Transition Visualizer
+                    </h3>
+                    <div id="transition-chart" class="w-full h-[300px]"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Social Share -->
+    <script>
+        function calculate() {
+            const fixedPay = parseFloat(document.getElementById('fixed-pay').value) || 0;
+            const years = parseFloat(document.getElementById('years-service').value) || 0;
+            const noticeDays = parseFloat(document.getElementById('notice-period').value) || 0;
+            const daysRemaining = parseFloat(document.getElementById('notice-remaining').value) || 0;
+            const leaveDays = parseFloat(document.getElementById('leave-balance').value) || 0;
+            const initialSavings = parseFloat(document.getElementById('initial-savings').value) || 0;
+            const joiningBonus = parseFloat(document.getElementById('joining-bonus').value) || 0;
+            const fnfDelay = parseFloat(document.getElementById('fnf-delay').value) || 45;
+
+            // Buyout: (FixedPay / 30) * daysRemaining
+            const buyout = (fixedPay / 30) * daysRemaining;
+
+            // Gratuity: (15 * Last_Drawn_Basic * Years) / 26 — eligible at 5 years
+            const basicPay = fixedPay * 0.5;
+            const gratuity = years >= 5 ? (15 * basicPay * years) / 26 : 0;
+
+            // Leave Encashment: (Basic_Pay / 30) * balance
+            const leaveEncashment = (basicPay / 30) * leaveDays;
+
+            // Net Buyout after Joining Bonus offset
+            const netBuyout = Math.max(0, buyout - joiningBonus);
+
+            // Cash Flow Analysis
+            const gapDays = (noticeDays - daysRemaining) + fnfDelay; // days until FnF received
+            const monthlyExpense = fixedPay * 0.70; // estimate 70% of take-home as expense
+            const gapMonths = gapDays / 30;
+            const cashNeeded = monthlyExpense * gapMonths;
+            const survivalRunway = initialSavings > 0 ? (initialSavings / monthlyExpense) : 0;
+
+            const net = (gratuity + leaveEncashment + joiningBonus) - buyout;
+
+            // Update UI — KPI Cards
+            document.getElementById('res-buyout').innerText = '₹' + netBuyout.toLocaleString('en-IN', { maximumFractionDigits: 0 });
+            document.getElementById('res-gratuity').innerText = '₹' + gratuity.toLocaleString('en-IN', { maximumFractionDigits: 0 });
+            document.getElementById('res-net-buyout').innerText = '₹' + netBuyout.toLocaleString('en-IN', { maximumFractionDigits: 0 }); // This should be netBuyout, not netBuyoutAfterBonus
+            document.getElementById('res-runway').innerText = survivalRunway.toFixed(1) + ' mo';
+
+            // F&F Breakdown
+            document.getElementById('ff-buyout').innerText = '- ₹' + buyout.toLocaleString('en-IN', { maximumFractionDigits: 0 });
+            document.getElementById('ff-gratuity').innerText = '+ ₹' + gratuity.toLocaleString('en-IN', { maximumFractionDigits: 0 });
+            document.getElementById('ff-leave').innerText = '+ ₹' + leaveEncashment.toLocaleString('en-IN', { maximumFractionDigits: 0 });
+
+            // Show joining bonus row dynamically
+            const bonusRow = document.getElementById('ff-bonus-row');
+            if (joiningBonus > 0) {
+                bonusRow.style.display = 'flex';
+                document.getElementById('ff-bonus').innerText = '+ ₹' + joiningBonus.toLocaleString('en-IN', { maximumFractionDigits: 0 });
+            } else {
+                bonusRow.style.display = 'none';
+            }
+
+            document.getElementById('ff-gap').innerText = '~ ' + Math.round(gapDays) + ' days';
+            document.getElementById('ff-total').innerText = (net >= 0 ? '' : '-') + '₹' + Math.abs(net).toLocaleString('en-IN', { maximumFractionDigits: 0 });
+
+            updateInsights(years, buyout, gratuity, net, survivalRunway, gapMonths, cashNeeded, initialSavings, joiningBonus);
+            updateChart(netBuyout, gratuity, leaveEncashment, joiningBonus);
+
+            if (window.qsLogCalc) qsLogCalc("job_transition", { inputs: Array.from(document.querySelectorAll("input[id],select[id]")).reduce(function (a, el) { a[el.id] = el.value; return a; }, {}), results: Array.from(document.querySelectorAll("[id^=r-],[id*=result],[id*=Result],[id*=total],[id*=Total],[id*=verdict]")).reduce(function (a, el) { a[el.id] = el.textContent.trim(); return a; }, {}) });
+        }
+
+        function updateInsights(years, buyout, gratuity, net, survivalRunway, gapMonths, cashNeeded, initialSavings, joiningBonus) {
+            let text = "";
+
+            // Gratuity Status
+            if (years < 5) {
+                text += `<div class="p-3 bg-amber-500/10 border border-amber-500/20 rounded-lg"><p class="text-amber-400 font-bold mb-1">⚠️ Gratuity Leakage</p>You are ${(5 - years).toFixed(1)} year(s) short of eligibility. Moving now forfeits your entire gratuity entitlement.</div>`;
+            } else {
+                text += `<div class="p-3 bg-emerald-500/10 border border-emerald-500/20 rounded-lg"><p class="text-emerald-400 font-bold mb-1">✅ Gratuity Secured</p>You've crossed 5 years. Your ₹${gratuity.toLocaleString('en-IN', { maximumFractionDigits: 0 })} payout is locked in your F&F settlement.</div>`;
+            }
+
+            // Survival Runway
+            if (initialSavings > 0) {
+                const runwayColor = survivalRunway >= gapMonths * 1.5 ? 'emerald' : survivalRunway >= gapMonths ? 'amber' : 'rose';
+                const runwayIcon = survivalRunway >= gapMonths * 1.5 ? '✅' : survivalRunway >= gapMonths ? '⚠️' : '🚨';
+                text += `<div class="p-3 bg-${runwayColor}-500/10 border border-${runwayColor}-500/20 rounded-lg"><p class="text-${runwayColor}-400 font-bold mb-1">${runwayIcon} Cash Flow Runway: ${survivalRunway.toFixed(1)} months</p>Income gap is ~${gapMonths.toFixed(1)} months. You need ₹${Math.round(cashNeeded).toLocaleString('en-IN')} to bridge it. Your savings ${survivalRunway >= gapMonths ? 'cover this gap ✓' : 'may fall short — consider negotiating a shorter FnF delay or earlier joining date.'}.</div>`;
+            }
+
+            // Joining Bonus Tip
+            if (buyout > 0) {
+                if (joiningBonus >= buyout) {
+                    text += `<div class="p-3 bg-emerald-500/10 border border-emerald-500/20 rounded-lg"><p class="text-emerald-400 font-bold mb-1">💰 Buyout Fully Covered</p>Your joining bonus of ₹${joiningBonus.toLocaleString('en-IN', { maximumFractionDigits: 0 })} fully offsets the ₹${buyout.toLocaleString('en-IN', { maximumFractionDigits: 0 })} buyout. Net cost to you: ₹0.</div>`;
+                } else {
+                    const uncovered = buyout - joiningBonus;
+                    text += `<div class="p-3 bg-indigo-500/20 rounded-lg"><p class="text-indigo-400 font-bold mb-1">💡 Buyout Negotiation Tip</p>Request your new employer to cover the ₹${buyout.toLocaleString('en-IN', { maximumFractionDigits: 0 })} buyout cost${joiningBonus > 0 ? `. Uncovered amount after bonus: ₹${uncovered.toLocaleString('en-IN', { maximumFractionDigits: 0 })}` : ''}. This is standard for early joiners.</div>`;
+                }
+            }
+
+            document.getElementById('ai-insights').innerHTML = text || '<p class="text-slate-500 text-sm">Fill in your details to see personalised insights.</p>';
+        }
+
+        function updateChart(buyout, gratuity, leave, bonus) {
+            const data = [
+                { label: 'Buyout', value: buyout, color: '#f43f5e' },
+                { label: 'Gratuity', value: gratuity, color: '#10b981' },
+                { label: 'Leave Enc.', value: leave, color: '#818cf8' }
+            ];
+            if (bonus > 0) data.push({ label: 'Join Bonus', value: bonus, color: '#34d399' });
+
+            const container = d3.select("#transition-chart");
+            container.selectAll("*").remove();
+
+            const width = container.node().getBoundingClientRect().width;
+            const height = 300;
+            const margin = { top: 20, right: 20, bottom: 40, left: 60 };
+
+            const svg = container.append("svg")
+                .attr("width", width)
+                .attr("height", height);
+
+            const x = d3.scaleBand()
+                .domain(data.map(d => d.label))
+                .range([margin.left, width - margin.right])
+                .padding(0.4);
+
+            const y = d3.scaleLinear()
+                .domain([0, d3.max(data, d => d.value) || 10000])
+                .range([height - margin.bottom, margin.top]);
+
+            svg.append("g")
+                .attr("transform", `translate(0,${height - margin.bottom})`)
+                .call(d3.axisBottom(x).tickSize(0).tickPadding(10))
+                .attr("color", "#94a3b8")
+                .selectAll("text").style("font-family", "Inter");
+
+            svg.selectAll(".bar")
+                .data(data)
+                .enter().append("rect")
+                .attr("x", d => x(d.label))
+                .attr("y", d => y(d.value))
+                .attr("width", x.bandwidth())
+                .attr("height", d => (height - margin.bottom) - y(d.value))
+                .attr("fill", d => d.color)
+                .attr("rx", 6);
+        }
+
+        function share(platform) {
+            const text = encodeURIComponent("Check out my Job Transition Finance analysis on Quantum Step!");
+            const url = encodeURIComponent(window.location.href);
+            let link = "";
+            if (platform === 'whatsapp') link = `https://api.whatsapp.com/send?text=${text}%20${url}`;
+            if (platform === 'facebook') link = `https://www.facebook.com/sharer/sharer.php?u=${url}`;
+            if (platform === 'linkedin') link = `https://www.linkedin.com/sharing/share-offsite/?url=${url}`;
+            window.open(link, '_blank');
+        }
+
+        window.onload = calculate;
+        window.addEventListener('resize', calculate);
+    </script>
+
+    <script>
+        if (typeof window.getExportData === 'undefined') {
+            window.getExportData = function () {
+                const rows = [['Quantum Step Creations - JobTransition Report'], ['Generated: ' + new Date().toLocaleDateString('en-IN')], ['']];
+                document.querySelectorAll('table').forEach(table => {
+                    const headers = [];
+                    table.querySelectorAll('thead th').forEach(th => headers.push(th.textContent.trim()));
+                    if (headers.length) rows.push(headers);
+                    table.querySelectorAll('tbody tr').forEach(tr => {
+                        const row = [];
+                        tr.querySelectorAll('td').forEach(td => row.push(td.textContent.trim()));
+                        if (row.some(c => c)) rows.push(row);
+                    });
+                    rows.push([]);
+                });
+                return { rows, sheetName: 'JobTransition', fileName: 'Job_Transition_Calculator.xlsx' };
+            };
+        }
+    </script>
+
+    <!-- Export Libraries -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script>
+        function exportToExcel() {
+            const exportData = window.getExportData ? window.getExportData() : null;
+            if (!exportData) { alert('Calculate results first.'); return; }
+            const wb = XLSX.utils.book_new();
+            const ws = XLSX.utils.aoa_to_sheet(exportData.rows);
+            XLSX.utils.book_append_sheet(wb, ws, exportData.sheetName || 'Results');
+            XLSX.writeFile(wb, exportData.fileName || 'QuantumStep_Export.xlsx');
+        }
+        async function exportToPDF() {
+            const { jsPDF } = window.jspdf;
+            const target = document.getElementById('results-section') || document.getElementById('export-target') || document.querySelector('.glass-panel');
+            if (!target) { alert('Calculate results first.'); return; }
+            const btn = document.getElementById('pdf-export-btn');
+            if (btn) { btn.disabled = true; btn.textContent = 'Generating...'; }
+            const canvas = await html2canvas(target, { scale: 2, backgroundColor: '#0f172a', useCORS: true });
+            const imgData = canvas.toDataURL('image/png');
+            const pdf = new jsPDF({ orientation: 'landscape', unit: 'px', format: [canvas.width / 2, canvas.height / 2] });
+            pdf.addImage(imgData, 'PNG', 0, 0, canvas.width / 2, canvas.height / 2);
+            const fname = window.getExportData ? (window.getExportData().fileName || 'QS').replace('.xlsx', '') + '.pdf' : 'QuantumStep.pdf';
+            pdf.save(fname);
+            if (btn) { btn.disabled = false; btn.innerHTML = btn._origHTML || 'Export PDF'; }
+        }
+    </script>
+    <script id="qs-calc-logger">
+        (function () {
+            var WEBHOOK = "https://script.google.com/macros/s/AKfycbwiYK9LDhZdbx3-r66rgRmfTClEyfH0VOWMFtKPw5nSzd_YRV7YETaqTVrOCaxpn7zNtg/exec", _t = null;
+            window.qsLogCalc = function (tool, data) {
+                clearTimeout(_t);
+                _t = setTimeout(function () {
+                    var s = sessionStorage.getItem("qs_user_" + tool), name = "", email = "";
+                    if (s) { try { var d = JSON.parse(s); name = d.name || ""; email = d.email || ""; } catch (e) { } }
+                    if (!name) return;
+                    var p = { type: "calculation", name: name, email: email, tool: tool, timestamp: new Date().toISOString(), url: location.href, data: data };
+                    try { navigator.sendBeacon(WEBHOOK, JSON.stringify(p)); } catch (e) { }
+                }, 2000);
+            };
+        })();
+    </script>
+</body>
+
+</html>

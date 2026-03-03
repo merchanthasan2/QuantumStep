@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://quantumstep.in/sitemap.xml

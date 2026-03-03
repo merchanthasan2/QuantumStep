@@ -1,0 +1,188 @@
+{
+    "metrics": {
+        "title": "Quantum Metrics",
+        "subtitle": "Proven Excellence & Industry Leadership",
+        "stats": [
+            {
+                "icon": "⚡",
+                "value": "24+",
+                "label": "Years Experience"
+            },
+            {
+                "icon": "📦",
+                "value": "150+",
+                "label": "Projects Delivered"
+            },
+            {
+                "icon": "🤝",
+                "value": "80+",
+                "label": "Happy Clients"
+            },
+            {
+                "icon": "🌍",
+                "value": "12+",
+                "label": "Countries Served"
+            }
+        ],
+        "rates": [
+            {
+                "value": "98%",
+                "label": "Success Rate",
+                "color": "#10b981"
+            },
+            {
+                "value": "96%",
+                "label": "Client Retention",
+                "color": "#818cf8"
+            },
+            {
+                "value": "94%",
+                "label": "On-Time Delivery",
+                "color": "#f59e0b"
+            }
+        ]
+    },
+    "industries": [
+        {
+            "icon": "🏭",
+            "name": "Manufacturing",
+            "category": "Industrial",
+            "highlight": "AI automation — 40% faster assembly",
+            "desc": "Smart systems that predict maintenance, optimize workflows, and eliminate downtime with advanced IoT.",
+            "impact": "40% efficiency",
+            "timeline": "6-12 months"
+        },
+        {
+            "icon": "🚗",
+            "name": "Automotive",
+            "category": "Transportation",
+            "highlight": "100% digital commerce",
+            "desc": "Complete digital transformation from traditional sales to modern e-commerce with full ERP integration.",
+            "impact": "100% digital",
+            "timeline": "18 months"
+        },
+        {
+            "icon": "🚚",
+            "name": "Logistics",
+            "category": "Supply Chain",
+            "highlight": "Real-time visibility — 22% fuel savings",
+            "desc": "Connected supply chains with predictive analytics and route optimization for maximum efficiency.",
+            "impact": "22% savings",
+            "timeline": "3-6 months"
+        },
+        {
+            "icon": "🛒",
+            "name": "Retail",
+            "category": "Commerce",
+            "highlight": "eStores outperforming physical revenue",
+            "desc": "Digital-first retail experiences that drive customer loyalty and sales growth through seamless omnichannel.",
+            "impact": "300% growth",
+            "timeline": "4-8 months"
+        },
+        {
+            "icon": "🏢",
+            "name": "Real Estate",
+            "category": "Property",
+            "highlight": "PropTech revolution in progress",
+            "desc": "Smart building management and digital property experiences with advanced analytics and automation.",
+            "impact": "50% automation",
+            "timeline": "6-10 months"
+        },
+        {
+            "icon": "🏦",
+            "name": "BFSI",
+            "category": "Financial",
+            "highlight": "Zero compliance-violation modernization",
+            "desc": "Secure financial platforms with full regulatory compliance and modern UX for enhanced customer experience.",
+            "impact": "100% compliant",
+            "timeline": "12-18 months"
+        }
+    ],
+    "growth_segments": [
+        {
+            "icon": "🚀",
+            "label": "Popular",
+            "title": "For Startups",
+            "quote": "From napkin sketch to market dominance in 8 months.",
+            "description": "We accelerate your journey from idea to a market-ready MVP, securing your foothold and attracting early adopters.",
+            "features": [
+                "Rapid Prototyping & MVP Development",
+                "Reduced Time-to-Market",
+                "Cost-Effective Scalable Architecture",
+                "Data-Driven Iteration for Product-Market Fit"
+            ],
+            "timeline": "2-6 months",
+            "focus": "Speed & Scale",
+            "metric": "85% Launch Rate",
+            "metric_color": "#10b981"
+        },
+        {
+            "icon": "📈",
+            "label": "Most Popular",
+            "title": "For Growing SMEs",
+            "quote": "Supercharge your growth and outpace competitors.",
+            "description": "We optimize and scale your existing operations, removing bottlenecks with robust technology solutions.",
+            "features": [
+                "Process Automation & System Integration",
+                "Enhanced Operational Efficiency",
+                "Advanced Data & Growth Analytics",
+                "Scalable Infrastructure for Uninterrupted Growth"
+            ],
+            "timeline": "6-12 months",
+            "focus": "Integration & Efficiency",
+            "metric": "40% Cost Reduction",
+            "metric_color": "#818cf8"
+        },
+        {
+            "icon": "🏛️",
+            "label": "Enterprise",
+            "title": "For Large Enterprises",
+            "quote": "Transform legacy systems into agile, innovation powerhouses.",
+            "description": "We modernize your digital core with cutting-edge solutions ensuring security, efficiency, and market leadership.",
+            "features": [
+                "Enterprise-Grade Digital Transformation",
+                "Legacy System Modernization & Cloud Migration",
+                "AI & ML Integration for Intelligent Operations",
+                "Enhanced Security, Compliance, and Global Scalability"
+            ],
+            "timeline": "12-24 months",
+            "focus": "Innovation & Security",
+            "metric": "99.9% Uptime",
+            "metric_color": "#f59e0b"
+        }
+    ],
+    "faqs": [
+        {
+            "q": "Why should businesses choose Quantum Step as their technology partner?",
+            "a": "We combine 24+ years of deep domain expertise with cutting-edge AI-assisted development. Every project gets dedicated architects, transparent communication, and a results-first approach — not just code delivery."
+        },
+        {
+            "q": "What types of digital solutions does Quantum Step provide?",
+            "a": "We cover the full spectrum — from custom web & mobile apps and SaaS platforms to AI integration, IoT systems, ERP tools, and e-commerce. If it runs on software, we build it."
+        },
+        {
+            "q": "What factors influence the cost and timeline of a project?",
+            "a": "Scope complexity, number of integrations, target platforms (web/mobile/both), and your desired go-live date all play a role. We provide detailed estimates after a free discovery call."
+        },
+        {
+            "q": "What development methodology do you follow?",
+            "a": "We follow an Agile/Scrum approach with 2-week sprints, regular demos, and continuous feedback loops — so you always know exactly where your product stands."
+        },
+        {
+            "q": "Do you help with system integration and data migration?",
+            "a": "Absolutely. We have deep experience integrating CRMs, ERPs, third-party APIs, and payment gateways. Data migration is handled with zero-downtime strategies."
+        },
+        {
+            "q": "Can you integrate AI capabilities into our existing legacy systems?",
+            "a": "Yes. We layer modern AI features (predictive analytics, chatbots, recommendation engines) onto existing systems without requiring a full rebuild."
+        },
+        {
+            "q": "Do you provide ongoing support after launch?",
+            "a": "Yes, we offer flexible support retainers covering performance monitoring, security patches, bug fixes, and feature enhancements — on a monthly or quarterly basis."
+        },
+        {
+            "q": "How do we get started?",
+            "a": "Simply click 'Free Consultation' above or fill out our contact form. We'll schedule a 30-minute discovery call to understand your goals and outline a roadmap — at no cost."
+        }
+    ]
+}

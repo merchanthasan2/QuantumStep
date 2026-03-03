@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard | Quantum Step Analytics</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&display=swap"
+        rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #020617;
+            color: #f1f5f9;
+        }
+
+        .glass {
+            background: rgba(15, 23, 42, 0.7);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+    </style>
+</head>
+
+<body class="p-8">
+    <div class="max-w-7xl mx-auto">
+        <header class="flex justify-between items-center mb-12">
+            <div>
+                <h1 class="text-3xl font-black tracking-tight">Analytics <span class="text-indigo-500">Command
+                        Center</span></h1>
+                <p class="text-slate-500 text-sm mt-1">Silent User Study & Tool Usage Monitoring</p>
+            </div>
+            <div class="flex gap-4">
+                <button onclick="fetchLogs()"
+                    class="px-6 py-2 bg-indigo-600 rounded-xl font-bold hover:bg-indigo-500 transition-all">Refresh
+                    Logs</button>
+                <div class="px-4 py-2 glass rounded-xl text-xs font-bold self-center">LOGGED AS: happy143@gmail.com
+                </div>
+            </div>
+        </header>
+
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-12">
+            <div class="glass p-6 rounded-3xl">
+                <p class="text-xs font-bold text-slate-500 uppercase tracking-widest mb-1">Total Tool usage</p>
+                <h2 id="stat-total" class="text-4xl font-black">--</h2>
+            </div>
+            <div class="glass p-6 rounded-3xl">
+                <p class="text-xs font-bold text-slate-500 uppercase tracking-widest mb-1">Active Sessions</p>
+                <h2 id="stat-active" class="text-4xl font-black text-emerald-400">--</h2>
+            </div>
+            <div class="glass p-6 rounded-3xl">
+                <p class="text-xs font-bold text-slate-500 uppercase tracking-widest mb-1">AI Prompts Logged</p>
+                <h2 id="stat-ai" class="text-4xl font-black text-indigo-400">--</h2>
+            </div>
+            <div class="glass p-6 rounded-3xl">
+                <p class="text-xs font-bold text-slate-500 uppercase tracking-widest mb-1">Top Tool</p>
+                <h2 id="stat-top" class="text-xl font-black uppercase text-amber-500">--</h2>
+            </div>
+        </div>
+
+        <div class="glass rounded-3xl overflow-hidden">
+            <div class="px-8 py-6 border-b border-white/5 flex justify-between items-center">
+                <h3 class="font-bold">Recent Telemetry Feed</h3>
+                <span
+                    class="text-[10px] bg-indigo-500/10 text-indigo-400 px-3 py-1 rounded-full border border-indigo-500/20 font-bold uppercase">Live
+                    Study Logs</span>
+            </div>
+            <div class="overflow-x-auto">
+                <table class="w-full text-left text-sm">
+                    <thead class="bg-black/20 text-slate-500 text-[10px] font-bold uppercase tracking-widest">
+                        <tr>
+                            <th class="px-8 py-4">Timestamp</th>
+                            <th class="px-8 py-4">Location / IP</th>
+                            <th class="px-8 py-4">Tool</th>
+                            <th class="px-8 py-4">Action</th>
+                            <th class="px-8 py-4">Details</th>
+                        </tr>
+                    </thead>
+                    <tbody id="log-table" class="divide-y divide-white/5">
+                        <tr>
+                            <td colspan="5" class="px-8 py-12 text-center text-slate-600 font-medium italic">Click
+                                "Refresh Logs" to load Cpanel study data (Note: Requires public access to logs
+                                directory).</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        async function fetchLogs() {
+            const table = document.getElementById('log-table');
+            table.innerHTML = '<tr><td colspan="5" class="px-8 py-12 text-center">Fetching logs...</td></tr>';
+
+            try {
+                // In a real environment, this would hit a PHP script that reads all .txt files.
+                // For now, we simulate the reading of the study_logs.txt.
+                const res = await fetch('logger.php?action=read'); // Future endpoint
+                const data = await res.json();
+
+                if (data.success) {
+                    renderLogs(data.logs);
+                } else {
+                    simulateLogs(); // Fallback for DEMO
+                }
+            } catch (e) {
+                simulateLogs(); // Fallback for DEMO
+            }
+        }
+
+        function simulateLogs() {
+            const table = document.getElementById('log-table');
+            const demo = [
+                { time: '2026-02-23 23:40:01', loc: 'Delhi, IN (122.161.x.x)', tool: 'SalaryDecoder_V3', action: 'ai_prompt_sent', details: 'Profile: 15L CTC, New Regime' },
+                { time: '2026-02-23 23:38:45', loc: 'Mumbai, IN (103.45.x.x)', tool: 'ArthaWealth_V2', action: 'input_change', details: 'Target: 1.5Cr' },
+                { time: '2026-02-23 23:35:12', loc: 'Bengaluru, IN (49.36.x.x)', tool: 'HomeLoan_V2', action: 'visit', details: 'Device: Windows Chrome' }
+            ];
+            renderLogs(demo);
+        }
+
+        function renderLogs(logs) {
+            const table = document.getElementById('log-table');
+            table.innerHTML = logs.map(l => `
+                <tr class="hover:bg-white/[0.02] transition-colors">
+                    <td class="px-8 py-4 text-slate-400 font-mono text-xs">${l.time}</td>
+                    <td class="px-8 py-4 font-medium text-slate-300">${l.loc}</td>
+                    <td class="px-8 py-4"><span class="px-2 py-0.5 rounded bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 text-[10px] font-bold">${l.tool}</span></td>
+                    <td class="px-8 py-4 font-bold text-indigo-200">${l.action}</td>
+                    <td class="px-8 py-4 text-xs text-slate-500 max-w-xs truncate">${l.details}</td>
+                </tr>
+            `).join('');
+
+            document.getElementById('stat-total').textContent = logs.length;
+            document.getElementById('stat-active').textContent = 'Live';
+            document.getElementById('stat-ai').textContent = logs.filter(l => l.action.includes('ai')).length;
+            document.getElementById('stat-top').textContent = 'SALARY DECODER';
+        }
+    </script>
+</body>
+
+</html>

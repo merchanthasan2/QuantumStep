@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Active Session | EngageIQ</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        violet: { 500: '#7C3AED', 600: '#6D28D9', 950: '#2e1065' },
+                        slate: { 800: '#1e293b', 900: '#0f172a', 950: '#020617' }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #020617;
+            color: white;
+            min-height: 100vh;
+        }
+
+        .option-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            transition: all 0.2s ease;
+        }
+
+        .option-card.selected {
+            border-color: #7C3AED;
+            background: rgba(124, 58, 237, 0.1);
+        }
+
+        /* Animations */
+        @keyframes float {
+
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+
+        @keyframes pulse-soft {
+
+            0%,
+            100% {
+                transform: scale(1);
+                opacity: 0.1;
+            }
+
+            50% {
+                transform: scale(1.1);
+                opacity: 0.2;
+            }
+        }
+
+        .animate-float {
+            animation: float 3s ease-in-out infinite;
+        }
+
+        .animate-pulse-soft {
+            animation: pulse-soft 2s ease-in-out infinite;
+        }
+
+        /* Mobile specific fixes */
+        .safe-pb {
+            padding-bottom: calc(1.5rem + env(safe-area-inset-bottom));
+        }
+    </style>
+</head>
+
+<body class="flex flex-col">
+    <!-- Mini Header -->
+    <header class="p-4 flex items-center justify-between border-b border-white/5 bg-slate-900/50 sticky top-0 z-50">
+        <div class="flex items-center gap-2">
+            <div class="w-6 h-6 bg-violet-600 rounded flex items-center justify-center">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3">
+                    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+                </svg>
+            </div>
+            <span class="text-xs font-black uppercase">EngageIQ</span>
+        </div>
+        <div
+            class="text-[10px] bg-emerald-500/10 text-emerald-500 px-2 py-0.5 rounded-full font-bold border border-emerald-500/20">
+            LIVE
+        </div>
+    </header>
+
+    <main id="main-content" class="flex-1 p-6">
+        <!-- Waiting State (Default) -->
+        <div id="waiting-state" class="flex flex-col items-center justify-center min-h-[60vh] text-center p-6">
+            <div class="relative mb-10">
+                <div class="absolute inset-0 bg-violet-600 rounded-full blur-3xl animate-pulse-soft"></div>
+                <div
+                    class="relative w-24 h-24 bg-gradient-to-br from-violet-500 to-violet-700 rounded-3xl flex items-center justify-center text-white shadow-2xl shadow-violet-900/40 animate-float">
+                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
+                    </svg>
+                </div>
+            </div>
+            <h2 class="text-3xl font-black mb-3 text-white tracking-tight">Hang tight!</h2>
+            <p class="text-slate-400 max-w-[240px] leading-relaxed">The presenter hasn't started this interaction yet.
+                We'll jump in automatically once they do.</p>
+
+            <div class="mt-12 flex items-center gap-2 px-4 py-2 bg-white/5 rounded-full border border-white/5">
+                <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Waiting for launch</span>
+            </div>
+        </div>
+
+        <!-- Dynamic Interaction Content (Hidden by default) -->
+        <div id="interaction-content" class="hidden pb-32">
+            <div class="mb-4 flex justify-between items-start">
+                <div>
+                    <div id="slide-info" class="text-violet-500 text-[10px] font-black tracking-widest uppercase mb-1">
+                        Question 1 of 1</div>
+                    <h1 id="question-text" class="text-2xl font-black text-white">Loading question...</h1>
+                </div>
+                <div id="participant-timer"
+                    class="hidden bg-slate-800 px-3 py-1 rounded-lg border border-white/5 font-black text-violet-400 text-sm">
+                    00
+                </div>
+            </div>
+
+            <div id="options-container" class="space-y-4">
+                <!-- Options will be injected here -->
+            </div>
+
+            <!-- Quiz Feedback Container -->
+            <div id="quiz-feedback" class="mt-8 hidden animate-scale-in">
+                <div id="feedback-card" class="p-6 rounded-3xl border flex items-center gap-4">
+                    <div id="feedback-icon" class="w-12 h-12 rounded-2xl flex items-center justify-center shrink-0">
+                    </div>
+                    <div>
+                        <div id="feedback-title" class="font-black text-lg"></div>
+                        <div id="feedback-text" class="text-sm opacity-80"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer id="footer-controls"
+        class="fixed bottom-0 left-0 right-0 p-6 bg-slate-950/80 backdrop-blur-xl border-t border-white/5 z-50 transform translate-y-full transition-transform duration-300 safe-pb">
+        <button id="submit-btn" disabled
+            class="w-full h-14 bg-slate-800 text-slate-500 rounded-2xl font-black transition-all shadow-xl">
+            Submit Answer
+        </button>
+    </footer>
+
+    <script type="module">
+        import { db, ref, onValue, update, set, push } from './firebase-config.js';
+
+        let selectedIdx = -1;
+        let currentSlideNum = -1;
+        let sessionData = null;
+        let hasVotedOnCurrentSlide = false;
+        let selectedResponse = null;
+        let timerInterval = null;
+
+        const urlParams = new URLSearchParams(window.location.search);
+        const sessionId = urlParams.get('id') || "582914";
+        const sessionRef = ref(db, `sessions/${sessionId}`);
+
+        function renderSlide(slideNum, data) {
+            const waitingState = document.getElementById('waiting-state');
+            const interactionContent = document.getElementById('interaction-content');
+            const footerControls = document.getElementById('footer-controls');
+            const quizFeedback = document.getElementById('quiz-feedback');
+            const participantTimer = document.getElementById('participant-timer');
+
+            // Clear previous states
+            clearInterval(timerInterval);
+            quizFeedback.classList.add('hidden');
+            participantTimer.classList.add('hidden');
+            hasVotedOnCurrentSlide = false;
+            selectedIdx = -1;
+            selectedResponse = null;
+
+            if (slideNum === 1) {
+                waitingState.classList.remove('hidden');
+                interactionContent.classList.add('hidden');
+                footerControls.classList.add('translate-y-full');
+                return;
+            }
+
+            currentSlideNum = slideNum;
+            const slideIndex = slideNum - 2;
+            const slide = data.slides[slideIndex];
+            if (!slide) return;
+
+            // Check if user already voted on this slide
+            const userId = getUserId();
+            if (data.votes && data.votes[slideIndex] && data.votes[slideIndex][userId] !== undefined) {
+                hasVotedOnCurrentSlide = true;
+                selectedResponse = data.votes[slideIndex][userId];
+                if (slide.type === 'POLL') selectedIdx = selectedResponse;
+            }
+
+            waitingState.classList.add('hidden');
+            interactionContent.classList.remove('hidden');
+            footerControls.classList.remove('translate-y-full');
+
+            document.getElementById('slide-info').innerText = `Interaction ${slideNum - 1} of ${data.slides.length}`;
+            document.getElementById('question-text').innerText = slide.question;
+
+            const optionsContainer = document.getElementById('options-container');
+            optionsContainer.innerHTML = '';
+
+            const type = slide.type || 'POLL';
+            if (type === 'POLL') {
+                slide.options.forEach((opt, idx) => {
+                    const btn = document.createElement('button');
+                    const isSelected = selectedIdx === idx;
+                    btn.className = `option-card w-full p-5 rounded-2xl flex items-center justify-between group text-left border ${isSelected ? 'border-violet-500 bg-violet-500/10' : 'border-white/5 bg-white/5'} shadow-lg`;
+                    if (!hasVotedOnCurrentSlide) {
+                        btn.onclick = () => selectOption(idx, btn);
+                    } else {
+                        btn.style.pointerEvents = 'none';
+                    }
+                    btn.innerHTML = `
+                        <span class="font-bold ${isSelected ? 'text-white' : 'text-slate-300'} group-hover:text-white transition-colors flex-1">${opt}</span>
+                        <div class="w-6 h-6 rounded-full border border-white/10 flex items-center justify-center flex-shrink-0 ml-4">
+                            <div class="w-3 h-3 rounded-full bg-violet-600 ${isSelected ? 'opacity-100' : 'opacity-0'} transition-opacity"></div>
+                        </div>
+                    `;
+                    optionsContainer.appendChild(btn);
+                });
+            } else if (type === 'QA' || type === 'WORD_CLOUD') {
+                const inputWrapper = document.createElement('div');
+                inputWrapper.className = 'space-y-4';
+                inputWrapper.innerHTML = `
+                    <textarea id="text-response" placeholder="${type === 'WORD_CLOUD' ? 'Enter short phrases or single words...' : 'Type your answer here...'}" 
+                    class="w-full bg-slate-900 border border-white/10 rounded-2xl p-5 text-white focus:outline-none focus:border-violet-500 transition-colors h-32 text-lg shadow-inner"
+                    ${hasVotedOnCurrentSlide ? 'disabled' : ''}
+                    oninput="validateTextResponse(this)">${hasVotedOnCurrentSlide ? selectedResponse : ''}</textarea>
+                `;
+                optionsContainer.appendChild(inputWrapper);
+            } else if (type === 'SLIDER') {
+                const initialVal = hasVotedOnCurrentSlide ? selectedResponse : 50;
+                const sliderWrapper = document.createElement('div');
+                sliderWrapper.className = 'py-10 px-4 space-y-8 bg-white/5 rounded-3xl border border-white/5 p-6';
+                sliderWrapper.innerHTML = `
+                    <div class="flex justify-between items-center px-2">
+                         <span class="text-xs font-black text-slate-500 uppercase tracking-widest">${slide.minLabel}</span>
+                         <span id="slider-val" class="text-5xl font-black text-violet-400">${initialVal}</span>
+                         <span class="text-xs font-black text-slate-500 uppercase tracking-widest">${slide.maxLabel}</span>
+                    </div>
+                    <input type="range" min="0" max="100" value="${initialVal}" class="w-full h-3 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-violet-500"
+                    ${hasVotedOnCurrentSlide ? 'disabled' : ''}
+                    oninput="updateSliderVal(this)">
+                `;
+                optionsContainer.appendChild(sliderWrapper);
+                if (!hasVotedOnCurrentSlide) selectedResponse = 50;
+            }
+
+            // Handle Timer
+            if (slide.timer > 0 && !hasVotedOnCurrentSlide) {
+                participantTimer.classList.remove('hidden');
+                let timeLeft = slide.timer;
+                participantTimer.innerText = timeLeft.toString().padStart(2, '0');
+                timerInterval = setInterval(() => {
+                    timeLeft--;
+                    participantTimer.innerText = timeLeft.toString().padStart(2, '0');
+                    if (timeLeft <= 0) {
+                        clearInterval(timerInterval);
+                        if (!hasVotedOnCurrentSlide && selectedResponse !== null) {
+                            submitVote();
+                        }
+                    }
+                }, 1000);
+            }
+
+            // Submit Button State
+            const submitBtn = document.getElementById('submit-btn');
+            if (hasVotedOnCurrentSlide) {
+                submitBtn.disabled = true;
+                submitBtn.innerText = 'Answer Submitted';
+                submitBtn.className = 'w-full h-14 bg-emerald-600/20 text-emerald-500 rounded-2xl font-black transition-all border border-emerald-500/20';
+            } else if (type === 'SLIDER') {
+                submitBtn.disabled = false;
+                submitBtn.className = 'w-full h-14 bg-violet-600 text-white rounded-2xl font-black transition-all shadow-xl shadow-violet-900/20';
+                submitBtn.innerText = 'Submit Answer';
+            } else {
+                submitBtn.disabled = true;
+                submitBtn.innerText = 'Submit Answer';
+                submitBtn.className = 'w-full h-14 bg-slate-800 text-slate-500 rounded-2xl font-black transition-all';
+            }
+
+            // Check if already revealed
+            if (data.revealed && data.revealed[slideIndex]) {
+                showQuizFeedback(slide, selectedResponse);
+            }
+        }
+
+        function getUserId() {
+            let userId = localStorage.getItem('participant_id');
+            if (!userId) {
+                userId = Math.random().toString(36).substr(2, 9);
+                localStorage.setItem('participant_id', userId);
+            }
+            return userId;
+        }
+
+        window.validateTextResponse = function (el) {
+            selectedResponse = el.value.trim();
+            const btn = document.getElementById('submit-btn');
+            if (selectedResponse.length > 0) {
+                btn.disabled = false;
+                btn.className = 'w-full h-14 bg-violet-600 text-white rounded-2xl font-black transition-all shadow-xl shadow-violet-900/20';
+            } else {
+                btn.disabled = true;
+                btn.className = 'w-full h-14 bg-slate-800 text-slate-500 rounded-2xl font-black transition-all';
+            }
+        };
+
+        window.updateSliderVal = function (el) {
+            selectedResponse = Number(el.value);
+            document.getElementById('slider-val').innerText = selectedResponse;
+        };
+
+        window.selectOption = function (idx, btn) {
+            if (hasVotedOnCurrentSlide) return;
+            selectedIdx = idx;
+            selectedResponse = idx;
+
+            document.querySelectorAll('.option-card').forEach((c) => {
+                c.classList.remove('selected', 'border-violet-500', 'bg-violet-500/10');
+                c.classList.add('border-white/5', 'bg-white/5');
+                c.querySelector('span').classList.remove('text-white');
+                c.querySelector('span').classList.add('text-slate-300');
+                const check = c.querySelector('div div');
+                if (check) check.classList.add('opacity-0');
+            });
+
+            btn.classList.add('selected', 'border-violet-500', 'bg-violet-500/10');
+            btn.classList.remove('border-white/5', 'bg-white/5');
+            btn.querySelector('span').classList.add('text-white');
+            btn.querySelector('span').classList.remove('text-slate-300');
+            const check = btn.querySelector('div div');
+            if (check) check.classList.remove('opacity-0');
+
+            const submitBtn = document.getElementById('submit-btn');
+            submitBtn.disabled = false;
+            submitBtn.className = 'w-full h-14 bg-violet-600 text-white rounded-2xl font-black transition-all shadow-xl shadow-violet-900/20';
+        };
+
+        async function submitVote() {
+            if (selectedResponse === null || hasVotedOnCurrentSlide) return;
+
+            const btn = document.getElementById('submit-btn');
+            const slideIndex = currentSlideNum - 2;
+            const userId = getUserId();
+
+            try {
+                btn.disabled = true;
+                btn.innerText = 'Submitting...';
+
+                const voteRef = ref(db, `sessions/${sessionId}/votes/${slideIndex}/${userId}`);
+                await set(voteRef, selectedResponse);
+
+                hasVotedOnCurrentSlide = true;
+                clearInterval(timerInterval);
+                document.getElementById('participant-timer').classList.add('hidden');
+
+                btn.innerText = 'Answer Submitted';
+                btn.className = 'w-full h-14 bg-emerald-600/20 text-emerald-500 rounded-2xl font-black transition-all border border-emerald-500/20';
+
+                // Disable inputs
+                document.querySelectorAll('.option-card').forEach(c => c.style.pointerEvents = 'none');
+                const textArea = document.getElementById('text-response');
+                if (textArea) textArea.disabled = true;
+                const rangeInput = document.querySelector('input[type="range"]');
+                if (rangeInput) rangeInput.disabled = true;
+
+            } catch (e) {
+                console.error("Vote failed:", e);
+                btn.innerText = 'Error! Try Again';
+                btn.disabled = false;
+            }
+        }
+
+        document.getElementById('submit-btn').onclick = submitVote;
+
+        function showQuizFeedback(slide, userResponse) {
+            if (slide.type !== 'POLL' || !slide.quizMode) return;
+
+            const quizFeedback = document.getElementById('quiz-feedback');
+            const card = document.getElementById('feedback-card');
+            const icon = document.getElementById('feedback-icon');
+            const title = document.getElementById('feedback-title');
+            const text = document.getElementById('feedback-text');
+
+            quizFeedback.classList.remove('hidden');
+            const correctIdx = Number(slide.correctAnswer) - 1;
+            const isCorrect = userResponse === correctIdx;
+
+            if (isCorrect) {
+                card.className = 'p-6 rounded-3xl border border-emerald-500/30 bg-emerald-500/10 flex items-center gap-4';
+                icon.className = 'w-12 h-12 rounded-2xl flex items-center justify-center shrink-0 bg-emerald-500 text-white';
+                icon.innerHTML = '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12" /></svg>';
+                title.innerText = 'Correct Answer!';
+                title.className = 'font-black text-lg text-emerald-400';
+                text.innerText = 'Great job! You got it right.';
+            } else {
+                card.className = 'p-6 rounded-3xl border border-red-500/30 bg-red-500/10 flex items-center gap-4';
+                icon.className = 'w-12 h-12 rounded-2xl flex items-center justify-center shrink-0 bg-red-500 text-white';
+                icon.innerHTML = '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" /></svg>';
+                title.innerText = 'Incorrect';
+                title.className = 'font-black text-lg text-red-400';
+                const correctText = slide.options[correctIdx];
+                text.innerText = `The correct answer was: ${correctText}`;
+            }
+
+            // Highlight in options list
+            document.querySelectorAll('.option-card').forEach((btn, idx) => {
+                const check = btn.querySelector('div');
+                if (idx === correctIdx) {
+                    btn.classList.add('border-emerald-500', 'bg-emerald-500/10');
+                    btn.classList.remove('border-white/5', 'bg-white/5');
+                } else if (idx === userResponse) {
+                    btn.classList.add('border-red-500', 'bg-red-500/10');
+                    btn.classList.remove('border-white/5', 'bg-white/5');
+                }
+            });
+        }
+
+        // Initialize listener
+        onValue(sessionRef, (snapshot) => {
+            const data = snapshot.val();
+            if (data) {
+                const oldSlideNum = currentSlideNum;
+                sessionData = data;
+
+                if (data.activeSlide !== currentSlideNum) {
+                    currentSlideNum = data.activeSlide || 1;
+                    renderSlide(currentSlideNum, data);
+                } else if (data.revealed && data.revealed[currentSlideNum - 2]) {
+                    // Check if newly revealed
+                    const slideIdx = currentSlideNum - 2;
+                    showQuizFeedback(data.slides[slideIdx], selectedResponse);
+                }
+            }
+        });
+    </script>
+</body>
+
+</html>

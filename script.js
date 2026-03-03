@@ -3,9 +3,11 @@
 // Modern Interactions & Animations
 // ===================================
 
-// Wait for DOM to load
+// Execute loading screen logic immediately
+initLoadingScreen();
+
+// Wait for DOM to load for other components
 document.addEventListener('DOMContentLoaded', () => {
-    initLoadingScreen();
     initNavigation();
     initScrollAnimations();
     initGSAPAnimations();
@@ -17,16 +19,24 @@ document.addEventListener('DOMContentLoaded', () => {
 // Loading Screen
 function initLoadingScreen() {
     const loadingScreen = document.getElementById('loading-screen');
+    if (!loadingScreen) return;
 
-    window.addEventListener('load', () => {
-        // Reduced from 1500ms - no need to artificially delay on mobile
+    const hideLoader = () => {
+        loadingScreen.classList.add('hidden');
         setTimeout(() => {
-            loadingScreen.classList.add('hidden');
-            setTimeout(() => {
-                loadingScreen.style.display = 'none';
-            }, 500);
+            loadingScreen.style.display = 'none';
         }, 500);
-    });
+    };
+
+    // Primary: hide when fully loaded
+    if (document.readyState === 'complete') {
+        hideLoader();
+    } else {
+        window.addEventListener('load', hideLoader);
+
+        // Safety fallback: hide after 3.5s regardless (more aggressive than 5s)
+        setTimeout(hideLoader, 3500);
+    }
 }
 
 // Navigation

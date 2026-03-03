@@ -1,0 +1,872 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Buy vs Rent Calculator India | Quantum Step</title>
+    <meta name="description"
+        content="Should you buy or rent in India? Compare total cost of home ownership vs renting with our detailed financial calculator for Indian professionals.">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="tool-shared.css">
+    <style>
+        :root {
+            --accent: #38bdf8;
+            --accent-bg: rgba(56, 189, 248, .12);
+            --accent-border: rgba(56, 189, 248, .25);
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #020617;
+            color: #f1f5f9;
+            margin: 0;
+            overflow-x: hidden;
+        }
+
+        .glass-panel {
+            background: rgba(15, 23, 42, 0.7);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 1.5rem;
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 1rem;
+        }
+
+        input[type="number"],
+        input[type="range"],
+        select {
+            background: rgba(255, 255, 255, .05);
+            border: 1px solid rgba(255, 255, 255, .1);
+            border-radius: .875rem;
+            color: #f1f5f9;
+            padding: .65rem 1rem;
+            font-family: inherit;
+            font-size: .9rem;
+            outline: none;
+            width: 100%;
+            box-sizing: border-box;
+            transition: border-color .2s;
+        }
+
+        input:focus,
+        select:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(56, 189, 248, .12);
+        }
+
+        input[type="range"] {
+            padding: 0;
+            height: 6px;
+            border-radius: 999px;
+            border: none;
+            -webkit-appearance: none;
+            background: rgba(56, 189, 248, .2);
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: var(--accent);
+            cursor: pointer;
+            border: 2px solid #7dd3fc;
+        }
+
+        label {
+            display: block;
+            font-size: .72rem;
+            font-weight: 700;
+            color: #64748b;
+            text-transform: uppercase;
+            letter-spacing: .07em;
+            margin-bottom: .35rem;
+        }
+
+        .field-group {
+            margin-bottom: 1.25rem;
+        }
+
+        .range-value {
+            font-size: .85rem;
+            font-weight: 700;
+            color: var(--accent);
+            float: right;
+        }
+
+        .verdict-card {
+            border-radius: 1.5rem;
+            padding: 2rem;
+            border: 2px solid;
+            text-align: center;
+        }
+
+        .verdict-buy {
+            background: rgba(16, 185, 129, .08);
+            border-color: rgba(16, 185, 129, .3);
+        }
+
+        .verdict-rent {
+            background: rgba(56, 189, 248, .08);
+            border-color: rgba(56, 189, 248, .3);
+        }
+
+        .stat-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: .6rem 0;
+            border-bottom: 1px solid rgba(255, 255, 255, .04);
+            font-size: .85rem;
+        }
+
+        .stat-row:last-child {
+            border-bottom: none;
+        }
+
+        .stat-label {
+            color: #94a3b8;
+        }
+
+        .stat-value {
+            font-weight: 700;
+            color: #f1f5f9;
+        }
+
+        .tab-btn {
+            padding: .5rem 1.25rem;
+            border-radius: 999px;
+            font-size: .8rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all .2s;
+            border: 1px solid rgba(255, 255, 255, .08);
+            background: transparent;
+            color: #64748b;
+            font-family: inherit;
+        }
+
+        .tab-btn.active {
+            background: var(--accent-bg);
+            border-color: var(--accent-border);
+            color: var(--accent);
+        }
+
+        .share-bar {
+            display: none !important;
+        }
+
+        .result-hidden {
+            display: none;
+        }
+    </style>
+<script id="qs-telemetry">
+(function(){
+    // Collect browser-side telemetry immediately
+    function getDeviceType() {
+        var ua = navigator.userAgent;
+        if (/tablet|ipad|playbook|silk/i.test(ua)) return 'Tablet';
+        if (/mobi|android|iphone|ipod|windows phone|blackberry|opera mini/i.test(ua)) return 'Mobile';
+        return 'Desktop';
+    }
+    function getOS() {
+        var ua = navigator.userAgent;
+        if (/Windows NT 10/.test(ua)) return 'Windows 10/11';
+        if (/Windows NT 6.3/.test(ua)) return 'Windows 8.1';
+        if (/Windows NT 6.1/.test(ua)) return 'Windows 7';
+        if (/Windows/.test(ua)) return 'Windows';
+        if (/Mac OS X ([\d_]+)/.test(ua)) return 'macOS ' + ua.match(/Mac OS X ([\d_]+)/)[1].replace(/_/g,'.');
+        if (/iPhone OS ([\d_]+)/.test(ua)) return 'iOS ' + ua.match(/iPhone OS ([\d_]+)/)[1].replace(/_/g,'.');
+        if (/Android ([\d.]+)/.test(ua)) return 'Android ' + ua.match(/Android ([\d.]+)/)[1];
+        if (/Linux/.test(ua)) return 'Linux';
+        return 'Unknown';
+    }
+    function getBrowser() {
+        var ua = navigator.userAgent;
+        if (/Edg\//.test(ua)) return 'Edge ' + (ua.match(/Edg\/(\d+)/)||['','?'])[1];
+        if (/OPR\/|Opera/.test(ua)) return 'Opera';
+        if (/Chrome\/(\d+)/.test(ua) && !/Chromium/.test(ua)) return 'Chrome ' + ua.match(/Chrome\/(\d+)/)[1];
+        if (/Firefox\/(\d+)/.test(ua)) return 'Firefox ' + ua.match(/Firefox\/(\d+)/)[1];
+        if (/Safari\/(\d+)/.test(ua) && !/Chrome/.test(ua)) return 'Safari';
+        if (/MSIE|Trident/.test(ua)) return 'Internet Explorer';
+        return 'Other';
+    }
+    function getUTM() {
+        var p = new URLSearchParams(location.search);
+        return {
+            source: p.get('utm_source') || '',
+            medium: p.get('utm_medium') || '',
+            campaign: p.get('utm_campaign') || ''
+        };
+    }
+    var utm = getUTM();
+    var tel = {
+        device_type: getDeviceType(),
+        os: getOS(),
+        browser: getBrowser(),
+        user_agent: navigator.userAgent,
+        screen: screen.width + 'x' + screen.height,
+        viewport: window.innerWidth + 'x' + window.innerHeight,
+        language: navigator.language || '',
+        timezone: Intl && Intl.DateTimeFormat ? Intl.DateTimeFormat().resolvedOptions().timeZone : '',
+        connection: (navigator.connection && navigator.connection.effectiveType) || '',
+        referrer: document.referrer || 'direct',
+        landing_url: location.href,
+        utm_source: utm.source,
+        utm_medium: utm.medium,
+        utm_campaign: utm.campaign,
+        ip: '', city: '', region: '', country: '', isp: '', lat: '', lon: ''
+    };
+
+    // Fetch IP + geo from free API (1000 req/day free)
+    fetch('https://ipapi.co/json/')
+        .then(function(r){ return r.json(); })
+        .then(function(d){
+            tel.ip      = d.ip || '';
+            tel.city    = d.city || '';
+            tel.region  = d.region || '';
+            tel.country = d.country_name || '';
+            tel.isp     = d.org || '';
+            tel.lat     = d.latitude || '';
+            tel.lon     = d.longitude || '';
+        })
+        .catch(function(){}) // Silently fail if blocked
+        .finally(function(){
+            sessionStorage.setItem('qs_telemetry', JSON.stringify(tel));
+        });
+
+    // Store immediately even without geo (geo updates async)
+    sessionStorage.setItem('qs_telemetry', JSON.stringify(tel));
+
+    // Expose for use by loggers
+    window.qsGetTelemetry = function() {
+        try { return JSON.parse(sessionStorage.getItem('qs_telemetry') || '{}'); }
+        catch(e) { return {}; }
+    };
+})();
+</script>
+</head>
+
+<body class="min-h-screen">
+
+    <!-- QS Name Capture Modal -->
+    <div id="qs-capture-overlay"
+        style="position:fixed;inset:0;z-index:9999;background:rgba(2,6,23,0.93);backdrop-filter:blur(16px);display:flex;align-items:center;justify-content:center;padding:1rem;">
+        <div
+            style="width:100%;max-width:420px;background:rgba(15,23,42,0.97);border:1px solid rgba(255,255,255,0.09);border-radius:1.75rem;padding:2.25rem;box-shadow:0 32px 80px rgba(0,0,0,0.7);">
+            <div style="display:flex;align-items:center;gap:.65rem;margin-bottom:1.75rem;">
+                <div
+                    style="width:36px;height:36px;border-radius:.65rem;background:var(--accent-bg);border:1px solid var(--accent-border);display:flex;align-items:center;justify-content:center;">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#38bdf8" stroke-width="2.5"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
+                    </svg>
+                </div>
+                <span style="font-size:.85rem;font-weight:700;color:#e2e8f0;">Quantum Step Tools</span>
+            </div>
+            <h2 style="font-size:1.4rem;font-weight:800;color:#f1f5f9;margin:0 0 .4rem;letter-spacing:-.02em;">Buy vs
+                Rent Calculator</h2>
+            <p style="font-size:.82rem;color:#475569;margin:0 0 1.75rem;line-height:1.55;">India's most detailed home
+                ownership vs renting financial comparison.</p>
+            <form onsubmit="qsCapture(event)">
+                <label>Your Name</label>
+                <input id="qs-name" type="text" placeholder="e.g. Rahul Sharma" required autocomplete="name"
+                    style="width:100%;box-sizing:border-box;padding:.65rem .9rem;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.09);border-radius:.85rem;color:#f1f5f9;font-size:.88rem;font-family:inherit;margin-bottom:.9rem;outline:none;transition:border-color .2s;"
+                    onfocus="this.style.borderColor='#38bdf880'"
+                    onblur="this.style.borderColor='rgba(255,255,255,.09)'">
+                <label>Work Email <span style="font-weight:400;text-transform:none;">(optional)</span></label>
+                <input id="qs-email" type="email" placeholder="you@company.com" autocomplete="email"
+                    style="width:100%;box-sizing:border-box;padding:.65rem .9rem;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.09);border-radius:.85rem;color:#f1f5f9;font-size:.88rem;font-family:inherit;margin-bottom:1.4rem;outline:none;transition:border-color .2s;"
+                    onfocus="this.style.borderColor='#38bdf880'"
+                    onblur="this.style.borderColor='rgba(255,255,255,.09)'">
+                <button type="submit"
+                    style="width:100%;padding:.75rem 1.25rem;background:linear-gradient(135deg,#38bdf8,#0ea5e9);border:none;border-radius:.85rem;color:#fff;font-size:.88rem;font-weight:700;cursor:pointer;font-family:inherit;display:flex;align-items:center;justify-content:center;gap:.45rem;transition:opacity .2s;"
+                    onmouseover="this.style.opacity='.85'" onmouseout="this.style.opacity='1'">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                        stroke-width="2.5">
+                        <polyline points="9 18 15 12 9 6" />
+                    </svg>
+                    Start Exploring
+                </button>
+            </form>
+            <p style="text-align:center;font-size:.68rem;color:#1e293b;margin-top:1rem;">Your information is never
+                shared or sold.</p>
+        </div>
+    </div>
+
+    <!-- Corner Share Icons -->
+    <div
+        style="position:fixed;top:130px;right:1.25rem;z-index:490;display:flex;flex-direction:column;gap:.45rem;align-items:center;">
+        <span
+            style="font-size:.58rem;color:#334155;text-transform:uppercase;letter-spacing:.09em;font-weight:700;writing-mode:vertical-rl;margin-bottom:.2rem;">Share</span>
+        <button title="WhatsApp"
+            onclick="(function(){var u=encodeURIComponent(location.href),t=encodeURIComponent('Should you Buy or Rent in India? Find out with this free calculator — by Quantum Step');window.open('https://wa.me/?text='+t+'%20'+u,'_blank')})()"
+            style="width:34px;height:34px;border-radius:50%;background:rgba(37,211,102,.1);border:1px solid rgba(37,211,102,.2);display:flex;align-items:center;justify-content:center;color:#25D166;cursor:pointer;transition:all .2s;padding:0;"
+            onmouseover="this.style.background='rgba(37,211,102,.22)';this.style.transform='scale(1.1)'"
+            onmouseout="this.style.background='rgba(37,211,102,.1)';this.style.transform=''">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor">
+                <path
+                    d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.348z" />
+                <path
+                    d="M12 0C5.373 0 0 5.373 0 12c0 2.085.54 4.043 1.481 5.749L.073 23.925l6.345-1.384A11.93 11.93 0 0 0 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.818a9.818 9.818 0 0 1-5.012-1.37l-.358-.213-3.747.817.848-3.651-.234-.372A9.818 9.818 0 1 1 12 21.818z" />
+            </svg>
+        </button>
+        <button title="LinkedIn"
+            onclick="window.open('https://www.linkedin.com/sharing/share-offsite/?url='+encodeURIComponent(location.href),'_blank')"
+            style="width:34px;height:34px;border-radius:50%;background:rgba(10,102,194,.1);border:1px solid rgba(10,102,194,.2);display:flex;align-items:center;justify-content:center;color:#0A66C2;cursor:pointer;transition:all .2s;padding:0;"
+            onmouseover="this.style.background='rgba(10,102,194,.22)';this.style.transform='scale(1.1)'"
+            onmouseout="this.style.background='rgba(10,102,194,.1)';this.style.transform=''">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor">
+                <path
+                    d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6zM2 9h4v12H2zm2-3a2 2 0 1 1 0-4 2 2 0 0 1 0 4z" />
+            </svg>
+        </button>
+        <button title="X / Twitter"
+            onclick="(function(){var u=encodeURIComponent(location.href),t=encodeURIComponent('Buy or Rent in India? Use this free financial calculator');window.open('https://twitter.com/intent/tweet?text='+t+'&url='+u,'_blank')})()"
+            style="width:34px;height:34px;border-radius:50%;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);display:flex;align-items:center;justify-content:center;color:#cbd5e1;cursor:pointer;transition:all .2s;padding:0;"
+            onmouseover="this.style.background='rgba(255,255,255,.12)';this.style.transform='scale(1.1)'"
+            onmouseout="this.style.background='rgba(255,255,255,.05)';this.style.transform=''">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor">
+                <path
+                    d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.73-8.835L1.254 2.25H8.08l4.277 5.653zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+            </svg>
+        </button>
+    </div>
+
+    <script>
+        (function () {
+            var TOOL = 'buy_vs_rent', WEBHOOK = 'https://script.google.com/macros/s/AKfycbwiYK9LDhZdbx3-r66rgRmfTClEyfH0VOWMFtKPw5nSzd_YRV7YETaqTVrOCaxpn7zNtg/exec', KEY = 'qs_user_' + TOOL;
+            function welcome(name) { var g = document.getElementById('qs-welcome-greet'); if (g) g.textContent = 'Welcome, ' + name + '.'; document.title = name + ' — ' + document.title; }
+            window.qsCapture = function (e) {
+                e.preventDefault();
+                var name = document.getElementById('qs-name').value.trim(), email = (document.getElementById('qs-email') || {}).value || '';
+                if (!name) return;
+                sessionStorage.setItem(KEY, JSON.stringify({ name, email }));
+                var ov = document.getElementById('qs-capture-overlay');
+                if (ov) { ov.style.opacity = '0'; ov.style.transition = 'opacity .35s'; setTimeout(function () { ov.remove(); }, 350); }
+                welcome(name);
+                try { navigator.sendBeacon(WEBHOOK, JSON.stringify({telemetry: window.qsGetTelemetry ? window.qsGetTelemetry() : {}, name, email, tool: TOOL, timestamp: new Date().toISOString(), url: location.href, referrer: document.referrer || 'direct' })); } catch (e2) { }
+            };
+            var ex = sessionStorage.getItem(KEY);
+            if (ex) { var d = JSON.parse(ex); document.getElementById('qs-capture-overlay') && document.getElementById('qs-capture-overlay').remove(); setTimeout(function () { welcome(d.name); }, 200); }
+        })();
+    </script>
+
+    <!-- Sticky Nav -->
+    <nav
+        style="position:sticky;top:0;z-index:100;background:rgba(2,6,23,0.95);border-bottom:1px solid rgba(255,255,255,0.06);padding:.75rem 0;backdrop-filter:blur(20px);">
+        <div
+            style="max-width:1200px;margin:0 auto;padding:0 1.5rem;display:flex;align-items:center;justify-content:space-between;">
+            <a href="index.html" style="display:flex;align-items:center;gap:.6rem;text-decoration:none;">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#6366f1" stroke-width="2.5">
+                    <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
+                </svg>
+                <span style="font-size:.9rem;font-weight:800;color:#f1f5f9;letter-spacing:-.01em;">Quantum Step</span>
+            </a>
+            <a href="index.html"
+                style="display:inline-flex;align-items:center;gap:.4rem;padding:.4rem .9rem;border-radius:999px;font-size:.78rem;font-weight:600;text-decoration:none;background:rgba(255,255,255,.05);color:#94a3b8;border:1px solid rgba(255,255,255,.1);"
+                onmouseover="this.style.color='#f1f5f9'" onmouseout="this.style.color='#94a3b8'">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                    <polyline points="15 18 9 12 15 6" />
+                </svg>
+                quantumstep.in
+            </a>
+        </div>
+    </nav>
+
+    <!-- Tool Nav -->
+    <div
+        style="background:rgba(15,23,42,0.95);border-bottom:1px solid rgba(255,255,255,0.06);padding:.6rem 0;sticky;top:58px;z-index:90;backdrop-filter:blur(20px);">
+        <div
+            style="max-width:1200px;margin:0 auto;padding:0 1.5rem;display:flex;align-items:center;gap:.5rem;justify-content:center;flex-wrap:wrap;">
+            <span
+                style="color:#64748b;font-size:.7rem;text-transform:uppercase;letter-spacing:.1em;font-weight:600;margin-right:.25rem;">Switch
+                Tool</span>
+            <a href="tool-salary-calculator.html"
+                style="display:inline-flex;align-items:center;gap:.4rem;padding:.4rem 1rem;border-radius:999px;font-size:.8rem;font-weight:600;text-decoration:none;background:rgba(255,255,255,.04);color:#94a3b8;border:1px solid rgba(255,255,255,.08);transition:all .2s;"
+                onmouseover="this.style.background='rgba(99,102,241,.1)';this.style.color='#a5b4fc'"
+                onmouseout="this.style.background='rgba(255,255,255,.04)';this.style.color='#94a3b8'">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="12" y1="1" x2="12" y2="23" />
+                    <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
+                </svg> Salary Decoder
+            </a>
+            <a href="tool-home-loan-calculator.html"
+                style="display:inline-flex;align-items:center;gap:.4rem;padding:.4rem 1rem;border-radius:999px;font-size:.8rem;font-weight:600;text-decoration:none;background:rgba(255,255,255,.04);color:#94a3b8;border:1px solid rgba(255,255,255,.08);transition:all .2s;"
+                onmouseover="this.style.background='rgba(99,102,241,.1)';this.style.color='#a5b4fc'"
+                onmouseout="this.style.background='rgba(255,255,255,.04)';this.style.color='#94a3b8'">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+                    <polyline points="9 22 9 12 15 12 15 22" />
+                </svg> Home Loan
+            </a>
+            <a href="tool-artha-wealth.html"
+                style="display:inline-flex;align-items:center;gap:.4rem;padding:.4rem 1rem;border-radius:999px;font-size:.8rem;font-weight:600;text-decoration:none;background:rgba(255,255,255,.04);color:#94a3b8;border:1px solid rgba(255,255,255,.08);transition:all .2s;"
+                onmouseover="this.style.background='rgba(99,102,241,.1)';this.style.color='#a5b4fc'"
+                onmouseout="this.style.background='rgba(255,255,255,.04)';this.style.color='#94a3b8'">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="23 6 13.5 15.5 8.5 10.5 1 18" />
+                </svg> ArthaWealth
+            </a>
+            <a href="tool-job-transition.html"
+                style="display:inline-flex;align-items:center;gap:.4rem;padding:.4rem 1rem;border-radius:999px;font-size:.8rem;font-weight:600;text-decoration:none;background:rgba(255,255,255,.04);color:#94a3b8;border:1px solid rgba(255,255,255,.08);transition:all .2s;"
+                onmouseover="this.style.background='rgba(99,102,241,.1)';this.style.color='#a5b4fc'"
+                onmouseout="this.style.background='rgba(255,255,255,.04)';this.style.color='#94a3b8'">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="2" y="7" width="20" height="14" rx="2" />
+                    <path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2" />
+                </svg> Job Transition
+            </a>
+            <a href="tool-buy-vs-rent.html"
+                style="display:inline-flex;align-items:center;gap:.4rem;padding:.4rem 1rem;border-radius:999px;font-size:.8rem;font-weight:700;text-decoration:none;background:linear-gradient(135deg,#0ea5e9,#38bdf8);color:white;border:1px solid rgba(56,189,248,.5);">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+                    <line x1="12" y1="22" x2="12" y2="12" />
+                </svg> Buy vs Rent
+            </a>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div style="max-width:1200px;margin:0 auto;padding:2rem 1.5rem 4rem;">
+
+        <!-- Header -->
+        <div style="text-align:center;margin-bottom:2.5rem;padding-top:1rem;">
+            <div
+                style="display:inline-flex;align-items:center;gap:.4rem;padding:.3rem .9rem;background:var(--accent-bg);border:1px solid var(--accent-border);border-radius:999px;color:#38bdf8;font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;margin-bottom:1rem;">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                    <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+                </svg>
+                Real Estate · Finance
+            </div>
+            <h1
+                style="font-size:clamp(1.75rem,4vw,2.75rem);font-weight:800;color:#f1f5f9;margin:0 0 .5rem;letter-spacing:-.025em;">
+                Buy vs Rent <span
+                    style="background:linear-gradient(135deg,#38bdf8,#818cf8);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">Calculator</span>
+            </h1>
+            <p id="qs-welcome-greet" style="font-size:.9rem;color:#475569;font-weight:500;min-height:1.4rem;"></p>
+            <p style="color:#64748b;font-size:.9rem;max-width:540px;margin:.5rem auto 0;">Indian home ownership vs
+                renting — true cost comparison over your holding period.</p>
+        </div>
+
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;" class="tool-grid">
+
+            <!-- LEFT: Inputs -->
+            <div>
+                <!-- Property Details -->
+                <div class="glass-panel p-6" style="padding:1.5rem;margin-bottom:1.5rem;">
+                    <h2
+                        style="font-size:1rem;font-weight:700;color:#f1f5f9;margin:0 0 1.25rem;display:flex;align-items:center;gap:.5rem;">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#38bdf8" stroke-width="2">
+                            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+                        </svg>
+                        Property Details
+                    </h2>
+                    <div class="field-group">
+                        <label>Property Price (₹) <span class="range-value" id="lbl-price">₹80L</span></label>
+                        <input type="range" id="prop-price" min="1000000" max="50000000" step="500000" value="8000000"
+                            oninput="updLbl('lbl-price',this.value,'price');calc()">
+                    </div>
+                    <div class="field-group">
+                        <label>Down Payment (%) <span class="range-value" id="lbl-dp">20%</span></label>
+                        <input type="range" id="down-pct" min="10" max="50" step="1" value="20"
+                            oninput="updLbl('lbl-dp',this.value,'pct');calc()">
+                    </div>
+                    <div class="field-group">
+                        <label>Home Loan Rate (%) <span class="range-value" id="lbl-lr">8.5%</span></label>
+                        <input type="range" id="loan-rate" min="6" max="14" step="0.1" value="8.5"
+                            oninput="updLbl('lbl-lr',this.value,'pct');calc()">
+                    </div>
+                    <div class="field-group">
+                        <label>Loan Tenure (years) <span class="range-value" id="lbl-lt">20 yrs</span></label>
+                        <input type="range" id="loan-tenure" min="5" max="30" step="1" value="20"
+                            oninput="updLbl('lbl-lt',this.value,'yr');calc()">
+                    </div>
+                    <div class="field-group">
+                        <label>Annual Property Appreciation (%) <span class="range-value" id="lbl-ap">6%</span></label>
+                        <input type="range" id="prop-appre" min="1" max="15" step="0.5" value="6"
+                            oninput="updLbl('lbl-ap',this.value,'pct');calc()">
+                    </div>
+                    <div class="field-group">
+                        <label>Annual Maintenance + Society (₹) <span class="range-value"
+                                id="lbl-maint">₹36K</span></label>
+                        <input type="range" id="maintenance" min="12000" max="300000" step="6000" value="36000"
+                            oninput="updLbl('lbl-maint',this.value,'inr');calc()">
+                    </div>
+                </div>
+
+                <!-- Rent Details -->
+                <div class="glass-panel p-6" style="padding:1.5rem;margin-bottom:1.5rem;">
+                    <h2
+                        style="font-size:1rem;font-weight:700;color:#f1f5f9;margin:0 0 1.25rem;display:flex;align-items:center;gap:.5rem;">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#818cf8" stroke-width="2">
+                            <path d="M20 7H4c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V9c0-1.1-.9-2-2-2z" />
+                            <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16" />
+                        </svg>
+                        Rental Details
+                    </h2>
+                    <div class="field-group">
+                        <label>Current Monthly Rent (₹) <span class="range-value" id="lbl-rent">₹25K</span></label>
+                        <input type="range" id="monthly-rent" min="5000" max="200000" step="1000" value="25000"
+                            oninput="updLbl('lbl-rent',this.value,'inr');calc()">
+                    </div>
+                    <div class="field-group">
+                        <label>Annual Rent Increase (%) <span class="range-value" id="lbl-ri">8%</span></label>
+                        <input type="range" id="rent-incr" min="2" max="15" step="0.5" value="8"
+                            oninput="updLbl('lbl-ri',this.value,'pct');calc()">
+                    </div>
+                </div>
+
+                <!-- Investment Assumptions -->
+                <div class="glass-panel p-6" style="padding:1.5rem;">
+                    <h2
+                        style="font-size:1rem;font-weight:700;color:#f1f5f9;margin:0 0 1.25rem;display:flex;align-items:center;gap:.5rem;">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#fbbf24" stroke-width="2">
+                            <polyline points="23 6 13.5 15.5 8.5 10.5 1 18" />
+                        </svg>
+                        Investment Assumptions
+                    </h2>
+                    <div class="field-group">
+                        <label>Alternative Investment Return (% p.a.) <span class="range-value"
+                                id="lbl-inv">12%</span></label>
+                        <input type="range" id="inv-return" min="4" max="20" step="0.5" value="12"
+                            oninput="updLbl('lbl-inv',this.value,'pct');calc()">
+                    </div>
+                    <div class="field-group">
+                        <label>Analysis Period (years) <span class="range-value" id="lbl-period">10 yrs</span></label>
+                        <input type="range" id="period" min="3" max="30" step="1" value="10"
+                            oninput="updLbl('lbl-period',this.value,'yr');calc()">
+                    </div>
+                    <div class="field-group">
+                        <label>Your Tax Bracket</label>
+                        <select id="tax-bracket" onchange="calc()">
+                            <option value="0">Nil (below 3L)</option>
+                            <option value="5">5%</option>
+                            <option value="10">10%</option>
+                            <option value="15">15%</option>
+                            <option value="20">20%</option>
+                            <option value="25" selected>25%</option>
+                            <option value="30">30%</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- RIGHT: Results -->
+            <div id="results-section">
+                <!-- Verdict -->
+                <div id="verdict-box" class="verdict-card verdict-buy" style="margin-bottom:1.5rem;">
+                    <div
+                        style="font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#64748b;margin-bottom:.5rem;">
+                        Verdict after <span id="verdict-period">10</span> years</div>
+                    <div id="verdict-icon" style="font-size:2.5rem;margin-bottom:.5rem;">
+                        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#34d399" stroke-width="1.5"
+                            style="margin:0 auto;display:block;">
+                            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+                        </svg>
+                    </div>
+                    <h3 id="verdict-text" style="font-size:1.5rem;font-weight:800;color:#f1f5f9;margin:0 0 .35rem;">
+                        Buying is Better</h3>
+                    <p id="verdict-sub" style="font-size:.85rem;color:#94a3b8;margin:0;">You save more by owning over
+                        this period.</p>
+                    <div id="verdict-saving" style="margin-top:1rem;font-size:1.75rem;font-weight:800;color:#34d399;">₹0
+                    </div>
+                    <div style="font-size:.75rem;color:#64748b;">net financial advantage</div>
+                </div>
+
+                <!-- Monthly Outflow -->
+                <div class="glass-panel" style="padding:1.5rem;margin-bottom:1.5rem;">
+                    <h3
+                        style="font-size:.85rem;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:.06em;margin:0 0 1rem;">
+                        Monthly Outflow Comparison</h3>
+                    <div class="stat-row">
+                        <span class="stat-label">Buy: EMI + Maintenance</span>
+                        <span class="stat-value" id="r-emi-total">—</span>
+                    </div>
+                    <div class="stat-row">
+                        <span class="stat-label">Rent: Month 1</span>
+                        <span class="stat-value" id="r-rent-m1">—</span>
+                    </div>
+                    <div class="stat-row">
+                        <span class="stat-label">Down Payment Required</span>
+                        <span class="stat-value" id="r-downpay">—</span>
+                    </div>
+                    <div class="stat-row">
+                        <span class="stat-label">Loan Amount</span>
+                        <span class="stat-value" id="r-loan">—</span>
+                    </div>
+                </div>
+
+                <!-- Total Cost Breakdown -->
+                <div class="glass-panel" style="padding:1.5rem;margin-bottom:1.5rem;">
+                    <h3
+                        style="font-size:.85rem;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:.06em;margin:0 0 1rem;">
+                        Total Cost Over Period</h3>
+                    <div class="stat-row">
+                        <span class="stat-label">Total Buy (EMI + maint + stamp + reg)</span>
+                        <span class="stat-value" id="r-total-buy">—</span>
+                    </div>
+                    <div class="stat-row">
+                        <span class="stat-label">Total Rent Paid</span>
+                        <span class="stat-value" id="r-total-rent">—</span>
+                    </div>
+                    <div class="stat-row">
+                        <span class="stat-label">Property Value at End</span>
+                        <span class="stat-value" id="r-prop-val">—</span>
+                    </div>
+                    <div class="stat-row">
+                        <span class="stat-label">Equity Built (Home)</span>
+                        <span class="stat-value" id="r-equity">—</span>
+                    </div>
+                </div>
+
+                <!-- Opportunity Cost -->
+                <div class="glass-panel" style="padding:1.5rem;margin-bottom:1.5rem;">
+                    <h3
+                        style="font-size:.85rem;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:.06em;margin:0 0 1rem;">
+                        Opportunity Cost Analysis</h3>
+                    <div class="stat-row">
+                        <span class="stat-label">Down Payment invested at <span id="r-inv-rate">12</span>%</span>
+                        <span class="stat-value" id="r-opp-dp">—</span>
+                    </div>
+                    <div class="stat-row">
+                        <span class="stat-label">Home Loan Tax Benefit (80C + 24b)</span>
+                        <span class="stat-value" id="r-tax-benefit">—</span>
+                    </div>
+                    <div class="stat-row">
+                        <span class="stat-label">Net Wealth: Buy scenario</span>
+                        <span class="stat-value" id="r-net-buy">—</span>
+                    </div>
+                    <div class="stat-row">
+                        <span class="stat-label">Net Wealth: Rent + Invest scenario</span>
+                        <span class="stat-value" id="r-net-rent">—</span>
+                    </div>
+                </div>
+
+                <!-- Export -->
+                <div
+                    style="display:flex;align-items:center;gap:.75rem;flex-wrap:wrap;padding:1rem 1.5rem;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);border-radius:1rem;margin-bottom:1.5rem;">
+                    <span
+                        style="display:flex;align-items:center;gap:.4rem;color:#94a3b8;font-size:.78rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;">
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2.5">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                            <polyline points="7 10 12 15 17 10" />
+                            <line x1="12" y1="15" x2="12" y2="3" />
+                        </svg>
+                        Export
+                    </span>
+                    <button onclick="exportToExcel()"
+                        style="display:inline-flex;align-items:center;gap:.45rem;padding:.5rem 1.1rem;background:rgba(16,185,129,.1);border:1px solid rgba(16,185,129,.25);border-radius:.65rem;color:#34d399;font-size:.82rem;font-weight:600;cursor:pointer;font-family:inherit;"
+                        onmouseover="this.style.background='rgba(16,185,129,.2)'"
+                        onmouseout="this.style.background='rgba(16,185,129,.1)'">
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                            <polyline points="14 2 14 8 20 8" />
+                        </svg> Excel
+                    </button>
+                    <button id="pdf-export-btn" onclick="exportToPDF()"
+                        style="display:inline-flex;align-items:center;gap:.45rem;padding:.5rem 1.1rem;background:rgba(244,63,94,.1);border:1px solid rgba(244,63,94,.25);border-radius:.65rem;color:#fb7185;font-size:.82rem;font-weight:600;cursor:pointer;font-family:inherit;"
+                        onmouseover="this.style.background='rgba(244,63,94,.2)'"
+                        onmouseout="this.style.background='rgba(244,63,94,.1)'">
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                            <polyline points="14 2 14 8 20 8" />
+                        </svg> PDF
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Responsive fix -->
+    <style>
+        @media (max-width:768px) {
+            .tool-grid {
+                grid-template-columns: 1fr !important;
+            }
+        }
+    </style>
+
+    <!-- Calc Logic -->
+    <script>
+        function fmt(n) { if (n >= 10000000) return '₹' + (n / 10000000).toFixed(2) + 'Cr'; if (n >= 100000) return '₹' + (n / 100000).toFixed(2) + 'L'; if (n >= 1000) return '₹' + (n / 1000).toFixed(1) + 'K'; return '₹' + Math.round(n).toLocaleString('en-IN'); }
+        function updLbl(id, val, type) {
+            var el = document.getElementById(id); if (!el) return;
+            if (type === 'price') el.textContent = fmt(+val);
+            else if (type === 'pct') el.textContent = (+val).toFixed(1) + '%';
+            else if (type === 'yr') el.textContent = val + ' yrs';
+            else if (type === 'inr') el.textContent = fmt(+val);
+        }
+
+        function calc() {
+            var price = +document.getElementById('prop-price').value;
+            var dpPct = +document.getElementById('down-pct').value / 100;
+            var loanRate = +document.getElementById('loan-rate').value / 100 / 12;
+            var loanYrs = +document.getElementById('loan-tenure').value;
+            var appre = +document.getElementById('prop-appre').value / 100;
+            var maint = +document.getElementById('maintenance').value;
+            var rent = +document.getElementById('monthly-rent').value;
+            var rentIncr = +document.getElementById('rent-incr').value / 100;
+            var invRet = +document.getElementById('inv-return').value / 100;
+            var period = +document.getElementById('period').value;
+            var taxBracket = +document.getElementById('tax-bracket').value / 100;
+
+            var downPay = price * dpPct;
+            var loanAmt = price - downPay;
+            var n = loanYrs * 12;
+            var emi = loanAmt * loanRate * Math.pow(1 + loanRate, n) / (Math.pow(1 + loanRate, n) - 1);
+            // Stamp duty + registration ~7% avg India
+            var stampReg = price * 0.07;
+            var totalBuyCost = downPay + stampReg;
+
+            // Compute period-year costs
+            var totalEmiPaid = 0, totalMaintPaid = 0, totalRentPaid = 0;
+            var loanBalance = loanAmt;
+            var interestYear1 = 0, principalYear1 = 0;
+            for (var mo = 1; mo <= period * 12; mo++) {
+                var yr = Math.ceil(mo / 12);
+                var interest = loanBalance * loanRate;
+                var principal = emi - interest;
+                if (mo <= n) { totalEmiPaid += emi; loanBalance -= principal; }
+                totalMaintPaid += maint;
+                totalRentPaid += rent * Math.pow(1 + rentIncr, yr - 1);
+                if (mo <= 12) { interestYear1 += interest; principalYear1 += principal; }
+            }
+            totalBuyCost += totalEmiPaid + totalMaintPaid;
+
+            // Property value at end
+            var propVal = price * Math.pow(1 + appre, period);
+            // Remaining loan balance
+            var remLoan = Math.max(0, loanBalance);
+            var equity = propVal - remLoan;
+
+            // Tax benefit: Section 24b interest (up to 2L/yr), 80C principal (up to 1.5L/yr)
+            var annualInterest = Math.min(interestYear1, 200000);
+            var annualPrincipal = Math.min(principalYear1, 150000);
+            var taxBenefitPerYear = (annualInterest + annualPrincipal) * taxBracket;
+            var totalTaxBenefit = taxBenefitPerYear * Math.min(period, loanYrs);
+
+            // Opportunity cost: down payment + stamp invested
+            var oppCostDP = (downPay + stampReg) * Math.pow(1 + invRet, period);
+
+            // Net wealth buy: equity + tax benefit - total cost paid
+            var netBuy = equity + totalTaxBenefit - totalBuyCost;
+            // Net wealth rent: invest down payment + monthly savings
+            var rentSavings = 0;
+            for (var yr2 = 0; yr2 < period; yr2++) {
+                var emiNext = yr2 < loanYrs ? emi : 0;
+                var rentAnn = rent * 12 * Math.pow(1 + rentIncr, yr2);
+                var saving = Math.max(0, (emiNext + maint / 12) - (rentAnn / 12));
+                rentSavings += saving * 12 * Math.pow(1 + invRet, period - yr2 - 1);
+            }
+            var netRent = (downPay + stampReg) * Math.pow(1 + invRet, period) + rentSavings - totalRentPaid;
+
+            var buying = netBuy > netRent;
+            var diff = Math.abs(netBuy - netRent);
+
+            // Update UI
+            document.getElementById('verdict-period').textContent = period;
+            document.getElementById('r-inv-rate').textContent = document.getElementById('inv-return').value;
+
+            var vbox = document.getElementById('verdict-box');
+            vbox.className = 'verdict-card ' + (buying ? 'verdict-buy' : 'verdict-rent');
+            document.getElementById('verdict-icon').innerHTML = buying
+                ? '<svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#34d399" stroke-width="1.5" style="margin:0 auto;display:block;"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>'
+                : '<svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#38bdf8" stroke-width="1.5" style="margin:0 auto;display:block;"><path d="M20 7H4c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V9c0-1.1-.9-2-2-2z"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>';
+            document.getElementById('verdict-text').textContent = buying ? 'Buying is Better' : 'Renting is Better';
+            document.getElementById('verdict-sub').textContent = buying ? 'Owning builds more wealth over this period.' : 'Renting & investing beats buying over this period.';
+            document.getElementById('verdict-saving').textContent = fmt(diff);
+            document.getElementById('verdict-saving').style.color = buying ? '#34d399' : '#38bdf8';
+
+            document.getElementById('r-emi-total').textContent = fmt(emi + maint / 12) + '/mo';
+            document.getElementById('r-rent-m1').textContent = fmt(rent) + '/mo';
+            document.getElementById('r-downpay').textContent = fmt(downPay);
+            document.getElementById('r-loan').textContent = fmt(loanAmt);
+            document.getElementById('r-total-buy').textContent = fmt(totalBuyCost);
+            document.getElementById('r-total-rent').textContent = fmt(totalRentPaid);
+            document.getElementById('r-prop-val').textContent = fmt(propVal);
+            document.getElementById('r-equity').textContent = fmt(equity);
+            document.getElementById('r-opp-dp').textContent = fmt(oppCostDP);
+            document.getElementById('r-tax-benefit').textContent = fmt(totalTaxBenefit);
+            document.getElementById('r-net-buy').textContent = fmt(netBuy);
+            document.getElementById('r-net-rent').textContent = fmt(netRent);
+
+            window._bvrData = { price, downPay, loanAmt, emi, maint, totalBuyCost, totalRentPaid, propVal, equity, netBuy, netRent, period, verdict: buying ? 'Buy' : 'Rent' };
+        
+    if(window.qsLogCalc) qsLogCalc("buy_vs_rent", {inputs: Array.from(document.querySelectorAll("input[id],select[id]")).reduce(function(a,el){a[el.id]=el.value;return a;},{}), results: Array.from(document.querySelectorAll("[id^=r-],[id*=result],[id*=Result],[id*=total],[id*=Total],[id*=verdict]")).reduce(function(a,el){a[el.id]=el.textContent.trim();return a;},{})});
+}
+
+        window.getExportData = function () {
+            var d = window._bvrData || {}; var dt = new Date().toLocaleDateString('en-IN');
+            return {
+                sheetName: 'BuyVsRent', fileName: 'Buy_vs_Rent_Calculator.xlsx', rows: [
+                    ['Quantum Step — Buy vs Rent Analysis'], ['Generated: ' + dt], [],
+                    ['Parameter', 'Value'],
+                    ['Property Price', '₹' + Math.round(d.price || 0).toLocaleString('en-IN')],
+                    ['Down Payment', '₹' + Math.round(d.downPay || 0).toLocaleString('en-IN')],
+                    ['Loan Amount', '₹' + Math.round(d.loanAmt || 0).toLocaleString('en-IN')],
+                    ['Monthly EMI + Maint', '₹' + Math.round((d.emi || 0) + (d.maint || 0) / 12).toLocaleString('en-IN')],
+                    ['Total Buy Cost', '₹' + Math.round(d.totalBuyCost || 0).toLocaleString('en-IN')],
+                    ['Total Rent Paid', '₹' + Math.round(d.totalRentPaid || 0).toLocaleString('en-IN')],
+                    ['Property Value at End', '₹' + Math.round(d.propVal || 0).toLocaleString('en-IN')],
+                    ['Equity Built', '₹' + Math.round(d.equity || 0).toLocaleString('en-IN')],
+                    ['Net Wealth - Buy', '₹' + Math.round(d.netBuy || 0).toLocaleString('en-IN')],
+                    ['Net Wealth - Rent+Invest', '₹' + Math.round(d.netRent || 0).toLocaleString('en-IN')],
+                    ['Verdict after ' + (d.period || 10) + ' years', d.verdict || '—']
+                ]
+            };
+        };
+
+        // init
+        calc();
+    </script>
+
+    <!-- Export Libraries -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script>
+        function exportToExcel() {
+            var d = window.getExportData(); var wb = XLSX.utils.book_new();
+            var ws = XLSX.utils.aoa_to_sheet(d.rows); XLSX.utils.book_append_sheet(wb, ws, d.sheetName); XLSX.writeFile(wb, d.fileName);
+        }
+        async function exportToPDF() {
+            var { jsPDF } = window.jspdf; var t = document.getElementById('results-section');
+            var btn = document.getElementById('pdf-export-btn'); if (btn) btn.disabled = true;
+            var canvas = await html2canvas(t, { scale: 2, backgroundColor: '#0f172a', useCORS: true });
+            var pdf = new jsPDF({ orientation: 'landscape', unit: 'px', format: [canvas.width / 2, canvas.height / 2] });
+            pdf.addImage(canvas.toDataURL('image/png'), 'PNG', 0, 0, canvas.width / 2, canvas.height / 2);
+            pdf.save('Buy_vs_Rent_Calculator.pdf');
+            if (btn) btn.disabled = false;
+        }
+    </script>
+<script id="qs-calc-logger">
+(function(){
+var WEBHOOK="https://script.google.com/macros/s/AKfycbwiYK9LDhZdbx3-r66rgRmfTClEyfH0VOWMFtKPw5nSzd_YRV7YETaqTVrOCaxpn7zNtg/exec",_t=null;
+window.qsLogCalc=function(tool,data){
+    clearTimeout(_t);
+    _t=setTimeout(function(){
+        var s=sessionStorage.getItem("qs_user_"+tool),name="",email="";
+        if(s){try{var d=JSON.parse(s);name=d.name||"";email=d.email||"";}catch(e){}}
+        if(!name)return;
+        var p={type:"calculation",name:name,email:email,tool:tool,timestamp:new Date().toISOString(),url:location.href,data:data};
+        try{navigator.sendBeacon(WEBHOOK,JSON.stringify(p));}catch(e){}
+    },2000);
+};
+})();
+</script>
+</body>
+
+</html>
