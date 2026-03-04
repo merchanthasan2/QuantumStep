@@ -690,7 +690,11 @@
 
                 if (type === 'POLL') {
                     const optionCounts = {};
-                    Object.values(slideVotes).forEach(v => optionCounts[v] = (optionCounts[v] || 0) + 1);
+                    // Support both new {name, response} objects and legacy bare values
+                    Object.values(slideVotes).forEach(v => {
+                        const resp = (v !== null && typeof v === 'object') ? v.response : v;
+                        optionCounts[resp] = (optionCounts[resp] || 0) + 1;
+                    });
 
                     slideEl.querySelectorAll('.vote-fill').forEach((fill, optIndex) => {
                         const count = optionCounts[optIndex] || 0;
@@ -701,16 +705,22 @@
                     });
                 } else if (type === 'QA') {
                     const qaContainer = slideEl.querySelector('.qa-container');
-                    qaContainer.innerHTML = Object.values(slideVotes).map(text => `
+                    qaContainer.innerHTML = Object.values(slideVotes).map(v => {
+                        const name = (v !== null && typeof v === 'object') ? (v.name || 'Anonymous') : 'Anonymous';
+                        const text = (v !== null && typeof v === 'object') ? v.response : v;
+                        return `
                         <div class="bg-white/5 border border-white/10 p-5 rounded-2xl text-xl animate-scale-in">
+                            <div class="text-xs font-black text-violet-400 uppercase tracking-widest mb-2">${name}</div>
                             ${text}
-                        </div>
-                    `).join('');
+                        </div>`;
+                    }).join('');
                 } else if (type === 'WORD_CLOUD') {
                     const cloudContainer = slideEl.querySelector('.word-cloud-container');
                     const wordCounts = {};
-                    Object.values(slideVotes).forEach(phrase => {
-                        const words = phrase.toLowerCase().trim().split(/\s+/);
+                    Object.values(slideVotes).forEach(v => {
+                        const phrase = (v !== null && typeof v === 'object') ? v.response : v;
+                        if (!phrase) return;
+                        const words = String(phrase).toLowerCase().trim().split(/\s+/);
                         words.forEach(w => wordCounts[w] = (wordCounts[w] || 0) + 1);
                     });
 
@@ -726,7 +736,10 @@
                         return `<span style="font-size: ${size}rem; color: ${color};" class="font-black capitalize transition-all duration-500">${word}</span>`;
                     }).join('');
                 } else if (type === 'SLIDER') {
-                    const sum = Object.values(slideVotes).reduce((a, b) => a + Number(b), 0);
+                    const sum = Object.values(slideVotes).reduce((a, v) => {
+                        const val = (v !== null && typeof v === 'object') ? v.response : v;
+                        return a + Number(val);
+                    }, 0);
                     const avg = totalResponses > 0 ? (sum / totalResponses).toFixed(1) : "0.0";
 
                     slideEl.querySelector('.average-value').innerText = avg;
