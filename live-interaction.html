@@ -986,8 +986,12 @@
             try {
                 setSubmitState('submitted');
 
-                // Save vote
-                await set(ref(db, `sessions/${sessionId}/votes/${slideIndex}/${userId}`), selectedResponse);
+                // Save vote with participant identity
+                await set(ref(db, `sessions/${sessionId}/votes/${slideIndex}/${userId}`), {
+                    name: participant.name,
+                    response: selectedResponse,
+                    submittedAt: Date.now()
+                });
 
                 // Handle Quiz Scoring
                 const slide = sessionData.slides[slideIndex];
@@ -995,7 +999,6 @@
                     const correctedCorrectIdx = Number(slide.correctAnswer);
                     if (selectedResponse === correctedCorrectIdx) {
                         const points = Number(slide.points) || 10;
-                        // For scores, we'll use a separate leaderboard node to keep it clean
                         const scoreRef = ref(db, `sessions/${sessionId}/leaderboard/${userId}`);
                         onValue(scoreRef, (snap) => {
                             const cur = snap.val() || { name: participant.name, score: 0 };
