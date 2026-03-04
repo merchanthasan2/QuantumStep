@@ -57,23 +57,47 @@
 
         .nav-item {
             display: flex;
-            items: center;
+            align-items: flex-start;
             gap: 12px;
             padding: 12px 16px;
             border-radius: 12px;
             color: #94a3b8;
+            font-weight: 500;
             transition: all 0.2s ease;
         }
 
-        .nav-item:hover,
-        .nav-item.active {
+        .nav-item:hover {
             color: white;
-            background: rgba(124, 58, 237, 0.1);
+            background: rgba(255, 255, 255, 0.05);
         }
 
         .nav-item.active {
             color: #a78bfa;
-            border: 1px solid rgba(124, 58, 237, 0.2);
+            background: rgba(124, 58, 237, 0.15);
+            border: 1px solid rgba(124, 58, 237, 0.3);
+            box-shadow: 0 4px 12px rgba(124, 58, 237, 0.1);
+        }
+
+        .nav-sub-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 16px 10px 44px;
+            border-radius: 12px;
+            color: #64748b;
+            font-size: 0.85rem;
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+
+        .nav-sub-item:hover {
+            color: white;
+            background: rgba(255, 255, 255, 0.03);
+        }
+
+        .nav-sub-item.active {
+            color: #a78bfa;
+            background: rgba(124, 58, 237, 0.08);
         }
 
         .status-badge {
@@ -110,77 +134,116 @@
     <!-- Sidebar -->
     <aside class="glass-sidebar w-64 fixed inset-y-0 left-0 z-50 p-6 flex flex-col hidden lg:flex">
         <div class="flex items-center gap-3 mb-10 px-2">
-            <div
-                class="w-10 h-10 bg-violet-600 rounded-xl flex items-center justify-center shadow-lg shadow-violet-500/20">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"
-                    stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
-                </svg>
-            </div>
-            <span class="text-xl font-black text-white uppercase tracking-tighter">EngageIQ</span>
+            <a href="dashboard.html" class="flex items-center gap-3" style="text-decoration:none;">
+                <div
+                    class="w-10 h-10 bg-violet-600 rounded-xl flex items-center justify-center shadow-lg shadow-violet-500/20">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+                    </svg>
+                </div>
+                <span class="text-xl font-black text-white uppercase tracking-tighter">EngageIQ</span>
+            </a>
         </div>
 
-        <nav class="space-y-1 flex-1">
-            <a href="#" class="nav-item active">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <rect x="3" y="3" width="7" height="7" />
-                    <rect x="14" y="3" width="7" height="7" />
-                    <rect x="14" y="14" width="7" height="7" />
-                    <rect x="3" y="14" width="7" height="7" />
+        <nav class="flex-1 space-y-1 overflow-y-auto hidden-scrollbar pr-4">
+            <a href="#" class="nav-item active" data-target="overview-section">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" class="feature-icon" stroke="currentColor"
+                    stroke-width="2">
+                    <rect x="3" y="3" width="7" height="7" rx="1.5" />
+                    <rect x="14" y="3" width="7" height="7" rx="1.5" />
+                    <rect x="14" y="14" width="7" height="7" rx="1.5" />
+                    <rect x="3" y="14" width="7" height="7" rx="1.5" />
                 </svg>
-                <span>Overview</span>
+                <span>Dashboard</span>
             </a>
-            <a href="#" class="nav-item">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M12 20v-6M6 20V10M18 20V4" />
+
+            <div>
+                <a href="#" class="nav-item" data-target="my-presentations-section">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        class="mt-0.5">
+                        <line x1="18" y1="20" x2="18" y2="10" />
+                        <line x1="12" y1="20" x2="12" y2="4" />
+                        <line x1="6" y1="20" x2="6" y2="14" />
+                    </svg>
+                    <span>My Presentations</span>
+                </a>
+                <div class="mt-1 space-y-1">
+                    <a href="#" class="nav-sub-item" data-target="my-quizzes-section">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <circle cx="12" cy="8" r="7" />
+                            <polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88" />
+                        </svg>
+                        <span>My Quizzes</span>
+                    </a>
+                    <a href="#" class="nav-sub-item" data-target="audience-qa-section">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <circle cx="12" cy="12" r="10" />
+                            <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" />
+                            <line x1="12" y1="17" x2="12.01" y2="17" />
+                        </svg>
+                        <span>My Q&A</span>
+                    </a>
+                </div>
+            </div>
+
+            <a href="#" class="nav-item" data-target="feedback-section">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                    class="mt-0.5">
+                    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
                 </svg>
-                <span>My Polls</span>
+                <span>Feedback & Forms</span>
             </a>
-            <a href="#" class="nav-item">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <circle cx="12" cy="12" r="10" />
-                    <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" />
-                    <line x1="12" y1="17" x2="12.01" y2="17" />
-                </svg>
-                <span>Audience Q&A</span>
-            </a>
-            <a href="#" class="nav-item">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path
-                        d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z" />
-                </svg>
-                <span>Feedback</span>
-            </a>
-            <div class="pt-6 pb-2 text-[10px] font-black tracking-widest text-slate-500 uppercase px-4">Management</div>
-            <a href="#" class="nav-item">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
-                    <circle cx="9" cy="7" r="4" />
-                    <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
-                    <path d="M16 3.13a4 4 0 0 1 0 7.75" />
-                </svg>
-                <span>Team Members</span>
-            </a>
-            <a href="#" class="nav-item">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        </nav>
+        <div class="pt-8 pb-4">
+            <span class="text-[10px] font-black text-slate-500 uppercase tracking-widest px-4">Management</span>
+        </div>
+        <div class="space-y-2">
+            <a href="#" class="nav-item" data-target="settings-section">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                    class="mt-0.5">
                     <circle cx="12" cy="12" r="3" />
                     <path
-                        d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33 1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82 1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z" />
+                        d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z" />
                 </svg>
                 <span>Settings</span>
             </a>
-        </nav>
+            <a href="#" id="logout-btn" class="nav-item text-red-400 hover:bg-red-500/10 hover:text-red-300">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                    class="mt-0.5">
+                    <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+                    <polyline points="16 17 21 12 16 7" />
+                    <line x1="21" y1="12" x2="9" y2="12" />
+                </svg>
+                <span>Signout</span>
+            </a>
+
+            <a href="admin.html" id="admin-nav-item" class="nav-item hidden" style="margin-top: 1rem;">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                    class="mt-0.5">
+                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                </svg>
+                <span class="text-rose-400 font-bold">Admin Panel</span>
+            </a>
+        </div>
 
         <div class="mt-auto glass-card p-4 rounded-2xl">
             <div class="flex items-center gap-3">
                 <div class="w-10 h-10 rounded-full bg-gradient-to-tr from-violet-500 to-blue-500 p-[2px]">
-                    <div
-                        class="w-full h-full rounded-full bg-slate-950 flex items-center justify-center text-xs font-bold">
-                        JD</div>
+                    <div class="w-full h-full rounded-full bg-slate-950 flex items-center justify-center text-xs font-bold"
+                        id="sidebar-avatar">
+                        U</div>
                 </div>
                 <div>
-                    <div class="text-sm font-bold truncate">John Smith</div>
-                    <div class="text-[10px] text-slate-500">Starter Plan</div>
+                    <div class="text-sm font-bold truncate" id="sidebar-name">Loading...</div>
+                    <div class="text-[10px] text-slate-500" id="sidebar-plan">...</div>
+                    <div class="flex items-center gap-1.5 mt-1 hidden" id="sidebar-role-badge">
+                        <span
+                            class="text-[9px] font-black px-2 py-0.5 bg-rose-500/10 border border-rose-500/20 text-rose-400 rounded-full uppercase tracking-tighter">Super
+                            Admin</span>
+                    </div>
                 </div>
             </div>
         </div>
@@ -188,151 +251,462 @@
 
     <!-- Main Content -->
     <main class="flex-1 lg:ml-64 p-4 lg:p-10">
-        <!-- Header -->
-        <header class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-10">
-            <div>
-                <h1 class="text-3xl font-black">Performance Overview</h1>
-                <p class="text-slate-500">Welcome back, John! Here's what's happening today.</p>
+        <!-- Top Toolbar / App Navigation -->
+        <div
+            class="flex justify-between items-center mb-10 bg-slate-900 border border-slate-800 rounded-xl p-4 shadow-lg">
+            <div class="font-bold text-slate-300 flex items-center gap-2">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M4 22h14a2 2 0 0 0 2-2V7.5L14.5 2H6a2 2 0 0 0-2 2v4"></path>
+                </svg>
+                Quantum Step Toolkit
             </div>
-            <div class="flex items-center gap-4 w-full md:w-auto">
-                <button id="new-session-btn"
-                    class="flex-1 md:flex-none glass-card px-5 py-2.5 rounded-xl font-bold text-sm flex items-center justify-center gap-2">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                        stroke-width="2.5">
-                        <circle cx="12" cy="12" r="10" />
-                        <line x1="12" y1="8" x2="12" y2="16" />
-                        <line x1="8" y1="12" x2="16" y2="12" />
+            <div class="flex gap-6 items-center">
+                <a href="#" class="text-sm font-medium text-slate-400 hover:text-white transition-colors">Analytics
+                    Tool</a>
+                <a href="#" class="text-sm font-medium text-slate-400 hover:text-white transition-colors">CRM Portal</a>
+                <div class="w-px h-4 bg-slate-700"></div>
+                <a href="index.html"
+                    class="text-sm font-medium text-rose-400 hover:text-rose-300 flex items-center gap-1 transition-colors">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
                     </svg>
-                    New Session
-                </button>
-                <button onclick="window.location.href='present.html?id=' + (window.currentSessionId || '582914')"
-                    class="bg-violet-600 hover:bg-violet-500 text-white transition-all px-5 py-2.5 rounded-xl font-bold text-sm shadow-lg shadow-violet-600/20">
-                    Go Live
-                </button>
+                    Exit EngageIQ
+                </a>
             </div>
-        </header>
+        </div>
 
-        <!-- Stats Grid -->
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
-            <div class="glass-card p-6 rounded-2xl">
-                <div class="text-slate-500 text-xs font-bold uppercase tracking-wider mb-2">Total Participants</div>
-                <div class="flex items-end gap-3">
-                    <span class="text-4xl font-black">1.2k</span>
-                    <span class="text-emerald-500 text-xs font-bold mb-1">+12% &uarr;</span>
+        <div id="overview-section" class="sidebar-section">
+            <!-- Header -->
+            <header class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-10 w-full">
+                <div>
+                    <h1 class="text-3xl font-black text-white">Performance Overview</h1>
+                    <p class="text-indigo-200 mt-1">Welcome back, <span id="welcome-name">Hasan</span>! Here's what's
+                        happening today.</p>
+                </div>
+                <div class="flex items-center gap-4 w-full md:w-auto">
+                    <button type="button" id="new-session-btn"
+                        class="flex-1 md:flex-none border border-white/10 hover:bg-white/5 px-6 py-2.5 rounded-xl font-bold text-sm flex items-center justify-center gap-2 transition-colors">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <path d="M12 5v14m-7-7h14" />
+                        </svg>
+                        New Session
+                    </button>
+                    <button onclick="window.location.href='present.html?id=' + (window.currentSessionId || '582914')"
+                        class="px-8 py-2.5 bg-violet-600 text-white rounded-xl font-bold text-sm hover:bg-violet-500 transition-colors shadow-lg shadow-violet-600/30">
+                        Go Live
+                    </button>
+                </div>
+            </header>
+
+            <!-- Stats Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
+                <div id="kpi-participation" class="glass-card p-6 rounded-2xl border border-white/5 bg-slate-900/50">
+                    <div class="text-slate-400 text-xs font-bold uppercase tracking-widest mb-4">Total Participation
+                    </div>
+                    <div class="flex items-end items-center gap-3">
+                        <span class="text-4xl font-black text-white leading-none">0</span>
+                        <span class="text-emerald-400 text-xs font-bold flex items-center gap-1">+0% &uarr;</span>
+                    </div>
+                </div>
+                <div id="kpi-active" class="glass-card p-6 rounded-2xl border border-white/5 bg-slate-900/50">
+                    <div class="text-slate-400 text-xs font-bold uppercase tracking-widest mb-4">Active Sessions</div>
+                    <div class="flex items-end items-center gap-3">
+                        <span class="text-4xl font-black text-white leading-none">00</span>
+                        <span class="bg-emerald-500/10 text-emerald-400 px-3 py-1 rounded-full text-xs font-bold">Active
+                            now</span>
+                    </div>
+                </div>
+                <div id="kpi-total" class="glass-card p-6 rounded-2xl border border-white/5 bg-slate-900/50">
+                    <div class="text-slate-400 text-xs font-bold uppercase tracking-widest mb-4">Total Created</div>
+                    <div class="flex items-end items-center gap-3">
+                        <span class="text-4xl font-black text-white leading-none">00</span>
+                    </div>
+                </div>
+                <div id="kpi-deleted" class="glass-card p-6 rounded-2xl border border-white/5 bg-slate-900/50">
+                    <div class="text-slate-400 text-xs font-bold uppercase tracking-widest mb-4">Archived/Deleted</div>
+                    <div class="flex items-end items-center gap-3">
+                        <span class="text-4xl font-black text-white leading-none">00</span>
+                    </div>
                 </div>
             </div>
-            <div class="glass-card p-6 rounded-2xl">
-                <div class="text-slate-500 text-xs font-bold uppercase tracking-wider mb-2">Live Sessions</div>
-                <div class="flex items-end gap-3">
-                    <span class="text-4xl font-black">03</span>
-                    <span class="status-badge status-live">Active now</span>
+
+            <!-- Content Grid -->
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <!-- Recent Presentations -->
+                <div class="lg:col-span-2">
+                    <div class="flex justify-between items-center mb-6">
+                        <h2 class="text-xl font-black">Recent Presentations</h2>
+                        <a href="#" class="text-violet-400 text-sm font-bold hover:underline">View all</a>
+                    </div>
+                    <div id="sessions-list-container" class="space-y-4">
+                        <!-- Session Card 1 -->
+                        <div
+                            class="glass-card p-4 rounded-2xl border border-white/5 bg-slate-900/40 flex items-center justify-between hover:bg-slate-800/40 transition-colors group cursor-pointer">
+                            <div class="flex items-center gap-4">
+                                <div
+                                    class="w-12 h-12 rounded-xl bg-violet-500/10 flex items-center justify-center text-violet-400 shrink-0">
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                        stroke-width="2">
+                                        <rect x="4" y="2" width="16" height="20" rx="2" ry="2" />
+                                        <line x1="12" y1="18" x2="12.01" y2="18" />
+                                    </svg>
+                                </div>
+                                <div>
+                                    <h3 class="font-bold text-white text-base">Test Session</h3>
+                                    <p class="text-xs text-slate-500 mt-1">03/03/2026 &bull; ID: 532341</p>
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-4 hidden md:flex">
+                                <span
+                                    class="bg-white/5 text-slate-300 px-3 py-1 rounded-full text-[10px] font-bold tracking-wider uppercase border border-white/5">Draft</span>
+                                <div class="flex items-center gap-3 text-slate-400">
+                                    <button class="hover:text-white transition-colors p-1"><svg width="18" height="18"
+                                            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <path d="M12 20h9" />
+                                            <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z" />
+                                        </svg></button>
+                                    <button class="hover:text-rose-400 transition-colors p-1"><svg width="18"
+                                            height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                            stroke-width="2">
+                                            <polyline points="3 6 5 6 21 6" />
+                                            <path
+                                                d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
+                                        </svg></button>
+                                    <button class="hover:text-emerald-400 transition-colors p-1"><svg width="20"
+                                            height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                            stroke-width="2">
+                                            <polygon points="5 3 19 12 5 21 5 3" />
+                                        </svg></button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Session Card 2 -->
+                        <div
+                            class="glass-card p-4 rounded-2xl border border-white/5 bg-slate-900/40 flex items-center justify-between hover:bg-slate-800/40 transition-colors group cursor-pointer">
+                            <div class="flex items-center gap-4">
+                                <div
+                                    class="w-12 h-12 rounded-xl bg-violet-500/10 flex items-center justify-center text-violet-400 shrink-0">
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                        stroke-width="2">
+                                        <rect x="4" y="2" width="16" height="20" rx="2" ry="2" />
+                                        <line x1="12" y1="18" x2="12.01" y2="18" />
+                                    </svg>
+                                </div>
+                                <div>
+                                    <h3 class="font-bold text-white text-base">IPN India - Ai For Women</h3>
+                                    <p class="text-xs text-slate-500 mt-1">03/03/2026 &bull; ID: 940921</p>
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-4 hidden md:flex">
+                                <span
+                                    class="bg-white/5 text-slate-300 px-3 py-1 rounded-full text-[10px] font-bold tracking-wider uppercase border border-white/5">Draft</span>
+                                <div class="flex items-center gap-3 text-slate-400">
+                                    <button class="hover:text-white transition-colors p-1"><svg width="18" height="18"
+                                            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <path d="M12 20h9" />
+                                            <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z" />
+                                        </svg></button>
+                                    <button class="hover:text-rose-400 transition-colors p-1"><svg width="18"
+                                            height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                            stroke-width="2">
+                                            <polyline points="3 6 5 6 21 6" />
+                                            <path
+                                                d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
+                                        </svg></button>
+                                    <button class="hover:text-emerald-400 transition-colors p-1"><svg width="20"
+                                            height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                            stroke-width="2">
+                                            <polygon points="5 3 19 12 5 21 5 3" />
+                                        </svg></button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Column -->
+                <div class="space-y-8">
+                    <!-- Plan Status -->
+                    <div
+                        class="glass-card p-6 rounded-3xl border border-violet-500/10 bg-slate-900/60 shadow-xl shadow-slate-950/50">
+                        <div class="flex justify-between items-start mb-8">
+                            <div>
+                                <h3 class="font-black text-xl text-white">Your Plan</h3>
+                                <p class="text-xs text-slate-500 mt-1">Starter (Free)</p>
+                            </div>
+                            <div
+                                class="w-10 h-10 rounded-full bg-violet-900/40 flex items-center justify-center text-violet-400 border border-violet-500/20">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2.5">
+                                    <path
+                                        d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6M18 9h1.5a2.5 2.5 0 0 0 0-5H18M4 22h16M10 14.66V17M14 14.66V17M18 2H6v7a6 6 0 0 0 12 0V2z" />
+                                </svg>
+                            </div>
+                        </div>
+                        <div class="mb-6">
+                            <div class="flex justify-between text-xs font-bold mb-3">
+                                <span class="text-white">Participants Used</span>
+                                <span class="text-violet-200">1,200 / 2,000</span>
+                            </div>
+                            <div class="w-full h-2 bg-slate-800 rounded-full overflow-hidden border border-white/5">
+                                <div
+                                    class="w-[60%] h-full bg-gradient-to-r from-violet-600 to-indigo-400 shadow-[0_0_10px_rgba(124,58,237,0.5)] rounded-full">
+                                </div>
+                            </div>
+                        </div>
+                        <button type="button" onclick="window.location.href='pricing.html'"
+                            class="w-full py-3 bg-white text-slate-950 font-black text-sm rounded-xl hover:bg-slate-200 transition-colors shadow-lg mt-2">Upgrade
+                            Plan</button>
+                    </div>
+
+                    <!-- Recent Feedback -->
+                    <div>
+                        <h2 class="text-xl font-black mb-6">Live Feedback</h2>
+                        <div class="glass-card p-6 rounded-3xl border border-white/5 bg-slate-900/40">
+                            <div class="space-y-6">
+                                <div class="flex gap-4 items-start">
+                                    <div
+                                        class="w-8 h-8 rounded-full bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-500 shrink-0 mt-1">
+                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
+                                            stroke="currentColor" stroke-width="3">
+                                            <polyline points="20 6 9 17 4 12" />
+                                        </svg>
+                                    </div>
+                                    <p class="text-sm text-slate-300">"Great visuals in the strategy presentation!"</p>
+                                </div>
+                                <div class="flex gap-4 items-start">
+                                    <div
+                                        class="w-8 h-8 rounded-full bg-blue-500/10 border border-blue-500/20 flex items-center justify-center text-blue-500 shrink-0 mt-1">
+                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
+                                            stroke="currentColor" stroke-width="3">
+                                            <circle cx="12" cy="12" r="10" />
+                                            <path d="M12 16v-4" />
+                                            <path d="M12 8h.01" />
+                                        </svg>
+                                    </div>
+                                    <p class="text-sm text-slate-300">"Can we have more time for Q&A next time?"</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
-            <div class="glass-card p-6 rounded-2xl">
-                <div class="text-slate-500 text-xs font-bold uppercase tracking-wider mb-2">Engagement Rate</div>
-                <div class="flex items-end gap-3">
-                    <span class="text-4xl font-black">88%</span>
-                    <span class="text-emerald-500 text-xs font-bold mb-1">+5.2% &uarr;</span>
+        </div> <!-- End Overview Section -->
+
+        <!-- My Presentations Section -->
+        <div id="my-presentations-section" class="sidebar-section hidden">
+            <h1 class="text-3xl font-black mb-4">My Presentations</h1>
+            <p class="text-slate-500 mb-8">Manage and review all your past and live presentations.</p>
+            <div id="my-presentations-list" class="space-y-4 mb-8 hidden"></div>
+            <div id="my-presentations-empty"
+                class="glass-card p-12 text-center rounded-2xl flex flex-col items-center justify-center border-dashed border-white/5">
+                <div
+                    class="w-16 h-16 rounded-full bg-slate-800 flex items-center justify-center mb-4 opacity-50 text-slate-400">
+                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="20" x2="18" y2="10" />
+                        <line x1="12" y1="20" x2="12" y2="4" />
+                        <line x1="6" y1="20" x2="6" y2="14" />
+                    </svg>
                 </div>
+                <h2 class="text-xl font-bold mb-2">No presentations created yet</h2>
+                <p class="text-slate-400 max-w-sm mb-6">Create single standalone presentations to share instantly.
+                </p>
+                <button type="button" class="bg-violet-600 text-white px-6 py-2 rounded-xl font-bold">Create New
+                    Presentation</button>
             </div>
-            <div class="glass-card p-6 rounded-2xl">
-                <div class="text-slate-500 text-xs font-bold uppercase tracking-wider mb-2">Avg. Response Time</div>
-                <div class="flex items-end gap-3">
-                    <span class="text-4xl font-black">1.4s</span>
-                    <span class="text-blue-400 text-xs font-bold mb-1">-0.2s &darr;</span>
+        </div>
+
+        <!-- Audience Q&A Section -->
+        <div id="audience-qa-section" class="sidebar-section hidden">
+            <div class="flex justify-between items-center mb-4">
+                <h1 class="text-3xl font-black">My Q&A</h1>
+                <button type="button" onclick="startNewSession('qa')"
+                    class="bg-violet-600 text-white px-4 py-2 rounded-xl font-bold text-sm flex items-center gap-2">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                        <line x1="12" y1="5" x2="12" y2="19" />
+                        <line x1="5" y1="12" x2="19" y2="12" />
+                    </svg>
+                    New Q&A
+                </button>
+            </div>
+            <p class="text-slate-500 mb-8">Review incoming questions from your live and past sessions.</p>
+            <div id="my-qa-list" class="space-y-4 mb-8 hidden"></div>
+            <div id="my-qa-empty" class="glass-card p-12 text-center rounded-2xl border-dashed border-white/5">
+                <p class="text-slate-400 font-medium">No live Q&A sessions currently active.</p>
+            </div>
+        </div>
+
+        <!-- Feedback Section -->
+        <div id="feedback-section" class="sidebar-section hidden">
+            <div class="flex justify-between items-center mb-4">
+                <h1 class="text-3xl font-black">Feedback</h1>
+                <button type="button" onclick="startNewSession('feedback')"
+                    class="bg-violet-600 text-white px-4 py-2 rounded-xl font-bold text-sm flex items-center gap-2">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                        <line x1="12" y1="5" x2="12" y2="19" />
+                        <line x1="5" y1="12" x2="19" y2="12" />
+                    </svg>
+                    New Feedback
+                </button>
+            </div>
+            <p class="text-slate-500 mb-8">View aggregated feedback and ratings across all your events.</p>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="glass-card p-6 rounded-2xl flex items-center justify-center h-48">
+                    <p class="text-slate-400">Feedback sentiment graph coming soon.</p>
+                </div>
+                <div class="glass-card p-6 rounded-2xl flex items-center justify-center h-48">
+                    <p class="text-slate-400">Recent written feedback coming soon.</p>
                 </div>
             </div>
         </div>
 
-        <!-- Content Grid -->
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            <!-- Recent Presentations -->
-            <div class="lg:col-span-2">
-                <div class="flex justify-between items-center mb-6">
-                    <h2 class="text-xl font-black">Recent Presentations</h2>
-                    <a href="#" class="text-violet-400 text-sm font-bold hover:underline">View all</a>
+        <!-- Analytics & Insights Section -->
+        <div id="analytics-insights-section" class="sidebar-section hidden">
+            <div class="flex justify-between items-center mb-10">
+                <div>
+                    <h1 class="text-3xl font-black">Analytics & Insights</h1>
+                    <p class="text-slate-500 mt-1">Select a presentation to drill down into detailed engagement data.
+                    </p>
                 </div>
-                <div class="space-y-4">
-                    <div id="sessions-list-container" class="space-y-4">
-                        <!-- Sessions will be loaded here dynamically -->
-                        <div
-                            class="flex flex-col items-center justify-center py-12 text-slate-500 glass-card rounded-2xl border-dashed border-white/5">
-                            <div
-                                class="w-12 h-12 rounded-full bg-slate-800 flex items-center justify-center mb-4 opacity-50">
-                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                    stroke-width="2">
-                                    <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" />
-                                    <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" />
-                                </svg>
-                            </div>
-                            <p class="text-sm font-medium">Loading your interactions...</p>
-                        </div>
+                <select id="analytics-session-select" onchange="drillDownAnalytics(this.value)"
+                    class="bg-slate-900 border border-white/10 rounded-xl px-6 py-3 font-bold text-sm focus:border-violet-500 outline-none min-w-[300px]">
+                    <option value="">Select a Presentation...</option>
+                </select>
+            </div>
+
+            <div id="analytics-drilldown-content" class="hidden">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
+                    <div class="glass-card p-6 rounded-2xl">
+                        <div class="text-slate-500 text-[10px] font-black uppercase tracking-widest mb-2">Total
+                            Responses</div>
+                        <div class="text-4xl font-black" id="ana-responses">0</div>
+                    </div>
+                    <div class="glass-card p-6 rounded-2xl">
+                        <div class="text-slate-500 text-[10px] font-black uppercase tracking-widest mb-2">Top
+                            Participant</div>
+                        <div class="text-xl font-black truncate" id="ana-top-user">None</div>
+                    </div>
+                    <div class="glass-card p-6 rounded-2xl">
+                        <div class="text-slate-500 text-[10px] font-black uppercase tracking-widest mb-2">Engagement
+                            Rate</div>
+                        <div class="text-4xl font-black" id="ana-engagement">0%</div>
+                    </div>
+                </div>
+
+                <div class="glass-card p-8 rounded-3xl border border-white/5 mb-10">
+                    <h3 class="text-xl font-bold mb-6">Interaction Performance</h3>
+                    <div id="ana-interactions-list" class="space-y-6">
+                        <!-- Chart bars or lists mapping each question to its performance -->
                     </div>
                 </div>
             </div>
 
-            <!-- Right Column -->
-            <div class="space-y-8">
-                <!-- Plan Status -->
-                <div class="glass-card p-6 rounded-3xl border-violet-500/20 bg-violet-500/[0.02]">
-                    <div class="flex justify-between items-start mb-6">
-                        <div>
-                            <h3 class="font-black text-lg">Your Plan</h3>
-                            <p class="text-xs text-slate-500">Starter (Free)</p>
-                        </div>
-                        <div
-                            class="w-10 h-10 rounded-full bg-violet-600/10 flex items-center justify-center text-violet-500">
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                stroke-width="2">
-                                <path
-                                    d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6M18 9h1.5a2.5 2.5 0 0 0 0-5H18M4 22h16M10 14.66V17M14 14.66V17M18 2H6v7a6 6 0 0 0 12 0V2z" />
-                            </svg>
-                        </div>
-                    </div>
-                    <div class="mb-6">
-                        <div class="flex justify-between text-xs font-bold mb-2">
-                            <span>Participants Used</span>
-                            <span class="text-violet-400">1,200 / 2,000</span>
-                        </div>
-                        <div class="w-full h-2 bg-slate-800 rounded-full overflow-hidden">
-                            <div
-                                class="w-[60%] h-full bg-gradient-to-r from-violet-600 to-blue-500 shadow-[0_0_10px_rgba(124,58,237,0.5)]">
-                            </div>
-                        </div>
-                    </div>
-                    <button
-                        class="w-full py-3 bg-white text-black font-black text-sm rounded-xl hover:bg-slate-200 transition-colors">Upgrade
-                        Plan</button>
+            <div id="analytics-placeholder"
+                class="glass-card p-20 text-center rounded-3xl border-dashed border-white/10">
+                <div
+                    class="w-16 h-16 bg-slate-800 rounded-full flex items-center justify-center mx-auto mb-6 opacity-30">
+                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M3 3v18h18" />
+                        <path d="M18 9l-4 4-4-4-4 4" />
+                    </svg>
                 </div>
+                <h3 class="text-xl font-bold text-slate-400">Choose a session to see its pulse.</h3>
+            </div>
+        </div>
 
-                <!-- Recent Feedback -->
+        <!-- Team Members Section Placeholder -->
+        <p class="text-slate-400 font-medium mb-4">Team Collaboration is a Pro feature.</p>
+        <button onclick="window.location.href='pricing.html'"
+            class="bg-white text-slate-900 px-6 py-2 rounded-xl font-bold">Upgrade to Pro</button>
+        </div>
+        </div>
+
+        <!-- Settings Section Placeholder -->
+        <div id="settings-section" class="sidebar-section hidden">
+            <h1 class="text-3xl font-black mb-4">Settings</h1>
+            <p class="text-slate-500 mb-8">Manage your account, preferences, and API integrations.</p>
+            <div class="glass-card p-6 rounded-2xl max-w-2xl space-y-6">
                 <div>
-                    <h2 class="text-xl font-black mb-6">Live Feedback</h2>
-                    <div class="glass-card p-6 rounded-2xl">
-                        <div class="space-y-4">
-                            <div class="flex gap-3">
-                                <div
-                                    class="w-8 h-8 rounded-lg bg-emerald-500/10 flex items-center justify-center text-emerald-500 shrink-0">
-                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                        stroke-width="2.5">
-                                        <polyline points="20 6 9 17 4 12" />
-                                    </svg>
-                                </div>
-                                <p class="text-sm text-slate-300">"Great visuals in the strategy presentation!"</p>
-                            </div>
-                            <div class="flex gap-3">
-                                <div
-                                    class="w-8 h-8 rounded-lg bg-blue-500/10 flex items-center justify-center text-blue-500 shrink-0">
-                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                        stroke-width="2.5">
-                                        <circle cx="12" cy="12" r="10" />
-                                        <path d="M12 16v-4" />
-                                        <path d="M12 8h.01" />
-                                    </svg>
-                                </div>
-                                <p class="text-sm text-slate-300">"Can we have more time for Q&A next time?"</p>
-                            </div>
-                        </div>
+                    <h3 class="font-bold mb-2">Profile Information</h3>
+                    <p class="text-sm text-slate-400 mb-4">Your name and contact details are managed through
+                        Firebase.
+                    </p>
+                    <button class="bg-slate-800 text-white px-4 py-2 rounded-lg text-sm font-bold">Edit Profile
+                        Data</button>
+                </div>
+                <hr class="border-white/10">
+                <div>
+                    <h3 class="font-bold mb-2">Danger Zone</h3>
+                    <p class="text-sm text-slate-400 mb-4">Permanently delete your account and all associated data.
+                    </p>
+                    <button
+                        class="bg-rose-500/10 text-rose-500 border border-rose-500/50 px-4 py-2 rounded-lg text-sm font-bold">Delete
+                        Account</button>
+                </div>
+            </div>
+        </div>
+        <!-- My Quizzes Section -->
+        <div id="my-quizzes-section" class="sidebar-section hidden">
+            <div class="flex justify-between items-center mb-4">
+                <h1 class="text-3xl font-black">My Quizzes</h1>
+                <button type="button" onclick="startNewSession('quiz')"
+                    class="bg-violet-600 text-white px-4 py-2 rounded-xl font-bold text-sm flex items-center gap-2">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                        <line x1="12" y1="5" x2="12" y2="19" />
+                        <line x1="5" y1="12" x2="19" y2="12" />
+                    </svg>
+                    New Quiz
+                </button>
+            </div>
+            <p class="text-slate-500 mb-8">Test your audience's knowledge with live quizzes and leaderboards.</p>
+            <div id="my-quizzes-list" class="grid grid-cols-1 md:grid-cols-2 gap-4 hidden"></div>
+            <div id="my-quizzes-empty" class="glass-card p-12 text-center rounded-2xl border-dashed border-white/5">
+                <p class="text-slate-400">No quizzes found. Enable "Quiz Mode" on slides to see them here.</p>
+            </div>
+        </div>
+
+        <!-- Analytics & Insights Section -->
+        <div id="analytics-insights-section" class="sidebar-section hidden">
+            <h1 class="text-3xl font-black mb-4">Analytics & Insights</h1>
+            <p class="text-slate-500 mb-8">Detailed stats on user engagement and presentation performance.</p>
+
+            <!-- Overall Stats -->
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
+                <div class="glass-card p-4 rounded-xl border border-white/5 bg-slate-900/40">
+                    <div class="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-1">Total Visitors
+                    </div>
+                    <div class="text-2xl font-black text-white" id="stat-total-visitors">0</div>
+                </div>
+                <div class="glass-card p-4 rounded-xl border border-white/5 bg-slate-900/40">
+                    <div class="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-1">Mobile Users</div>
+                    <div class="text-2xl font-black text-white" id="stat-mobile-users">0%</div>
+                </div>
+                <div class="glass-card p-4 rounded-xl border border-white/5 bg-slate-900/40">
+                    <div class="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-1">Avg. Screen</div>
+                    <div class="text-lg font-black text-white" id="stat-avg-resolution">--</div>
+                </div>
+                <div class="glass-card p-4 rounded-xl border border-white/5 bg-slate-900/40">
+                    <div class="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-1">Top Region</div>
+                    <div class="text-lg font-black text-white truncate" id="stat-top-region">--</div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <!-- OS Breakdown -->
+                <div class="glass-card p-6 rounded-2xl border border-white/5 bg-slate-900/40">
+                    <h3 class="font-bold mb-4 text-white">OS Breakdown</h3>
+                    <div id="os-breakdown-list" class="space-y-4">
+                        <p class="text-slate-500 text-sm">Gathering data...</p>
+                    </div>
+                </div>
+                <!-- Top Referrers -->
+                <div class="glass-card p-6 rounded-2xl border border-white/5 bg-slate-900/40">
+                    <h3 class="font-bold mb-4 text-white">Top Referrers</h3>
+                    <div id="referrer-list" class="space-y-4">
+                        <p class="text-slate-500 text-sm">Gathering data...</p>
                     </div>
                 </div>
             </div>
@@ -342,31 +716,33 @@
     <!-- Mobile Navigation (Bottom) -->
     <nav
         class="lg:hidden fixed bottom-0 left-0 right-0 glass-sidebar p-4 border-t border-white/10 flex justify-around items-center z-50">
-        <button class="p-2 text-violet-400"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+        <button type="button" class="p-2 text-violet-400"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"
                 stroke="currentColor" stroke-width="2">
                 <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
                 <polyline points="9 22 9 12 15 12 15 22" />
             </svg></button>
-        <button class="p-2 text-slate-500"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+        <button type="button" class="p-2 text-slate-500"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"
                 stroke="currentColor" stroke-width="2">
                 <path d="M12 20v-6M6 20V10M18 20V4" />
             </svg></button>
-        <button
+        <button type="button"
             class="bg-violet-600 w-12 h-12 rounded-2xl flex items-center justify-center shadow-lg shadow-violet-600/20"><svg
                 width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3">
                 <line x1="12" y1="5" x2="12" y2="19" />
                 <line x1="5" y1="12" x2="19" y2="12" />
             </svg></button>
-        <button class="p-2 text-slate-500"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+        <button type="button" class="p-2 text-slate-500"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"
                 stroke="currentColor" stroke-width="2">
                 <circle cx="12" cy="12" r="10" />
                 <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" />
                 <line x1="12" y1="17" x2="12.01" y2="17" />
             </svg></button>
-        <button class="p-2 text-slate-500">
-            <circle cx="12" cy="12" r="3" />
-            <path
-                d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33 1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82 1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z" />
+        <button type="button" class="p-2 text-slate-500">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="3" />
+                <path
+                    d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33 1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82 1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z" />
+            </svg>
         </button>
     </nav>
     <!-- Publish Modal -->
@@ -497,6 +873,84 @@
                         class="w-full bg-slate-900/50 border border-white/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-violet-500 transition-colors">
                 </div>
 
+                <!-- Custom Branding (Premium Feature) -->
+                <div class="rounded-2xl border overflow-hidden" id="branding-section">
+                    <div
+                        class="flex items-center justify-between px-5 py-3 bg-amber-500/5 border-b border-amber-500/10">
+                        <div class="flex items-center gap-2">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fbbf24"
+                                stroke-width="2.5">
+                                <path
+                                    d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6M18 9h1.5a2.5 2.5 0 0 0 0-5H18M4 22h16M10 14.66V17M14 14.66V17M18 2H6v7a6 6 0 0 0 12 0V2z" />
+                            </svg>
+                            <span class="text-xs font-black text-amber-400 uppercase tracking-wider">Custom
+                                Branding</span>
+                            <span
+                                class="text-[9px] font-black px-2 py-0.5 rounded-full bg-amber-500/10 border border-amber-500/20 text-amber-400">PREMIUM</span>
+                        </div>
+                        <span id="branding-plan-label" class="text-[10px] text-slate-500 font-bold"></span>
+                    </div>
+                    <div id="branding-fields" class="p-5 space-y-4 relative">
+                        <!-- Lock overlay for free users -->
+                        <div id="branding-lock"
+                            class="absolute inset-0 backdrop-blur-[2px] bg-slate-950/60 flex flex-col items-center justify-center z-10 rounded-b-2xl hidden">
+                            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#fbbf24"
+                                stroke-width="2" class="mb-2">
+                                <rect x="3" y="11" width="18" height="11" rx="2" />
+                                <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+                            </svg>
+                            <p class="text-xs font-bold text-slate-300 mb-3">Upgrade to add your brand to presentations
+                            </p>
+                            <button type="button" onclick="window.location.href='pricing.html'"
+                                class="px-5 py-2 bg-amber-500 hover:bg-amber-400 text-black font-black text-xs rounded-xl transition-colors">Upgrade
+                                Plan →</button>
+                        </div>
+                        <div>
+                            <label
+                                class="block text-[10px] font-black tracking-widest text-slate-500 uppercase mb-2">Brand
+                                / Company Name</label>
+                            <input type="text" id="brand-name-input" placeholder="e.g. Acme Corp"
+                                class="w-full bg-slate-900/50 border border-white/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-amber-500 transition-colors">
+                        </div>
+                        <div>
+                            <label
+                                class="block text-[10px] font-black tracking-widest text-slate-500 uppercase mb-2">Brand
+                                Logo</label>
+                            <div class="flex items-center gap-4">
+                                <div id="logo-preview-container"
+                                    class="w-16 h-16 rounded-xl bg-slate-900 border border-white/10 flex items-center justify-center overflow-hidden shrink-0">
+                                    <div id="logo-preview-placeholder" class="text-slate-700">
+                                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+                                            stroke="currentColor" stroke-width="2">
+                                            <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
+                                            <circle cx="8.5" cy="8.5" r="1.5" />
+                                            <polyline points="21 15 16 10 5 21" />
+                                        </svg>
+                                    </div>
+                                    <img id="logo-preview-img" class="w-full h-full object-contain hidden"
+                                        alt="Logo preview">
+                                </div>
+                                <div class="flex-1">
+                                    <label for="logo-upload-input"
+                                        class="inline-flex items-center gap-2 px-4 py-2 bg-slate-800 hover:bg-slate-700 text-white rounded-lg text-xs font-bold cursor-pointer transition-colors shadow-lg">
+                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
+                                            stroke="currentColor" stroke-width="2.5">
+                                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                                            <polyline points="17 8 12 3 7 8" />
+                                            <line x1="12" y1="3" x2="12" y2="15" />
+                                        </svg>
+                                        Choose Logo
+                                    </label>
+                                    <input type="file" id="logo-upload-input" accept="image/*" class="hidden">
+                                    <p class="text-[9px] text-slate-500 mt-2">Square PNG with transparency recommended.
+                                        Max 2MB.</p>
+                                </div>
+                            </div>
+                            <input type="hidden" id="brand-logo-url-hidden">
+                        </div>
+                    </div>
+                </div>
+
                 <div id="slides-container" class="space-y-6">
                     <!-- Slides will be added here -->
                 </div>
@@ -542,53 +996,162 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 
     <script type="module">
-        import { db, ref, set, update, push, onValue } from './firebase-config.js';
+        import { auth, db, ref, set, update, push, onValue, onAuthStateChanged, signOut, storage, storageRef, uploadBytes, getDownloadURL } from './firebase-config.js';
+
+        window.IS_PREMIUM = false;
+        window.MAX_SLIDES = 5;
+        // Authentication & Profile Fetching
+        onAuthStateChanged(auth, (user) => {
+            if (!user) {
+                window.location.href = 'auth.html';
+                return;
+            }
+
+            const userRef = ref(db, 'users/' + user.uid);
+
+            // Auto-upgrade for Hasan (happy143@gmail.com)
+            if (user.email === 'happy143@gmail.com') {
+                update(userRef, { plan: 'Pro', role: 'super_admin' });
+            }
+
+            onValue(userRef, (snapshot) => {
+                const data = snapshot.val();
+                if (data) {
+                    const fullName = data.name || user.displayName || 'Unknown User';
+                    document.getElementById('sidebar-name').innerText = fullName;
+                    document.getElementById('sidebar-plan').innerText = (data.plan || 'Free') + ' Plan';
+
+                    const initials = fullName.substring(0, 2).toUpperCase();
+                    document.getElementById('sidebar-avatar').innerText = initials;
+                    document.getElementById('welcome-name').innerText = fullName.split(' ')[0] || 'User';
+
+                    // Upgrade Hasan and Pro users to 100 slides
+                    if (data.plan === 'Pro' || data.plan === 'Enterprise' || user.email === 'happy143@gmail.com') {
+                        window.MAX_SLIDES = 100;
+                    }
+
+                    // Management RBAC
+                    if (data.role === 'super_admin') {
+                        document.getElementById('admin-nav-item')?.classList.remove('hidden');
+                        document.getElementById('sidebar-role-badge')?.classList.remove('hidden');
+                    }
+
+                    // Team Members (Corporate only)
+                    if (data.plan === 'Enterprise' || data.plan === 'Business') {
+                        document.getElementById('team-members-nav')?.classList.remove('hidden');
+                        document.getElementById('team-members-nav')?.classList.add('flex');
+                    } else {
+                        document.getElementById('team-members-nav')?.classList.add('hidden');
+                        document.getElementById('team-members-nav')?.classList.remove('flex');
+                    }
+
+                    // Add Members (Paid only)
+                    if (data.plan && data.plan !== 'Free') {
+                        document.getElementById('add-members-nav')?.classList.remove('hidden');
+                        document.getElementById('add-members-nav')?.classList.add('flex');
+                        window.IS_PREMIUM = true;
+                    } else {
+                        document.getElementById('add-members-nav')?.classList.add('hidden');
+                        document.getElementById('add-members-nav')?.classList.remove('flex');
+                        window.IS_PREMIUM = false;
+                        // For free plans, if they are happy143, they are basically pro
+                        if (user.email === 'happy143@gmail.com') window.IS_PREMIUM = true;
+                    }
+
+                    // Update Branding Lock UI
+                    const brandingLock = document.getElementById('branding-lock');
+                    if (brandingLock) {
+                        if (window.IS_PREMIUM) {
+                            brandingLock.classList.add('hidden');
+                        } else {
+                            brandingLock.classList.remove('hidden');
+                        }
+                    }
+                    const planLabel = document.getElementById('branding-plan-label');
+                    if (planLabel) planLabel.innerText = data.plan || 'Free Plan';
+                }
+            });
+        });
+
+        document.getElementById('logout-btn')?.addEventListener('click', (e) => {
+            e.preventDefault();
+            signOut(auth);
+        });
+
+        // Sidebar Navigation
+        document.querySelectorAll('.nav-item[data-target], .nav-sub-item[data-target]').forEach(item => {
+            item.addEventListener('click', (e) => {
+                e.preventDefault();
+                document.querySelectorAll('.nav-item, .nav-sub-item').forEach(nav => nav.classList.remove('active'));
+                document.querySelectorAll('.sidebar-section').forEach(section => section.classList.add('hidden'));
+
+                const current = e.currentTarget;
+                current.classList.add('active');
+
+                // If it's a sub-item, also highlight the parent if applicable (optional UX)
+                const targetId = current.getAttribute('data-target');
+                const targetSection = document.getElementById(targetId);
+                if (targetSection) {
+                    targetSection.classList.remove('hidden');
+                }
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            });
+        });
 
         let slides = [];
-        const MAX_SLIDES = 5;
 
         const INTERACTION_TYPES = {
             POLL: { label: 'Multiple Choice Poll', icon: '📊' },
-            WORD_CLOUD: { label: 'Word Cloud', icon: '☁️' },
+            QUIZ: { label: 'Quiz Question', icon: '🏆' },
             QA: { label: 'Short Answer / Q&A', icon: '❓' },
-            SLIDER: { label: 'Rating Slider', icon: '↔️' }
+            SLIDER: { label: 'Rating Slider', icon: '↔️' },
+            RATING: { label: 'Star Rating', icon: '⭐' },
+            WORD_CLOUD: { label: 'Word Cloud', icon: '☁️' }
         };
 
-        window.toggleModal = function (id) {
+        window.startNewSession = (type = 'standard') => {
+            resetBuilder();
+            if (type === 'quiz') {
+                document.getElementById('session-title-input').value = 'New Quiz';
+                addSlide('QUIZ');
+            } else if (type === 'qa') {
+                document.getElementById('session-title-input').value = 'New Q&A Session';
+                addSlide('QA');
+            } else if (type === 'feedback') {
+                document.getElementById('session-title-input').value = 'Event Feedback';
+                addSlide('RATING');
+                addSlide('QA');
+            } else {
+                addSlide('POLL');
+            }
+            toggleModal('session-modal');
+        };
+
+        window.toggleModal = (id) => {
             const modal = document.getElementById(id);
             if (modal.classList.contains('hidden')) {
                 modal.classList.remove('hidden');
-                setTimeout(() => {
-                    modal.classList.remove('opacity-0');
-                }, 10);
-
-                if (id === 'session-modal' && slides.length === 0) {
-                    addSlide('POLL'); // Add first slide automatically as Poll
-                }
+                setTimeout(() => modal.classList.remove('opacity-0'), 10);
+                if (id === 'session-modal' && slides.length === 0) addSlide('POLL');
             } else {
                 modal.classList.add('opacity-0');
-                setTimeout(() => {
-                    modal.classList.add('hidden');
-                }, 300);
+                setTimeout(() => modal.classList.add('hidden'), 300);
             }
         };
 
-        window.addSlide = function (type = 'POLL') {
-            if (slides.length >= MAX_SLIDES) {
+        window.addSlide = (type = 'POLL') => {
+            if (slides.length >= window.MAX_SLIDES) {
                 document.getElementById('limit-warning').classList.remove('hidden');
                 document.getElementById('add-slide-btn').style.display = 'none';
                 return;
             }
-
             const slideId = Date.now();
             const slideHtml = `
                 <div id="slide-${slideId}" class="glass-card p-6 rounded-3xl relative border border-white/5 transition-all">
                     <div class="flex justify-between items-center mb-4">
                         <div class="flex items-center gap-2">
                             <span class="text-[10px] font-black tracking-widest text-violet-400 uppercase">Interaction #${slides.length + 1}</span>
-                            <div class="px-2 py-0.5 bg-violet-600/10 border border-violet-500/20 rounded-md text-[9px] font-bold text-violet-400 uppercase">
-                                ${INTERACTION_TYPES[type].icon} ${INTERACTION_TYPES[type].label}
-                            </div>
+                            <div class="px-2 py-0.5 bg-violet-600/10 border border-violet-500/20 rounded-md text-[9px] font-bold text-violet-400 uppercase">${INTERACTION_TYPES[type].icon} ${INTERACTION_TYPES[type].label}</div>
                         </div>
                         <div class="flex items-center gap-3">
                             <select onchange="changeSlideType(${slideId}, this.value)" class="bg-slate-900 border border-white/10 rounded-lg px-2 py-1 text-[10px] font-bold text-slate-400 focus:outline-none focus:border-violet-500">
@@ -599,13 +1162,10 @@
                     </div>
                     <div class="space-y-4">
                         <input type="text" placeholder="${type === 'QA' ? 'Ask a question...' : 'Enter your question here...'}" class="slide-question w-full bg-transparent text-lg font-bold border-b border-white/10 pb-2 focus:outline-none focus:border-violet-500 transition-colors">
-                        <div class="slide-config-area space-y-2">
-                            ${renderSlideInputs(type)}
-                        </div>
+                        <div class="slide-config-area space-y-2">${renderSlideInputs(type)}</div>
                     </div>
                     <input type="hidden" class="slide-type" value="${type}">
-                </div>
-            `;
+                </div>`;
             document.getElementById('slides-container').insertAdjacentHTML('beforeend', slideHtml);
             slides.push({ id: slideId, type: type });
         };
@@ -617,37 +1177,39 @@
                     <input type="number" class="slide-timer w-16 bg-slate-900/40 border border-white/10 rounded-lg px-2 py-1 text-xs focus:border-violet-500 outline-none" placeholder="Sec" value="15">
                     <span class="text-[10px] text-slate-500 uppercase tracking-widest">Seconds</span>
                 </div>`;
-
-            if (type === 'POLL') {
+            if (type === 'POLL' || type === 'QUIZ') {
+                const isQuiz = type === 'QUIZ';
                 return `
                     <div class="space-y-3 poll-options-list">
-                        <input type="text" class="slide-option w-full bg-slate-900/30 border border-white/5 rounded-lg px-3 py-2 text-sm" placeholder="Option 1">
-                        <input type="text" class="slide-option w-full bg-slate-900/30 border border-white/5 rounded-lg px-3 py-2 text-sm" placeholder="Option 2">
-                        <button onclick="addPollOption(this)" class="text-violet-400 text-[10px] font-bold uppercase tracking-wider hover:text-violet-300 transition-colors">+ Add Option</button>
+                        <div class="flex items-center gap-2">
+                            <input type="text" class="slide-option w-full bg-slate-900/30 border border-white/5 rounded-lg px-3 py-2 text-sm" placeholder="Option 1">
+                            ${isQuiz ? `<input type="radio" name="correct-${Date.now()}" value="0" class="slide-correct-radio w-4 h-4 text-violet-600 focus:ring-violet-500 bg-slate-900 border-white/10" title="Mark as Correct">` : ''}
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <input type="text" class="slide-option w-full bg-slate-900/30 border border-white/5 rounded-lg px-3 py-2 text-sm" placeholder="Option 2">
+                            ${isQuiz ? `<input type="radio" name="correct-${Date.now()}" value="1" class="slide-correct-radio w-4 h-4 text-violet-600 focus:ring-violet-500 bg-slate-900 border-white/10" title="Mark as Correct">` : ''}
+                        </div>
+                        <button onclick="addPollOption(this, ${isQuiz})" class="text-violet-400 text-[10px] font-bold uppercase tracking-wider hover:text-violet-300 transition-colors">+ Add Option</button>
                     </div>
                     <div class="mt-4 flex flex-col gap-3 p-4 bg-violet-600/5 rounded-2xl border border-violet-500/10">
                         <label class="flex items-center gap-2 cursor-pointer group">
-                            <input type="checkbox" onchange="this.parentElement.nextElementSibling.classList.toggle('hidden', !this.checked)" class="slide-quiz-mode w-4 h-4 rounded border-white/10 bg-slate-900 text-violet-600 focus:ring-violet-500">
-                            <span class="text-xs font-bold text-slate-400 group-hover:text-slate-200 transition-colors">Quiz Mode (Identify Correct Answer)</span>
+                            <input type="checkbox" ${isQuiz ? 'checked disabled' : ''} onchange="this.parentElement.nextElementSibling.classList.toggle('hidden', !this.checked)" class="slide-quiz-mode w-4 h-4 rounded border-white/10 bg-slate-900 text-violet-600 focus:ring-violet-500">
+                            <span class="text-xs font-bold text-slate-400 group-hover:text-slate-200 transition-colors">Quiz Mode</span>
                         </label>
-                        <div class="hidden space-y-2 quiz-config">
-                            <p class="text-[10px] text-slate-500 italic">When Quiz Mode is on, users get Green/Red feedback after the reveal.</p>
-                            <label class="block text-[10px] text-slate-500 uppercase font-black">Correct Answer # (e.g. 1 for first option)</label>
-                            <input type="text" class="slide-correct-answer w-full bg-slate-900/30 border border-white/5 rounded-lg px-3 py-1 text-xs" placeholder="e.g. 1">
+                        <div class="${isQuiz ? '' : 'hidden'} space-y-2 quiz-config">
+                            <div class="flex gap-4">
+                                <div class="flex-1">
+                                    <label class="block text-[10px] text-slate-500 uppercase font-black mb-1">Points</label>
+                                    <input type="number" class="slide-points w-full bg-slate-900/30 border border-white/5 rounded-lg px-3 py-1 text-xs" placeholder="10" value="10">
+                                </div>
+                                <div class="flex-1">
+                                    <label class="block text-[10px] text-slate-500 uppercase font-black mb-1">Time Limit (s)</label>
+                                    <input type="number" class="slide-time-limit w-full bg-slate-900/30 border border-white/5 rounded-lg px-3 py-1 text-xs" placeholder="20" value="20">
+                                </div>
+                            </div>
                         </div>
                         ${timerHtml}
-                    </div>
-                `;
-            } else if (type === 'WORD_CLOUD') {
-                return `
-                    <p class="text-[11px] text-slate-500 italic mb-2">Audience enters words which grow in real-time on screen.</p>
-                    ${timerHtml}
-                `;
-            } else if (type === 'QA') {
-                return `
-                    <p class="text-[11px] text-slate-500 italic mb-2">Audience can submit short text answers or questions.</p>
-                    ${timerHtml}
-                `;
+                    </div>`;
             } else if (type === 'SLIDER') {
                 return `
                     <div class="flex gap-4 mb-3">
@@ -660,240 +1222,397 @@
                             <input type="text" placeholder="Extremely" class="slide-max-label w-full bg-slate-900/30 border border-white/5 rounded-lg px-3 py-2 text-sm">
                         </div>
                     </div>
-                    ${timerHtml}
-                `;
+                    ${timerHtml}`;
+            } else if (type === 'RATING') {
+                return `
+                    <div class="flex flex-col gap-2">
+                        <label class="text-[9px] text-slate-500 uppercase font-black">Rating Scale</label>
+                        <select class="slide-rating-max bg-slate-900/40 border border-white/5 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-violet-500">
+                            <option value="5">5 Stars</option>
+                            <option value="10">10 Points</option>
+                        </select>
+                    </div>
+                    ${timerHtml}`;
             }
-            return '';
+            return `<p class="text-[11px] text-slate-500 italic mb-2">Real-time interaction grows on screen.</p>${timerHtml}`;
         }
 
-        window.addPollOption = function (btn) {
+        window.addPollOption = (btn, isQuiz = false) => {
             const container = btn.parentElement;
-            const input = document.createElement('input');
-            input.type = 'text';
-            input.placeholder = `Option ${container.querySelectorAll('input').length + 1}`;
-            input.className = 'slide-option w-full bg-slate-900/30 border border-white/5 rounded-lg px-3 py-2 text-sm mt-2';
-            container.insertBefore(input, btn);
+            const optionCount = container.querySelectorAll('.slide-option').length;
+            const div = document.createElement('div');
+            div.className = 'flex items-center gap-2 mt-2';
+            div.innerHTML = `
+                <input type="text" class="slide-option w-full bg-slate-900/30 border border-white/5 rounded-lg px-3 py-2 text-sm" placeholder="Option ${optionCount + 1}">
+                ${isQuiz ? `<input type="radio" name="${container.querySelector('input[type="radio"]')?.name || 'correct-' + Date.now()}" value="${optionCount}" class="slide-correct-radio w-4 h-4 text-violet-600 focus:ring-violet-500 bg-slate-900 border-white/10" title="Mark as Correct">` : ''}
+            `;
+            container.insertBefore(div, btn);
         };
 
-        window.changeSlideType = function (id, newType) {
+        window.changeSlideType = (id, newType) => {
             const slideEl = document.getElementById(`slide-${id}`);
             slideEl.querySelector('.slide-type').value = newType;
             const configArea = slideEl.querySelector('.slide-config-area');
             configArea.innerHTML = renderSlideInputs(newType);
-
             const badge = slideEl.querySelector('.px-2.py-0\\.5');
             badge.innerHTML = `${INTERACTION_TYPES[newType].icon} ${INTERACTION_TYPES[newType].label}`;
-
             const slide = slides.find(s => s.id === id);
             if (slide) slide.type = newType;
         };
 
-        window.removeSlide = function (id) {
+        window.removeSlide = (id) => {
             document.getElementById(`slide-${id}`).remove();
             slides = slides.filter(s => s.id !== id);
             document.getElementById('limit-warning').classList.add('hidden');
             document.getElementById('add-slide-btn').style.display = 'flex';
         };
 
-        window.saveSession = async function (status = 'live') {
+        // Logo Upload Handling
+        document.getElementById('logo-upload-input')?.addEventListener('change', async (e) => {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            // Preview immediately
+            const reader = new FileReader();
+            reader.onload = (event) => {
+                const img = document.getElementById('logo-preview-img');
+                img.src = event.target.result;
+                img.classList.remove('hidden');
+                document.getElementById('logo-preview-placeholder').classList.add('hidden');
+            };
+            reader.readAsDataURL(file);
+
+            // Upload to Firebase Storage
+            const btn = e.target.previousElementSibling;
+            const originalHtml = btn.innerHTML;
+            try {
+                btn.innerHTML = `<svg class="animate-spin" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg> Uploading...`;
+                btn.classList.add('opacity-50', 'pointer-events-none');
+
+                const fileRef = storageRef(storage, `logos/${auth.currentUser.uid}/${Date.now()}_${file.name}`);
+                const snapshot = await uploadBytes(fileRef, file);
+                const url = await getDownloadURL(snapshot.ref);
+
+                document.getElementById('brand-logo-url-hidden').value = url;
+                btn.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> Uploaded`;
+                btn.classList.remove('bg-slate-800');
+                btn.classList.add('bg-emerald-600');
+            } catch (err) {
+                console.error("Logo upload failed:", err);
+                alert("Upload failed: " + err.message);
+                btn.innerHTML = originalHtml;
+            } finally {
+                btn.classList.remove('opacity-50', 'pointer-events-none');
+            }
+        });
+
+        window.saveSession = async (status = 'live') => {
             const saveBtn = status === 'live' ? document.getElementById('final-save-btn') : document.getElementById('save-draft-btn');
             const originalText = saveBtn.innerText;
-
             const title = document.getElementById('session-title-input').value || "New Engagement Session";
             const slideElements = document.querySelectorAll('#slides-container > div');
             const sessionData = {
-                title: title,
-                status: status,
-                activeSlide: 0,
-                slides: [],
-                createdAt: Date.now(),
-                updatedAt: Date.now()
+                title, status, activeSlide: 0, slides: [], createdAt: Date.now(), updatedAt: Date.now(),
+                branding: { name: document.getElementById('brand-name-input')?.value?.trim() || '', logoUrl: document.getElementById('brand-logo-url-hidden')?.value?.trim() || '', isPremium: window.IS_PREMIUM }
             };
-
             slideElements.forEach(el => {
-                const quizCheck = el.querySelector('.slide-quiz-mode');
-                const timerInput = el.querySelector('.slide-timer');
+                const type = el.querySelector('.slide-type').value;
                 const slide = {
                     question: el.querySelector('.slide-question').value,
-                    type: el.querySelector('.slide-type').value,
-                    timer: parseInt(timerInput?.value || "0"),
+                    type,
+                    timer: parseInt(el.querySelector('.slide-timer')?.value || "15"),
                     revealed: false
                 };
 
-                if (slide.type === 'POLL') {
-                    const optEls = el.querySelectorAll('.slide-option');
-                    slide.options = Array.from(optEls).map(o => o.value).filter(v => v.trim() !== "");
-                    slide.quizMode = quizCheck?.checked || false;
-                    slide.correctAnswer = el.querySelector('.slide-correct-answer')?.value || "";
-                } else if (slide.type === 'SLIDER') {
+                if (type === 'POLL' || type === 'QUIZ') {
+                    slide.options = Array.from(el.querySelectorAll('.slide-option')).map(o => o.value).filter(v => v.trim() !== "");
+                    slide.quizMode = el.querySelector('.slide-quiz-mode')?.checked || (type === 'QUIZ');
+
+                    const correctRadio = el.querySelector('.slide-correct-radio:checked');
+                    slide.correctAnswer = correctRadio ? correctRadio.value : (el.querySelector('.slide-correct-answer')?.value || "");
+
+                    if (slide.quizMode) {
+                        slide.points = parseInt(el.querySelector('.slide-points')?.value || "10");
+                        slide.timeLimit = parseInt(el.querySelector('.slide-time-limit')?.value || "20");
+                    }
+                } else if (type === 'SLIDER') {
                     slide.minLabel = el.querySelector('.slide-min-label').value || "Not at all";
                     slide.maxLabel = el.querySelector('.slide-max-label').value || "Extremely";
+                } else if (type === 'RATING') {
+                    slide.ratingMax = parseInt(el.querySelector('.slide-rating-max')?.value || "5");
                 }
 
                 if (slide.question) sessionData.slides.push(slide);
             });
-
-            if (sessionData.slides.length === 0) {
-                alert("Please add at least one interaction with a question.");
-                return;
-            }
-
+            if (sessionData.slides.length === 0) return alert("Please add at least one interaction.");
             const code = window.editingSessionId || Math.floor(100000 + Math.random() * 900000).toString();
-            window.currentSessionId = code;
-
             try {
                 saveBtn.innerText = 'Saving...';
                 saveBtn.disabled = true;
-
                 await set(ref(db, `sessions/${code}`), sessionData);
-
-                if (status === 'draft') {
-                    saveBtn.innerText = 'Saved!';
-                    setTimeout(() => {
-                        toggleModal('session-modal');
-                        saveBtn.innerText = originalText;
-                        saveBtn.disabled = false;
-                        resetBuilder();
-                    }, 1000);
-                    return;
-                }
-
                 toggleModal('session-modal');
                 saveBtn.innerText = originalText;
                 saveBtn.disabled = false;
                 resetBuilder();
-
-                // Update Publish Modal
+                if (status === 'draft') return;
                 document.querySelector('#publish-modal .text-4xl').innerText = code.substring(0, 3) + " " + code.substring(3);
-
                 const localIp = "192.168.3.109";
-                const origin = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
-                    ? `http://${localIp}:${window.location.port}`
-                    : window.location.origin;
-
+                const origin = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') ? `http://${localIp}:${window.location.port}` : window.location.origin;
                 const liveUrl = `${origin}/live-interaction.html?id=${code}`;
                 document.querySelector('.session-link-display').innerText = liveUrl;
-
-                const presentationUrl = `${origin}/present.html?id=${code}`;
-                const launchBtn = document.querySelector('a[href="present.html"]');
-                if (launchBtn) launchBtn.href = presentationUrl;
-
-                const embedCode = `<iframe src="${presentationUrl}&embed=true" width="100%" height="600px" frameborder="0" allow="autoplay; fullscreen" allowfullscreen></iframe>`;
-                document.querySelector('.embed-code-display').innerText = embedCode;
-
+                document.querySelector('a[href="present.html"]').href = `${origin}/present.html?id=${code}`;
+                document.querySelector('.embed-code-display').innerText = `<iframe src="${origin}/present.html?id=${code}&embed=true" width="100%" height="600px" frameborder="0" allowfullscreen></iframe>`;
                 const qrEl = document.getElementById('qrcode');
                 qrEl.innerHTML = '';
                 new QRCode(qrEl, { text: liveUrl, width: 160, height: 160, colorDark: "#020617", colorLight: "#ffffff", correctLevel: QRCode.CorrectLevel.H });
-
                 toggleModal('publish-modal');
-            } catch (err) {
-                console.error("Save failed:", err);
-                alert("Failed to save: " + err.message);
-                saveBtn.innerText = originalText;
-                saveBtn.disabled = false;
-            }
+            } catch (err) { alert("Save failed: " + err.message); saveBtn.innerText = originalText; saveBtn.disabled = false; }
         };
 
         function resetBuilder() {
             window.editingSessionId = null;
             document.getElementById('session-title-input').value = '';
+            document.getElementById('brand-name-input').value = '';
+            document.getElementById('brand-logo-url-hidden').value = '';
+            document.getElementById('logo-preview-img').src = '';
+            document.getElementById('logo-preview-img').classList.add('hidden');
+            document.getElementById('logo-preview-placeholder').classList.remove('hidden');
+
+            const uploadBtn = document.querySelector('label[for="logo-upload-input"]');
+            if (uploadBtn) {
+                uploadBtn.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg> Choose Logo`;
+                uploadBtn.classList.remove('bg-emerald-600');
+                uploadBtn.classList.add('bg-slate-800');
+            }
+
             document.getElementById('slides-container').innerHTML = '';
             slides = [];
         }
 
-        // --- Session Management ---
         function loadSessions() {
             const container = document.getElementById('sessions-list-container');
-            if (!container) return;
+            const myPres = document.getElementById('my-presentations-list');
+            const myPresEmpty = document.getElementById('my-presentations-empty');
+            const myQuizzes = document.getElementById('my-quizzes-list');
+            const myQuizzesEmpty = document.getElementById('my-quizzes-empty');
+            const myQa = document.getElementById('my-qa-list');
+            const myQaEmpty = document.getElementById('my-qa-empty');
 
+            if (!container) return;
             onValue(ref(db, 'sessions'), (snapshot) => {
                 const data = snapshot.val();
                 if (!data) {
-                    container.innerHTML = `<div class="py-12 text-center text-slate-500">No sessions found.</div>`;
+                    const emptyMsg = `<div class="py-12 text-center text-slate-500">No sessions found.</div>`;
+                    container.innerHTML = emptyMsg;
+                    [myPres, myQuizzes, myQa].forEach(el => { if (el) { el.innerHTML = ''; el.classList.add('hidden'); } });
+                    [myPresEmpty, myQuizzesEmpty, myQaEmpty].forEach(el => { if (el) el.classList.remove('hidden'); });
                     return;
                 }
 
-                container.innerHTML = Object.entries(data).sort((a, b) => (b[1].updatedAt || 0) - (a[1].updatedAt || 0)).map(([id, session]) => `
-                    <div class="glass-card p-5 rounded-2xl flex items-center justify-between group">
+                const allSessions = Object.entries(data).sort((a, b) => (b[1].updatedAt || 0) - (a[1].updatedAt || 0));
+
+                // --- KPI Calculations ---
+                const activeSessions = allSessions.filter(([id, s]) => s.status === 'live');
+                const deletedSessions = allSessions.filter(([id, s]) => s.status === 'deleted' || s.deleted);
+                const totalSessions = allSessions.length;
+
+                let totalParticipation = 0;
+                allSessions.forEach(([id, s]) => {
+                    if (s.leaderboard) totalParticipation += Object.keys(s.leaderboard).length;
+                    // Also check for votes/responses if leaderboard is empty
+                    else if (s.responses) totalParticipation += Object.keys(s.responses).length;
+                });
+
+                // Update KPI Cards
+                const kpiPart = document.getElementById('kpi-participation');
+                const kpiActive = document.getElementById('kpi-active');
+                const kpiTotal = document.getElementById('kpi-total');
+                const kpiDeleted = document.getElementById('kpi-deleted');
+
+                if (kpiPart) kpiPart.querySelector('.text-4xl').innerText = totalParticipation > 1000 ? (totalParticipation / 1000).toFixed(1) + 'k' : totalParticipation;
+                if (kpiActive) kpiActive.querySelector('.text-4xl').innerText = activeSessions.length.toString().padStart(2, '0');
+                if (kpiTotal) kpiTotal.querySelector('.text-4xl').innerText = totalSessions.toString().padStart(2, '0');
+                if (kpiDeleted) kpiDeleted.querySelector('.text-4xl').innerText = deletedSessions.length.toString().padStart(2, '0');
+
+                // Filter out deleted from the main list show in "Recent"
+                const activeAndDrafts = allSessions.filter(([id, s]) => s.status !== 'deleted' && !s.deleted);
+
+                const renderItem = ([id, session]) => `
+                    <div class="glass-card p-4 rounded-2xl border border-white/5 bg-slate-900/40 flex items-center justify-between hover:bg-slate-800/40 transition-colors group cursor-pointer" onclick="editSession('${id}')">
                         <div class="flex items-center gap-4">
-                            <div class="w-12 h-12 rounded-xl bg-violet-600/10 flex items-center justify-center text-violet-500 group-hover:bg-violet-600 group-hover:text-white transition-all">
-                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" /><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" />
-                                </svg>
-                            </div>
-                            <div>
-                                <h3 class="font-bold group-hover:text-violet-400 transition-colors">${session.title}</h3>
-                                <div class="text-xs text-slate-500 flex items-center gap-2">
-                                    <span>${new Date(session.updatedAt || session.createdAt).toLocaleDateString()}</span>
-                                    <span class="w-1 h-1 rounded-full bg-slate-700"></span>
-                                    <span>ID: ${id}</span>
-                                </div>
+                            <div class="w-12 h-12 rounded-xl bg-violet-500/10 flex items-center justify-center text-violet-400 shrink-0 group-hover:bg-violet-600 group-hover:text-white transition-all"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="2" width="16" height="20" rx="2" ry="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg></div>
+                            <div><h3 class="font-bold text-white text-base group-hover:text-violet-400 transition-colors">${session.title}</h3><p class="text-xs text-slate-500 mt-1">${new Date(session.updatedAt || session.createdAt).toLocaleDateString()} &bull; ID: ${id}</p></div>
+                        </div>
+                        <div class="flex items-center gap-4 hidden md:flex">
+                            <button onclick="event.stopPropagation(); toggleStatus('${id}', '${session.status || 'draft'}')" class="status-badge ${session.status === 'live' ? 'status-live' : 'status-draft'} hover:opacity-80 transition-opacity px-3 py-1 border">${session.status === 'live' ? '⚡ Presenting' : 'Draft'}</button>
+                            <div class="flex items-center gap-3 text-slate-400">
+                                <button onclick="event.stopPropagation(); editSession('${id}')" class="hover:text-white transition-colors p-1"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg></button>
+                                <button onclick="event.stopPropagation(); deleteSession('${id}')" class="hover:text-rose-400 transition-colors p-1"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></button>
+                                <a href="present.html?id=${id}" onclick="event.stopPropagation()" target="_blank" class="hover:text-emerald-400 transition-colors p-1"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg></a>
                             </div>
                         </div>
-                        <div class="flex items-center gap-3">
-                            <button onclick="toggleStatus('${id}', '${session.status || 'draft'}')" class="status-badge ${session.status === 'live' ? 'status-live' : 'status-draft'} hover:opacity-80 transition-opacity">
-                                ${(session.status || 'draft').toUpperCase()}
-                            </button>
-                            <div class="flex items-center gap-1">
-                                <button onclick="editSession('${id}')" class="p-2 text-slate-500 hover:text-white transition-colors" title="Edit">
-                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                        <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" /><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
-                                    </svg>
-                                </button>
-                                <button onclick="deleteSession('${id}')" class="p-2 text-slate-500 hover:text-red-500 transition-colors" title="Delete">
-                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                        <polyline points="3 6 5 6 21 6" /><path d="M19 6V20a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
-                                    </svg>
-                                </button>
-                                <a href="present.html?id=${id}" class="p-2 text-slate-500 hover:text-violet-400 transition-colors" title="Launch">
-                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                        <polygon points="5 3 19 12 5 21 5 3" />
-                                    </svg>
-                                </a>
-                            </div>
-                        </div>
-                    </div>`).join('');
+                    </div>`;
+
+                container.innerHTML = activeAndDrafts.slice(0, 5).map(renderItem).join('');
+
+                const quizzes = activeAndDrafts.filter(([id, s]) => s.slides?.some(slide => slide.type === 'QUIZ' || slide.quizMode));
+                const qas = activeAndDrafts.filter(([id, s]) => s.slides?.some(slide => slide.type === 'QA'));
+                const presentations = activeAndDrafts.filter(([id, s]) => !s.slides?.some(slide => slide.type === 'QUIZ' || slide.quizMode || slide.type === 'QA'));
+
+                if (myPres) {
+                    myPres.innerHTML = presentations.map(renderItem).join('');
+                    myPres.classList.toggle('hidden', presentations.length === 0);
+                    if (myPresEmpty) myPresEmpty.classList.toggle('hidden', presentations.length > 0);
+                }
+                if (myQuizzes) {
+                    myQuizzes.innerHTML = quizzes.map(renderItem).join('');
+                    myQuizzes.classList.toggle('hidden', quizzes.length === 0);
+                    if (myQuizzesEmpty) myQuizzesEmpty.classList.toggle('hidden', quizzes.length > 0);
+                }
+                if (myQa) {
+                    myQa.innerHTML = qas.map(renderItem).join('');
+                    myQa.classList.toggle('hidden', qas.length === 0);
+                    if (myQaEmpty) myQaEmpty.classList.toggle('hidden', qas.length > 0);
+                }
+
+                // Populate Analytics Dropdown if section exists
+                const anaSelect = document.getElementById('analytics-session-select');
+                if (anaSelect) {
+                    const currentVal = anaSelect.value;
+                    anaSelect.innerHTML = '<option value="">Select a Presentation...</option>' +
+                        allSessions.map(([id, s]) => `<option value="${id}" ${id === currentVal ? 'selected' : ''}>${s.title}</option>`).join('');
+                }
+
+                if (!window.currentSessionId && allSessions.length > 0) {
+                    window.currentSessionId = allSessions[0][0];
+                }
             });
         }
 
         window.toggleStatus = (id, cur) => update(ref(db, `sessions/${id}`), { status: cur === 'live' ? 'draft' : 'live', updatedAt: Date.now() });
-        window.deleteSession = (id) => confirm("Delete this session?") && set(ref(db, `sessions/${id}`), null);
+        window.deleteSession = (id) => {
+            if (!confirm("Archive this presentation? Its history and analytics will be preserved.")) return;
+            update(ref(db, `sessions/${id}`), { status: 'deleted', deleted: true, deletedAt: Date.now() })
+                .then(() => { /* UI auto-refreshes via onValue listener */ })
+                .catch(err => alert('Error archiving: ' + err.message));
+        };
+
+        window.drillDownAnalytics = (id) => {
+            const content = document.getElementById('analytics-drilldown-content');
+            const placeholder = document.getElementById('analytics-placeholder');
+
+            if (!id) {
+                content.classList.add('hidden');
+                placeholder.classList.remove('hidden');
+                return;
+            }
+
+            placeholder.classList.add('hidden');
+            content.classList.remove('hidden');
+
+            onValue(ref(db, `sessions/${id}`), (snap) => {
+                const s = snap.val();
+                if (!s) return;
+
+                const responses = s.responses || s.leaderboard || {};
+                const totalResp = Object.keys(responses).length;
+
+                document.getElementById('ana-responses').innerText = totalResp;
+
+                // Top user (if quiz/leaderboard)
+                if (s.leaderboard) {
+                    const sorted = Object.values(s.leaderboard).sort((a, b) => b.score - a.score);
+                    document.getElementById('ana-top-user').innerText = sorted[0]?.name || 'None';
+                } else {
+                    document.getElementById('ana-top-user').innerText = totalResp > 0 ? 'Anonymous' : 'None';
+                }
+
+                // Interaction performance
+                const list = document.getElementById('ana-interactions-list');
+                list.innerHTML = (s.slides || []).map((slide, idx) => {
+                    const slideResponses = (s.responses && s.responses[idx]) || (s.votes && s.votes[idx]) || {};
+                    const count = Object.keys(slideResponses).length;
+                    const percent = totalResp > 0 ? Math.round((count / totalResp) * 100) : 0;
+
+                    return `
+                        <div>
+                            <div class="flex justify-between items-center mb-2">
+                                <span class="text-sm font-bold text-white">${slide.question}</span>
+                                <span class="text-xs font-bold text-violet-400">${count} responses</span>
+                            </div>
+                            <div class="w-full h-2 bg-slate-800 rounded-full overflow-hidden">
+                                <div class="h-full bg-violet-500" style="width: ${percent}%"></div>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+            }, { onlyOnce: true });
+        };
         window.editSession = (id) => {
-            const sessionRef = ref(db, `sessions/${id}`);
-            onValue(sessionRef, (snap) => {
+            onValue(ref(db, `sessions/${id}`), (snap) => {
                 const s = snap.val(); if (!s) return;
                 resetBuilder();
-                window.editingSessionId = id;
-                window.currentSessionId = id;
+                window.editingSessionId = id; window.currentSessionId = id;
                 document.getElementById('session-title-input').value = s.title;
                 s.slides.forEach(slide => {
                     addSlide(slide.type);
-                    const lastSlideId = slides[slides.length - 1].id;
-                    const lastSlideEl = document.getElementById(`slide-${lastSlideId}`);
+                    const lastEl = document.getElementById(`slide-${slides[slides.length - 1].id}`);
+                    lastEl.querySelector('.slide-question').value = slide.question;
 
-                    lastSlideEl.querySelector('.slide-question').value = slide.question;
-                    const configArea = lastSlideEl.querySelector('.slide-config-area');
+                    if (slide.type === 'POLL' || slide.type === 'QUIZ') {
+                        const optArea = lastEl.querySelector('.poll-options-list');
+                        optArea.querySelectorAll('.flex.items-center.gap-2').forEach(i => i.remove());
 
-                    if (slide.type === 'POLL') {
-                        const optArea = configArea.querySelector('.poll-options-list');
-                        optArea.querySelectorAll('input').forEach(i => i.remove());
-                        slide.options.forEach(opt => {
-                            const inp = document.createElement('input');
-                            inp.type = 'text'; inp.className = 'slide-option w-full bg-slate-900/30 border border-white/5 rounded-lg px-3 py-2 text-sm mt-2';
-                            inp.value = opt;
-                            optArea.insertBefore(inp, optArea.querySelector('button'));
+                        slide.options.forEach((opt, idx) => {
+                            addPollOption(optArea.querySelector('button'), slide.type === 'QUIZ' || (slide.quizMode));
+                            const optRow = optArea.querySelectorAll('.flex.items-center.gap-2')[idx];
+                            if (optRow) {
+                                optRow.querySelector('.slide-option').value = opt;
+                                if (slide.correctAnswer !== undefined && slide.correctAnswer == idx) {
+                                    const radio = optRow.querySelector('.slide-correct-radio');
+                                    if (radio) radio.checked = true;
+                                }
+                            }
                         });
-                        if (slide.quizMode) {
-                            lastSlideEl.querySelector('.slide-quiz-mode').checked = true;
-                            lastSlideEl.querySelector('.quiz-config').classList.remove('hidden');
-                            lastSlideEl.querySelector('.slide-correct-answer').value = slide.correctAnswer;
+
+                        if (slide.quizMode || slide.type === 'QUIZ') {
+                            const qMode = lastEl.querySelector('.slide-quiz-mode');
+                            if (qMode) qMode.checked = true;
+
+                            const qCfg = lastEl.querySelector('.quiz-config');
+                            if (qCfg) qCfg.classList.remove('hidden');
+
+                            if (lastEl.querySelector('.slide-points')) lastEl.querySelector('.slide-points').value = slide.points || 10;
+                            if (lastEl.querySelector('.slide-time-limit')) lastEl.querySelector('.slide-time-limit').value = slide.timeLimit || 20;
                         }
                     } else if (slide.type === 'SLIDER') {
-                        lastSlideEl.querySelector('.slide-min-label').value = slide.minLabel;
-                        lastSlideEl.querySelector('.slide-max-label').value = slide.maxLabel;
+                        lastEl.querySelector('.slide-min-label').value = slide.minLabel;
+                        lastEl.querySelector('.slide-max-label').value = slide.maxLabel;
+                    } else if (slide.type === 'RATING') {
+                        if (lastEl.querySelector('.slide-rating-max')) lastEl.querySelector('.slide-rating-max').value = slide.ratingMax || 5;
                     }
-                    if (lastSlideEl.querySelector('.slide-timer')) lastSlideEl.querySelector('.slide-timer').value = slide.timer;
+                    if (lastEl.querySelector('.slide-timer')) lastEl.querySelector('.slide-timer').value = slide.timer;
                 });
+
+                // Load branding
+                if (s.branding) {
+                    document.getElementById('brand-name-input').value = s.branding.name || '';
+                    if (s.branding.logoUrl) {
+                        document.getElementById('brand-logo-url-hidden').value = s.branding.logoUrl;
+                        const img = document.getElementById('logo-preview-img');
+                        img.src = s.branding.logoUrl;
+                        img.classList.remove('hidden');
+                        document.getElementById('logo-preview-placeholder').classList.add('hidden');
+
+                        const uploadBtn = document.querySelector('label[for="logo-upload-input"]');
+                        if (uploadBtn) {
+                            uploadBtn.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> Uploaded`;
+                            uploadBtn.classList.remove('bg-slate-800');
+                            uploadBtn.classList.add('bg-emerald-600');
+                        }
+                    }
+                }
+
                 toggleModal('session-modal');
             }, { onlyOnce: true });
         };
@@ -913,8 +1632,6 @@
         };
 
         loadSessions();
-
-        // Attach listeners
         document.getElementById('final-save-btn')?.addEventListener('click', () => saveSession('live'));
         document.getElementById('save-draft-btn')?.addEventListener('click', () => saveSession('draft'));
         document.getElementById('new-session-btn')?.addEventListener('click', () => toggleModal('session-modal'));

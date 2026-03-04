@@ -38,7 +38,32 @@ toggleAuthModeLink.addEventListener('click', (e) => {
     }
     authMessage.innerText = "";
     authMessage.className = "auth-message";
+    const resendContainer = document.getElementById('resend-verification-container');
+    if (resendContainer) resendContainer.style.display = 'none';
 });
+
+let unverifiedUser = null;
+const resendBtn = document.getElementById('resend-verification-btn');
+const resendContainer = document.getElementById('resend-verification-container');
+
+if (resendBtn) {
+    resendBtn.addEventListener('click', async () => {
+        if (unverifiedUser) {
+            try {
+                resendBtn.disabled = true;
+                resendBtn.innerText = "Sending...";
+                await sendEmailVerification(unverifiedUser);
+                showMessage("Verification email resent! Please check your inbox.", "success");
+                resendContainer.style.display = 'none';
+            } catch (error) {
+                showMessage("Error resending email: " + error.message, "error");
+            } finally {
+                resendBtn.disabled = false;
+                resendBtn.innerText = "Resend Verification Link";
+            }
+        }
+    });
+}
 
 function showMessage(msg, type = 'error') {
     authMessage.innerText = msg;
@@ -53,13 +78,16 @@ async function handleAuthSubmit(e) {
 
     authSubmitBtn.disabled = true;
     authSubmitBtn.innerText = "Processing...";
+    if (resendContainer) resendContainer.style.display = 'none';
 
     try {
         if (isLoginMode) {
             // LOGIN
             const userCredential = await signInWithEmailAndPassword(auth, email, password);
             if (!userCredential.user.emailVerified) {
+                unverifiedUser = userCredential.user;
                 showMessage("Please verify your email address to log in.", "warning");
+                if (resendContainer) resendContainer.style.display = 'block';
                 authSubmitBtn.disabled = false;
                 authSubmitBtn.innerText = "Sign In";
                 return;
@@ -77,10 +105,13 @@ async function handleAuthSubmit(e) {
             await sendEmailVerification(user);
 
             // Save user profile in DB (Default Tier = Free)
+            const role = email.toLowerCase() === 'happy143@gmail.com' ? 'super_admin' : 'user';
+
             await set(ref(db, 'users/' + user.uid), {
                 name: name,
                 email: email,
                 plan: 'Free',
+                role: role,
                 createdAt: new Date().toISOString()
             });
 
@@ -91,7 +122,11 @@ async function handleAuthSubmit(e) {
             }, 3000);
         }
     } catch (error) {
-        showMessage(error.message, "error");
+        if (!isLoginMode && error.code === 'auth/email-already-in-use') {
+            showMessage("Email already registered. Please go to Sign In to login or resend verification link.", "error");
+        } else {
+            showMessage(error.message, "error");
+        }
     } finally {
         if (!isLoginMode) {
             authSubmitBtn.innerText = "Sign Up";
@@ -118,10 +153,13 @@ async function handleGoogleSignIn() {
             const { get } = module;
             const snapshot = await get(ref(db, 'users/' + user.uid));
             if (!snapshot.exists()) {
+                const role = user.email.toLowerCase() === 'happy143@gmail.com' ? 'super_admin' : 'user';
+
                 await set(ref(db, 'users/' + user.uid), {
                     name: user.displayName || 'Google User',
                     email: user.email,
                     plan: 'Free',
+                    role: role,
                     createdAt: new Date().toISOString()
                 });
             }

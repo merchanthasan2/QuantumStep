@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel - EngageIQ</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        body {
+            background-color: #0f172a;
+            color: #f8fafc;
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+        }
+
+        /* Access Denied Overlay */
+        #access-denied {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #0f172a;
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+
+        #access-denied h1 {
+            color: #ef4444;
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        #access-denied p {
+            color: #94a3b8;
+            font-size: 1.2rem;
+        }
+
+        /* Admin Layout */
+        #admin-content {
+            display: none;
+            /* hidden until verified */
+            padding: 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .admin-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            border-bottom: 1px solid #334155;
+            padding-bottom: 1rem;
+        }
+
+        .admin-header h1 {
+            font-weight: 800;
+            background: linear-gradient(135deg, #a78bfa, #818cf8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin: 0;
+        }
+
+        .btn-logout {
+            background: #334155;
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            text-decoration: none;
+            cursor: pointer;
+            border: none;
+            font-weight: 600;
+            transition: background 0.3s;
+        }
+
+        .btn-logout:hover {
+            background: #ef4444;
+        }
+
+        /* Tabs */
+        .admin-tabs {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .tab-btn {
+            background: #1e293b;
+            color: #cbd5e1;
+            border: 1px solid #334155;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+
+        .tab-btn.active {
+            background: rgba(124, 58, 237, 0.2);
+            color: #a78bfa;
+            border-color: #8b5cf6;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* Panels / Cards */
+        .admin-card {
+            background: #1e293b;
+            border: 1px solid #334155;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .admin-card h2 {
+            margin-top: 0;
+            font-size: 1.2rem;
+            color: #f1f5f9;
+            border-bottom: 1px solid #334155;
+            padding-bottom: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        /* Data Tables */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+        }
+
+        th,
+        td {
+            padding: 1rem;
+            border-bottom: 1px solid #334155;
+        }
+
+        th {
+            color: #94a3b8;
+            font-weight: 600;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+        }
+
+        td {
+            color: #e2e8f0;
+            font-size: 0.95rem;
+        }
+
+        tr:hover td {
+            background: #0f172a;
+        }
+
+        select.tier-select {
+            background: #0f172a;
+            color: #f1f5f9;
+            border: 1px solid #475569;
+            padding: 0.4rem;
+            border-radius: 6px;
+            outline: none;
+        }
+
+        /* Analytics Specific */
+        .kpi-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .kpi-card {
+            background: #1e293b;
+            border: 1px solid #334155;
+            border-radius: 12px;
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .kpi-value {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: #a78bfa;
+            line-height: 1;
+        }
+
+        .kpi-label {
+            color: #94a3b8;
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Access Denied Overlay (default until verified) -->
+    <div id="access-denied">
+        <h1>Verifying Authentication...</h1>
+        <p>Checking your permissions securely against Firebase.</p>
+    </div>
+
+    <!-- Main Admin Dashboard -->
+    <div id="admin-content">
+        <div class="admin-header">
+            <div class="flex items-center gap-4">
+                <a href="dashboard.html" class="btn-logout"
+                    style="background: rgba(124, 58, 237, 0.1); color: #a78bfa; border: 1px solid rgba(124, 58, 237, 0.2);">&larr;
+                    Back to Dashboard</a>
+                <h1>EngageIQ Super Admin</h1>
+            </div>
+            <div>
+                <span id="admin-email-display" style="margin-right: 1.5rem; color: #94a3b8; font-weight: 500;"></span>
+                <button id="logout-btn" class="btn-logout">Sign Out</button>
+            </div>
+        </div>
+
+        <div class="admin-tabs">
+            <button class="tab-btn active" data-target="users">User Management</button>
+            <button class="tab-btn" data-target="analytics">Traffic Analytics</button>
+            <button class="tab-btn" data-target="tiers">Tier Management</button>
+            <button class="tab-btn" data-target="feedback">Feedback & Responses</button>
+        </div>
+
+        <!-- User Management Tab -->
+        <div id="tab-users" class="tab-content active">
+            <div class="admin-card">
+                <h2>Registered Accounts</h2>
+                <div style="overflow-x: auto;">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Account Date</th>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Role</th>
+                                <th>Current Tier</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="users-table-body">
+                            <tr>
+                                <td colspan="6" style="text-align: center;">Loading users...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Traffic Analytics Tab -->
+        <div id="tab-analytics" class="tab-content">
+            <div class="kpi-grid">
+                <div class="kpi-card">
+                    <div class="kpi-value" id="kpi-total-hits">0</div>
+                    <div class="kpi-label">Total Hits</div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-value" id="kpi-unique-visitors">0</div>
+                    <div class="kpi-label">Unique IPs</div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-value" id="kpi-mobile-users">0%</div>
+                    <div class="kpi-label">Mobile Traffic</div>
+                </div>
+            </div>
+
+            <div class="admin-card">
+                <h2>Recent Traffic Logs</h2>
+                <div style="overflow-x: auto;">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Timestamp</th>
+                                <th>Page</th>
+                                <th>Location</th>
+                                <th>Device / OS</th>
+                                <th>ISP</th>
+                                <th>Referrer</th>
+                            </tr>
+                        </thead>
+                        <tbody id="analytics-table-body">
+                            <tr>
+                                <td colspan="6" style="text-align: center;">Loading analytics...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tier Management Tab -->
+        <div id="tab-tiers" class="tab-content">
+            <div class="admin-card">
+                <h2>📦 Tier Configuration</h2>
+                <p style="color:#94a3b8;font-size:0.9rem;margin-bottom:1.5rem;">Define limits for each plan tier.
+                    Changes are saved to Firebase and enforced globally for all users on that tier.</p>
+                <div id="tiers-container" style="display:flex;flex-direction:column;gap:1.5rem;"></div>
+                <button onclick="saveTiers()"
+                    style="margin-top:1.5rem;background:linear-gradient(135deg,#7C3AED,#6366f1);color:white;padding:0.75rem 2rem;border:none;border-radius:10px;font-weight:700;cursor:pointer;font-size:1rem;">💾
+                    Save All Tiers</button>
+                <span id="tiers-save-msg" style="margin-left:1rem;color:#10b981;font-weight:600;display:none;">✓
+                    Saved!</span>
+            </div>
+
+            <div class="admin-card">
+                <h2>👤 Per-User Override</h2>
+                <p style="color:#94a3b8;font-size:0.9rem;margin-bottom:1rem;">Override limits for a specific user by
+                    their Firebase UID or email.</p>
+                <div style="display:flex;gap:1rem;flex-wrap:wrap;align-items:flex-end;">
+                    <div style="flex:1;min-width:200px;">
+                        <label
+                            style="display:block;font-size:0.75rem;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:0.5rem;">User
+                            Email</label>
+                        <input id="override-email" type="email" placeholder="user@example.com"
+                            style="width:100%;background:#0f172a;border:1px solid #334155;color:white;padding:0.6rem 1rem;border-radius:8px;outline:none;">
+                    </div>
+                    <div style="width:120px;">
+                        <label
+                            style="display:block;font-size:0.75rem;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:0.5rem;">Max
+                            Sessions</label>
+                        <input id="override-max-sessions" type="number" min="1" placeholder="e.g. 20"
+                            style="width:100%;background:#0f172a;border:1px solid #334155;color:white;padding:0.6rem 1rem;border-radius:8px;outline:none;">
+                    </div>
+                    <div style="width:140px;">
+                        <label
+                            style="display:block;font-size:0.75rem;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:0.5rem;">Max
+                            Participants</label>
+                        <input id="override-max-participants" type="number" min="1" placeholder="e.g. 500"
+                            style="width:100%;background:#0f172a;border:1px solid #334155;color:white;padding:0.6rem 1rem;border-radius:8px;outline:none;">
+                    </div>
+                    <button onclick="saveUserOverride()"
+                        style="background:#10b981;color:white;padding:0.6rem 1.5rem;border:none;border-radius:8px;font-weight:700;cursor:pointer;">Apply</button>
+                    <span id="override-save-msg" style="color:#10b981;font-weight:600;display:none;">✓ Saved!</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Feedback & Responses Tab -->
+        <div id="tab-feedback" class="tab-content">
+            <div class="admin-card">
+                <h2>💬 Participant Feedback</h2>
+                <p style="color:#94a3b8;font-size:0.9rem;margin-bottom:1rem;">All feedback submitted by participants
+                    after sessions ended. You can respond and choose to make feedback public on the site.</p>
+                <div style="display:flex;gap:1rem;margin-bottom:1.5rem;align-items:center;flex-wrap:wrap;">
+                    <label style="font-size:0.8rem;color:#94a3b8;font-weight:600;">Filter by Session:</label>
+                    <select id="feedback-session-filter" oninput="loadFeedback()"
+                        style="background:#0f172a;border:1px solid #334155;color:white;padding:0.4rem 0.75rem;border-radius:8px;outline:none;">
+                        <option value="">All Sessions</option>
+                    </select>
+                    <label
+                        style="display:flex;align-items:center;gap:0.5rem;font-size:0.8rem;color:#94a3b8;cursor:pointer;">
+                        <input type="checkbox" id="feedback-public-only" oninput="loadFeedback()"> Public only
+                    </label>
+                </div>
+                <div id="feedback-list" style="display:flex;flex-direction:column;gap:1rem;">Loading feedback...</div>
+            </div>
+        </div>
+
+    </div>
+
+    <script type="module" src="admin.js"></script>
+</body>
+
+</html>

@@ -1,16 +1,20 @@
 // Quantum Step - Real-Time Analytics Tracking
-// ------------------------------------------
+import { db, ref, push, set } from './firebase-config.js';
 
 async function trackVisitor() {
+    // Only track once per session
+    if (sessionStorage.getItem('qs_analytics_tracked')) return;
+
     try {
         // 1. Get IP and Location Data
-        const geoResponse = await fetch('https://ipapi.co/json/');
-        const geoData = await geoResponse.json();
+        let geoData = { ip: 'Unknown', city: 'Unknown', region: 'Unknown', country_name: 'Unknown', org: 'Unknown' };
+        try {
+            const geoResponse = await fetch('https://ipapi.co/json/');
+            geoData = await geoResponse.json();
+        } catch (e) { console.warn("Geo IP fetch failed"); }
 
         // 2. Get Device & OS Data
         const ua = navigator.userAgent;
-        const platform = navigator.platform;
-
         let deviceType = 'Desktop';
         if (/tablet|ipad/i.test(ua)) deviceType = 'Tablet';
         else if (/mobile|iphone|android/i.test(ua)) deviceType = 'Mobile';
@@ -37,13 +41,13 @@ async function trackVisitor() {
             screen_resolution: `${window.screen.width}x${window.screen.height}`
         };
 
-        console.log('Quantum Analytics - Logged:', visitorData);
+        // 3. Push to Firebase
+        const newDocRef = push(ref(db, 'analytics'));
+        await set(newDocRef, visitorData);
 
-        // 3. Push to Supabase (Configured for Future)
-        // pushToSupabase(visitorData);
-
-        // Storage fallback for local testing
-        saveLocalLog(visitorData);
+        // Mark as tracked for session
+        sessionStorage.setItem('qs_analytics_tracked', 'true');
+        console.log('Quantum Analytics - Logged to Firebase');
 
     } catch (error) {
         console.warn('Analytics tracking failed:', error);
@@ -60,14 +64,6 @@ function getBrowserName(ua) {
     return 'Unknown';
 }
 
-function saveLocalLog(data) {
-    let logs = JSON.parse(localStorage.getItem('qs_analytics_logs') || '[]');
-    logs.unshift(data);
-    if (logs.length > 100) logs = logs.slice(0, 100); // Keep last 100
-    localStorage.setItem('qs_analytics_logs', JSON.stringify(logs));
-}
-
-// Initial session tracking
 if (document.readyState === 'complete') {
     trackVisitor();
 } else {

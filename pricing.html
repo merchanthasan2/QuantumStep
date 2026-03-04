@@ -10,36 +10,90 @@
         rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
     <style>
+        body,
+        html {
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', sans-serif;
+            background-color: #020617;
+            color: #f8fafc;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
         .pricing-section {
-            padding: 8rem 0;
-            background: #f8fafc;
+            padding: 6rem 0;
+            background: #020617;
+            text-align: center;
+        }
+
+        .section-badge {
+            color: #6366f1;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            font-size: 0.875rem;
+            letter-spacing: 0;
+        }
+
+        .section-title {
+            font-size: 5rem;
+            font-weight: 900;
+            letter-spacing: -2px;
+            margin: 0 0 1rem 0;
+        }
+
+        .gradient-text {
+            background: linear-gradient(to right, #6366f1, #a855f7, #ec4899);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .section-description {
+            color: #a78bfa;
+            font-size: 1.25rem;
+            max-width: 600px;
+            margin: 0 auto 3rem auto;
+            line-height: 1.6;
+        }
+
+        .savings-banner {
+            color: #10b981;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            margin-bottom: 4rem;
+            font-size: 1rem;
         }
 
         .pricing-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
             gap: 2rem;
-            margin-top: 4rem;
+            text-align: left;
         }
 
         .pricing-card {
-            background: white;
-            border-radius: 16px;
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 24px;
             padding: 2.5rem;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
-            transition: all 0.3s ease;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.04);
             position: relative;
             display: flex;
             flex-direction: column;
-        }
-
-        .pricing-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            border: 1px solid transparent;
         }
 
         .pricing-card.popular {
-            border: 2px solid #6366f1;
+            border: 2px solid #8b5cf6;
         }
 
         .popular-badge {
@@ -49,45 +103,60 @@
             transform: translateX(-50%);
             background: #6366f1;
             color: white;
-            padding: 4px 12px;
+            padding: 4px 16px;
             border-radius: 20px;
             font-size: 0.75rem;
-            font-weight: 600;
+            font-weight: 700;
             letter-spacing: 1px;
             text-transform: uppercase;
         }
 
-        .plan-name {
+        .plan-header-icon {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .plan-header-icon img {
+            width: 24px;
+            height: 24px;
+        }
+
+        .plan-header-icon span {
             font-size: 1.5rem;
-            font-weight: 700;
-            color: #1e293b;
-            margin-bottom: 0.5rem;
+            font-weight: 800;
+            color: #f1f5f9;
+            /* VERY faint gray to match the image */
+            letter-spacing: -0.5px;
         }
 
         .plan-desc {
-            color: #64748b;
+            color: #a78bfa;
             font-size: 0.95rem;
-            margin-bottom: 1.5rem;
-            min-height: 44px;
+            margin-bottom: 2rem;
+            min-height: 24px;
         }
 
         .plan-price {
-            font-size: 2.5rem;
+            font-size: 3rem;
             font-weight: 900;
-            color: #0f172a;
-            margin-bottom: 0.5rem;
+            color: #f8fafc;
+            margin-bottom: 0.25rem;
+            letter-spacing: -1px;
         }
 
         .plan-price span {
             font-size: 1rem;
-            font-weight: 500;
-            color: #64748b;
+            font-weight: 600;
+            color: #a78bfa;
+            letter-spacing: 0;
         }
 
         .plan-price-inr {
-            font-size: 0.95rem;
-            color: #475569;
-            margin-bottom: 2rem;
+            font-size: 0.875rem;
+            color: #cbd5e1;
+            margin-bottom: 2.5rem;
             font-weight: 500;
         }
 
@@ -101,32 +170,37 @@
 
         .plan-features li {
             position: relative;
-            padding-left: 1.75rem;
-            margin-bottom: 1rem;
-            color: #475569;
+            padding-left: 2rem;
+            margin-bottom: 1.25rem;
+            color: #cbd5e1;
             font-size: 0.95rem;
+            font-weight: 500;
         }
 
         .plan-features li::before {
             content: "✓";
             position: absolute;
             left: 0;
+            color: #6366f1;
+            /* Using primarily blue checkmarks to match design vibe for pro */
+            font-weight: 800;
+            font-size: 1rem;
+        }
+
+        /* Free check is green in mockup, starter and pro are purple/blue */
+        .plan-features.free-list li::before {
             color: #10b981;
-            font-weight: bold;
         }
 
         .plan-features li.pro-feature {
-            font-weight: 600;
-            color: #1e293b;
-        }
-
-        .plan-features li.pro-feature::before {
-            color: #6366f1;
+            font-weight: 700;
+            color: #f8fafc;
         }
 
         .plan-features li.missing::before {
             content: "×";
-            color: #ef4444;
+            color: #a78bfa;
+            font-weight: bold;
         }
 
         .plan-features li.missing {
@@ -136,42 +210,49 @@
         .btn-upgrade {
             display: inline-block;
             text-align: center;
-            padding: 0.875rem 1.5rem;
-            border-radius: 8px;
-            font-weight: 600;
+            padding: 1rem 1.5rem;
+            border-radius: 12px;
+            font-weight: 700;
             text-decoration: none;
-            transition: all 0.3s ease;
+            transition: all 0.2s ease;
             width: 100%;
             box-sizing: border-box;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: #f8fafc;
+        }
+
+        .btn-upgrade:hover {
+            border-color: #a78bfa;
+            background: #f8fafc;
         }
 
         .btn-upgrade.primary {
             background: #6366f1;
             color: white;
+            border: none;
         }
 
         .btn-upgrade.primary:hover {
             background: #4f46e5;
         }
 
-        .btn-upgrade.secondary {
-            background: #f1f5f9;
-            color: #1e293b;
-        }
-
-        .btn-upgrade.secondary:hover {
-            background: #e2e8f0;
-        }
-
         /* Comparison Table */
         .comparison-section {
             padding: 4rem 0 8rem;
-            background: white;
+            background: #020617;
         }
 
         .comparison-table-wrapper {
             overflow-x: auto;
             margin-top: 3rem;
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 24px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.04);
+            padding: 2rem;
         }
 
         .table {
@@ -183,41 +264,32 @@
         .table th,
         .table td {
             padding: 1.25rem 1rem;
-            border-bottom: 1px solid #e2e8f0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
         }
 
         .table th {
-            font-weight: 600;
-            color: #1e293b;
-            background: #f8fafc;
+            font-weight: 700;
+            color: #f8fafc;
         }
 
         .table td {
-            color: #475569;
+            color: #cbd5e1;
             font-size: 0.95rem;
         }
 
-        .table th:first-child,
         .table td:first-child {
             font-weight: 600;
-            color: #0f172a;
-            position: sticky;
-            left: 0;
-            background: #f8fafc;
-        }
-
-        .table td:first-child {
-            background: white;
+            color: #f8fafc;
         }
 
         .status-badge {
             display: inline-block;
-            padding: 2px 8px;
+            padding: 4px 10px;
             border-radius: 12px;
             font-size: 0.75rem;
-            font-weight: 600;
-            background: #f1f5f9;
-            color: #475569;
+            font-weight: 700;
+            background: rgba(255, 255, 255, 0.1);
+            color: #a78bfa;
         }
 
         .status-badge.live {
@@ -227,23 +299,69 @@
 
         .icon-check {
             color: #10b981;
-            font-weight: bold;
+            font-weight: 800;
         }
 
         .icon-cross {
-            color: #ef4444;
-            font-weight: bold;
+            color: #a78bfa;
+            font-weight: 800;
         }
 
-        .savings-banner {
-            text-align: center;
-            margin-bottom: 2rem;
-            color: #10b981;
-            font-weight: 600;
+        .main-nav {
+            background: #0f172a !important;
+            padding: 1rem 2rem;
             display: flex;
             align-items: center;
-            justify-content: center;
-            gap: 0.5rem;
+            justify-content: space-between;
+        }
+
+        .main-nav .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+        }
+
+        .main-nav .logo-image {
+            width: 40px;
+            height: 40px;
+        }
+
+        .main-nav .logo-text {
+            color: white;
+            font-weight: 800;
+            font-size: 1.5rem;
+            background: linear-gradient(to right, #6366f1, #d946ef);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .nav-menu {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        .nav-menu a {
+            color: #e2e8f0;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        .nav-menu .nav-cta-btn {
+            background: #6366f1;
+            color: white;
+            padding: 8px 24px;
+            border-radius: 24px;
+            transition: all 0.2s ease;
+        }
+
+        .nav-menu .nav-cta-btn:hover {
+            background: #5558e6;
         }
     </style>
 </head>
@@ -258,6 +376,9 @@
                 <span class="logo-text">Quantum Step</span>
             </a>
             <ul id="nav-menu" class="nav-menu">
+                <li><a href="use-cases.html" class="nav-link"
+                        style="color: #e2e8f0; text-decoration: none; font-weight: 600; font-size: 0.95rem;">Use
+                        Cases</a></li>
                 <li><a href="index.html#engageiq" class="nav-link">About EngageIQ</a></li>
                 <li><a href="auth.html" class="nav-cta-btn">Sign In</a></li>
             </ul>
@@ -269,7 +390,7 @@
         <div class="container">
             <div class="section-header">
                 <div class="section-badge">EngageIQ Pricing</div>
-                <h2 class="section-title">Simple, transparent <span class="gradient-text">pricing</span></h2>
+                <h2 class="section-title"><span class="gradient-text">pricing</span></h2>
                 <p class="section-description">Choose the plan that fits your event size and audience needs. Upgrade
                     anytime.</p>
             </div>
@@ -285,25 +406,32 @@
             <div class="pricing-grid">
                 <!-- Free Plan -->
                 <div class="pricing-card">
-                    <h3 class="plan-name">🆓 Free</h3>
+                    <div class="plan-header-icon">
+                        <span style="display:inline-block; font-size:1.5rem; margin-right:4px;">🆓</span>
+                        <span>Free</span>
+                    </div>
                     <p class="plan-desc">First-time users & testing</p>
                     <div class="plan-price">$0</div>
                     <div class="plan-price-inr">₹0 / forever</div>
-                    <ul class="plan-features">
+                    <ul class="plan-features free-list">
                         <li>100 Participants per Event</li>
                         <li>2 Events Total</li>
                         <li>3 Questions per Event</li>
-                        <li>QR Code Join</li>
-                        <li>Live Results Display</li>
+                        <li class="missing">QR Code Join</li>
+                        <li class="missing">Live Results Display</li>
                         <li class="missing">Analytics & Exports</li>
                         <li class="missing">Custom Branding</li>
                     </ul>
+                    <!-- Keep ID specific for auth JS bindings if needed or keep standard class -->
                     <a href="auth.html" class="btn-upgrade secondary">Get Started Free</a>
                 </div>
 
                 <!-- Starter Plan -->
                 <div class="pricing-card">
-                    <h3 class="plan-name">🚀 Starter</h3>
+                    <div class="plan-header-icon">
+                        <span style="display:inline-block; font-size:1.5rem; margin-right:4px;">🚀</span>
+                        <span>Starter</span>
+                    </div>
                     <p class="plan-desc">Freelancers & educators</p>
                     <div class="plan-price">$4.99<span> / mo</span></div>
                     <div class="plan-price-inr">₹415 / mo</div>
@@ -321,8 +449,11 @@
 
                 <!-- Pro Plan -->
                 <div class="pricing-card popular">
-                    <div class="popular-badge">Most Popular</div>
-                    <h3 class="plan-name">⚡ Pro</h3>
+                    <div class="popular-badge">MOST POPULAR</div>
+                    <div class="plan-header-icon">
+                        <span style="display:inline-block; font-size:1.5rem; margin-right:4px; color:#f59e0b;">⚡</span>
+                        <span>Pro</span>
+                    </div>
                     <p class="plan-desc">Professionals & teams</p>
                     <div class="plan-price">$14.99<span> / mo</span></div>
                     <div class="plan-price-inr">₹1,249 / mo</div>
@@ -339,8 +470,12 @@
                 </div>
 
                 <!-- Enterprise Plan -->
+                <!-- We can hide this specific card, or add it with the 🏢 icon depending on requirements. Assuming 4th card should stay as per mockup which showed 3, let's keep it but make it blend -->
                 <div class="pricing-card">
-                    <h3 class="plan-name">🏢 Enterprise</h3>
+                    <div class="plan-header-icon">
+                        <span style="display:inline-block; font-size:1.5rem; margin-right:4px;">🏢</span>
+                        <span>Enterprise</span>
+                    </div>
                     <p class="plan-desc">Large corporates & enterprises</p>
                     <div class="plan-price">$39.99<span> / user/mo</span></div>
                     <div class="plan-price-inr">₹3,329 / user/mo</div>
@@ -353,7 +488,8 @@
                         <li class="pro-feature">Dedicated Manager & SLA</li>
                     </ul>
                     <a href="#" class="btn-upgrade secondary"
-                        style="cursor: not-allowed; background:#e2e8f0; color:#94a3b8;">Coming Soon</a>
+                        style="cursor: not-allowed; background: rgba(255, 255, 255, 0.1); color:#94a3b8; border-color:transparent;">Coming
+                        Soon</a>
                 </div>
             </div>
         </div>
@@ -507,6 +643,9 @@
         </div>
     </section>
 
+    <script type="module" src="script.js"></script>
+    <!-- Analytics Tracking -->
+    <script type="module" src="analytics.js"></script>
 </body>
 
 </html>

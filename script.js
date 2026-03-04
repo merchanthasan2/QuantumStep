@@ -75,8 +75,12 @@ function initNavigation() {
     // Smooth scroll
     navLinks.forEach(link => {
         link.addEventListener('click', (e) => {
-            e.preventDefault();
             const targetId = link.getAttribute('href');
+
+            // Allow normal navigation for external/page links
+            if (!targetId || !targetId.startsWith('#')) return;
+
+            e.preventDefault();
             const targetSection = document.querySelector(targetId);
 
             if (targetSection) {

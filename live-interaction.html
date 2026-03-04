@@ -11,41 +11,193 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
 
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        violet: { 500: '#7C3AED', 600: '#6D28D9', 950: '#2e1065' },
-                        slate: { 800: '#1e293b', 900: '#0f172a', 950: '#020617' }
-                    }
-                }
-            }
-        }
-    </script>
+    <!-- GSAP for Premium Animations -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
 
     <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        :root {
+            --violet: #7C3AED;
+            --indigo: #6366f1;
+            --purple-light: #f5f3ff;
+            --surface: #ffffff;
+            --bg: #0f172a;
+            /* Deep dark background */
+            --text: #f8fafc;
+            --text-muted: #94a3b8;
+            --border: rgba(255, 255, 255, 0.1);
+            --success: #10b981;
+            --danger: #ef4444;
+            --glass: rgba(255, 255, 255, 0.03);
+            --glass-border: rgba(255, 255, 255, 0.1);
+        }
+
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #020617;
-            color: white;
+            background: radial-gradient(circle at top left, #1e1b4b 0%, #0f172a 100%);
+            color: var(--text);
             min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
         }
 
-        .option-card {
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            transition: all 0.2s ease;
+        body.light-mode {
+            --bg: #f8fafc;
+            --text: #0f172a;
+            --text-muted: #64748b;
+            --border: #e2e8f0;
+            --glass: rgba(255, 255, 255, 0.8);
+            --glass-border: rgba(0, 0, 0, 0.05);
+            background: #f1f5f9;
         }
 
-        .option-card.selected {
-            border-color: #7C3AED;
-            background: rgba(124, 58, 237, 0.1);
+        /* ── Header ── */
+        header {
+            background: linear-gradient(135deg, #7C3AED 0%, #6366f1 60%, #8b5cf6 100%);
+            padding: 14px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            box-shadow: 0 4px 24px rgba(124, 58, 237, 0.3);
         }
 
-        /* Animations */
+        .header-brand {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .header-icon {
+            width: 32px;
+            height: 32px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .header-logo-img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        .header-icon {
+            width: 32px;
+            height: 32px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .header-logo-img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        .header-name {
+            font-size: 0.8rem;
+            font-weight: 900;
+            color: white;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+        }
+
+        .live-chip {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            background: rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 999px;
+            padding: 4px 10px;
+            font-size: 0.65rem;
+            font-weight: 900;
+            color: white;
+            letter-spacing: 0.08em;
+        }
+
+        .live-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: #86efac;
+            animation: pulse-dot 1.5s ease-in-out infinite;
+        }
+
+        @keyframes pulse-dot {
+
+            0%,
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+
+            50% {
+                opacity: 0.6;
+                transform: scale(1.3);
+            }
+        }
+
+        /* ── Main Content ── */
+        main {
+            flex: 1;
+            padding: 24px 16px;
+            max-width: 480px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        /* ── Waiting State ── */
+        #waiting-state {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 65vh;
+            text-align: center;
+        }
+
+        .waiting-orb {
+            width: 100px;
+            height: 100px;
+            border-radius: 28px;
+            background: linear-gradient(135deg, #7C3AED, #6366f1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            margin-bottom: 28px;
+            box-shadow: 0 20px 50px rgba(124, 58, 237, 0.35);
+            animation: float 3s ease-in-out infinite;
+            position: relative;
+        }
+
+        .waiting-orb::before {
+            content: '';
+            position: absolute;
+            inset: -12px;
+            border-radius: 38px;
+            background: linear-gradient(135deg, rgba(124, 58, 237, 0.2), rgba(99, 102, 241, 0.1));
+            z-index: -1;
+            animation: pulse-ring 2s ease-in-out infinite;
+        }
+
         @keyframes float {
 
             0%,
@@ -58,117 +210,569 @@
             }
         }
 
-        @keyframes pulse-soft {
+        @keyframes pulse-ring {
 
             0%,
             100% {
                 transform: scale(1);
-                opacity: 0.1;
+                opacity: 0.6;
             }
 
             50% {
-                transform: scale(1.1);
-                opacity: 0.2;
+                transform: scale(1.08);
+                opacity: 0.3;
             }
         }
 
-        .animate-float {
-            animation: float 3s ease-in-out infinite;
+        .waiting-title {
+            font-size: 1.6rem;
+            font-weight: 900;
+            color: var(--text);
+            margin-bottom: 10px;
         }
 
-        .animate-pulse-soft {
-            animation: pulse-soft 2s ease-in-out infinite;
+        .waiting-sub {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            max-width: 240px;
+            line-height: 1.6;
+            margin-bottom: 28px;
         }
 
-        /* Mobile specific fixes */
-        .safe-pb {
-            padding-bottom: calc(1.5rem + env(safe-area-inset-bottom));
+        .waiting-badge {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 999px;
+            padding: 8px 18px;
+            font-size: 0.7rem;
+            font-weight: 800;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+        }
+
+        /* ── Interaction Content ── */
+        #interaction-content {
+            padding-bottom: 120px;
+        }
+
+        .slide-label {
+            font-size: 0.65rem;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--violet);
+            margin-bottom: 6px;
+        }
+
+        .question-text {
+            font-size: 1.4rem;
+            font-weight: 900;
+            color: var(--text);
+            line-height: 1.3;
+            margin-bottom: 24px;
+        }
+
+        .timer-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: #fff7ed;
+            border: 1px solid #fed7aa;
+            border-radius: 999px;
+            padding: 4px 12px;
+            font-size: 0.8rem;
+            font-weight: 900;
+            color: #ea580c;
+            flex-shrink: 0;
+        }
+
+        /* ── Option Cards ── */
+        .option-card {
+            background: white;
+            border: 2px solid var(--border);
+            border-radius: 16px;
+            padding: 16px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+            margin-bottom: 12px;
+            width: 100%;
+            text-align: left;
+        }
+
+        .option-card:hover {
+            border-color: #c4b5fd;
+            box-shadow: 0 4px 20px rgba(124, 58, 237, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .option-card.selected {
+            border-color: var(--violet);
+            background: linear-gradient(135deg, #faf5ff, #eff6ff);
+            box-shadow: 0 6px 24px rgba(124, 58, 237, 0.18);
+        }
+
+        .option-text {
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: var(--text);
+            flex: 1;
+        }
+
+        .option-card.selected .option-text {
+            color: var(--violet);
+        }
+
+        .option-radio {
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            border: 2px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            margin-left: 12px;
+            transition: all 0.2s;
+        }
+
+        .option-card.selected .option-radio {
+            border-color: var(--violet);
+            background: var(--violet);
+        }
+
+        .option-radio-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: white;
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+
+        .option-card.selected .option-radio-dot {
+            opacity: 1;
+        }
+
+        /* ── Text Area ── */
+        textarea {
+            width: 100%;
+            background: white;
+            border: 2px solid var(--border);
+            border-radius: 16px;
+            padding: 16px;
+            font-size: 1rem;
+            font-family: inherit;
+            color: var(--text);
+            resize: none;
+            height: 130px;
+            transition: border-color 0.2s;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+            outline: none;
+        }
+
+        textarea:focus {
+            border-color: var(--violet);
+            box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.1);
+        }
+
+        /* ── Slider ── */
+        .slider-card {
+            background: white;
+            border: 2px solid var(--border);
+            border-radius: 20px;
+            padding: 32px 24px;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.05);
+        }
+
+        .slider-value {
+            font-size: 4rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, #7C3AED, #6366f1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-align: center;
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        .slider-labels {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.7rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--text-muted);
+            margin-bottom: 16px;
+        }
+
+        input[type="range"] {
+            width: 100%;
+            height: 8px;
+            border-radius: 999px;
+            appearance: none;
+            background: linear-gradient(to right, #7C3AED, #6366f1);
+            outline: none;
+            cursor: pointer;
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            appearance: none;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: white;
+            border: 3px solid #7C3AED;
+            box-shadow: 0 2px 10px rgba(124, 58, 237, 0.3);
+            cursor: pointer;
+        }
+
+        /* ── Quiz Feedback ── */
+        .feedback-card {
+            border-radius: 20px;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            margin-top: 24px;
+        }
+
+        .feedback-correct {
+            background: #f0fdf4;
+            border: 2px solid #86efac;
+        }
+
+        .feedback-wrong {
+            background: #fef2f2;
+            border: 2px solid #fca5a5;
+        }
+
+        .feedback-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        /* ── Footer Submit ── */
+        footer {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(20px);
+            border-top: 1px solid var(--border);
+            padding: 16px 20px calc(16px + env(safe-area-inset-bottom));
+            z-index: 50;
+            transform: translateY(100%);
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        footer.visible {
+            transform: translateY(0);
+        }
+
+        .submit-btn {
+            width: 100%;
+            height: 56px;
+            border-radius: 16px;
+            font-size: 1rem;
+            font-weight: 900;
+            border: none;
+            cursor: pointer;
+            font-family: inherit;
+            letter-spacing: 0.02em;
+            transition: all 0.2s;
+        }
+
+        .submit-btn.active {
+            background: linear-gradient(135deg, #7C3AED, #6366f1);
+            color: white;
+            box-shadow: 0 8px 24px rgba(124, 58, 237, 0.35);
+        }
+
+        .submit-btn.active:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 32px rgba(124, 58, 237, 0.45);
+        }
+
+        .submit-btn.active:active {
+            transform: translateY(0);
+        }
+
+        .submit-btn.disabled {
+            background: #f1f5f9;
+            color: #94a3b8;
+            cursor: not-allowed;
+        }
+
+        .submit-btn.submitted {
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+            box-shadow: 0 8px 24px rgba(16, 185, 129, 0.3);
+        }
+
+        /* ── Dark Mode Toggle ── */
+        .mode-toggle {
+            position: fixed;
+            top: 72px;
+            right: 14px;
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            background: white;
+            border: 1.5px solid var(--border);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 40;
+            transition: all 0.2s;
+        }
+
+        .mode-toggle:hover {
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+        }
+
+        /* ── Dark Mode ── */
+        body.dark-mode {
+            --bg: #020617;
+            --surface: #0f172a;
+            --text: #f8fafc;
+            --text-muted: #94a3b8;
+            --border: rgba(255, 255, 255, 0.08);
+        }
+
+        body.dark-mode .option-card {
+            background: rgba(255, 255, 255, 0.03);
+        }
+
+        body.dark-mode .option-card.selected {
+            background: rgba(124, 58, 237, 0.1);
+        }
+
+        body.dark-mode .waiting-badge,
+        body.dark-mode .slider-card,
+        body.dark-mode textarea {
+            background: rgba(255, 255, 255, 0.04);
+            border-color: rgba(255, 255, 255, 0.08);
+            color: var(--text);
+        }
+
+        body.dark-mode footer {
+            background: rgba(2, 6, 23, 0.85);
+            border-color: rgba(255, 255, 255, 0.06);
+        }
+
+        body.dark-mode .submit-btn.disabled {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        body.dark-mode .mode-toggle {
+            background: rgba(255, 255, 255, 0.06);
+            border-color: rgba(255, 255, 255, 0.1);
+        }
+
+        /* ── Scrollbar ── */
+        ::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #c4b5fd;
+            border-radius: 999px;
         }
     </style>
 </head>
 
-<body class="flex flex-col">
-    <!-- Mini Header -->
-    <header class="p-4 flex items-center justify-between border-b border-white/5 bg-slate-900/50 sticky top-0 z-50">
-        <div class="flex items-center gap-2">
-            <div class="w-6 h-6 bg-violet-600 rounded flex items-center justify-center">
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3">
+<body>
+    <!-- Header -->
+    <header id="main-header">
+        <div class="header-brand">
+            <div class="header-icon" id="header-logo-container">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5">
                     <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
                 </svg>
             </div>
-            <span class="text-xs font-black uppercase">EngageIQ</span>
+            <span class="header-name" id="header-brand-name">EngageIQ</span>
         </div>
-        <div
-            class="text-[10px] bg-emerald-500/10 text-emerald-500 px-2 py-0.5 rounded-full font-bold border border-emerald-500/20">
+        <div class="live-chip">
+            <span class="live-dot"></span>
             LIVE
         </div>
     </header>
 
-    <main id="main-content" class="flex-1 p-6">
-        <!-- Waiting State (Default) -->
-        <div id="waiting-state" class="flex flex-col items-center justify-center min-h-[60vh] text-center p-6">
-            <div class="relative mb-10">
-                <div class="absolute inset-0 bg-violet-600 rounded-full blur-3xl animate-pulse-soft"></div>
-                <div
-                    class="relative w-24 h-24 bg-gradient-to-br from-violet-500 to-violet-700 rounded-3xl flex items-center justify-center text-white shadow-2xl shadow-violet-900/40 animate-float">
-                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
-                        stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
-                    </svg>
+    <!-- Join Session Modal -->
+    <div id="join-modal"
+        class="fixed inset-0 z-[100] flex items-center justify-center p-6 bg-slate-950/90 backdrop-blur-xl transition-all duration-500">
+        <div
+            class="w-full max-w-sm bg-white/5 border border-white/10 backdrop-blur-md rounded-[2.5rem] p-10 shadow-2xl relative overflow-hidden">
+            <!-- Decorative Glow -->
+            <div class="absolute -top-24 -left-24 w-48 h-48 bg-violet-600/20 blur-[80px] rounded-full"></div>
+
+            <div class="relative z-10">
+                <div class="text-center mb-10">
+                    <div id="join-logo-container"
+                        class="w-20 h-20 bg-violet-600 rounded-3xl flex items-center justify-center text-white mx-auto mb-6 shadow-xl shadow-violet-900/30">
+                        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2.5">
+                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                            <circle cx="12" cy="7" r="4" />
+                        </svg>
+                    </div>
+                    <h2 class="text-3xl font-black text-white mb-3">Welcome!</h2>
+                    <p class="text-slate-400 text-sm leading-relaxed" id="join-welcome-msg">Join the conversation and
+                        participate in live polls & quizzes.</p>
+                </div>
+
+                <div class="space-y-6">
+                    <div class="space-y-2">
+                        <label class="block text-[10px] font-black text-violet-400 uppercase tracking-widest ml-1">Your
+                            Full Name</label>
+                        <input type="text" id="participant-name" placeholder="Enter your name"
+                            class="w-full bg-white/5 border border-white/10 rounded-2xl px-5 py-4 text-white placeholder:text-slate-600 focus:outline-none focus:border-violet-500 focus:bg-white/10 transition-all">
+                    </div>
+                    <div class="space-y-2">
+                        <label class="block text-[10px] font-black text-violet-400 uppercase tracking-widest ml-1">Email
+                            Address</label>
+                        <input type="email" id="participant-email" placeholder="name@company.com"
+                            class="w-full bg-white/5 border border-white/10 rounded-2xl px-5 py-4 text-white placeholder:text-slate-600 focus:outline-none focus:border-violet-500 focus:bg-white/10 transition-all">
+                    </div>
+                    <button id="join-btn"
+                        class="w-full py-5 bg-violet-600 hover:bg-violet-500 text-white font-black rounded-2xl shadow-xl shadow-violet-900/40 hover:scale-[1.02] active:scale-95 transition-all text-lg mt-4">
+                        Join Session
+                    </button>
+                    <p class="text-center text-[10px] text-slate-500 font-bold uppercase tracking-widest mt-6">EngageIQ
+                        by Quantum Step</p>
                 </div>
             </div>
-            <h2 class="text-3xl font-black mb-3 text-white tracking-tight">Hang tight!</h2>
-            <p class="text-slate-400 max-w-[240px] leading-relaxed">The presenter hasn't started this interaction yet.
-                We'll jump in automatically once they do.</p>
+        </div>
+    </div>
 
-            <div class="mt-12 flex items-center gap-2 px-4 py-2 bg-white/5 rounded-full border border-white/5">
-                <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-                <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Waiting for launch</span>
+    <!-- Dark Mode Toggle -->
+    <button class="mode-toggle" onclick="toggleDarkMode()" title="Toggle dark mode" id="mode-btn">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#64748b" stroke-width="2">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
+        </svg>
+    </button>
+
+    <main>
+        <!-- Waiting State -->
+        <div id="waiting-state">
+            <div class="waiting-orb">
+                <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
+                </svg>
+            </div>
+            <h2 class="waiting-title">Hang tight! 👋</h2>
+            <p class="waiting-sub">The presenter hasn't started this interaction yet. We'll jump in automatically once
+                they do.</p>
+            <div class="waiting-badge">
+                <span class="live-dot"></span>
+                <span id="waiting-status">Waiting for presenter</span>
+            </div>
+            <div id="brand-footer" class="mt-12 opacity-30 flex flex-col items-center gap-2 hidden">
+                <img id="brand-logo-small" src="" class="h-6 w-auto grayscale">
+                <span id="brand-name-small" class="text-[10px] font-black uppercase tracking-widest"></span>
             </div>
         </div>
 
-        <!-- Dynamic Interaction Content (Hidden by default) -->
-        <div id="interaction-content" class="hidden pb-32">
-            <div class="mb-4 flex justify-between items-start">
+        <!-- Session Ended / Feedback Screen -->
+        <div id="session-ended-screen" class="hidden fixed inset-0 z-[200] flex items-center justify-center p-6"
+            style="background: radial-gradient(circle at top left, #1e1b4b 0%, #0f172a 100%);">
+            <div class="w-full max-w-sm text-center">
+                <!-- Animated emoji burst -->
+                <div id="feedback-emoji-burst" style="font-size:4rem;margin-bottom:1rem;animation:pop 0.6s ease">🎉
+                </div>
+                <h2 style="font-size:1.8rem;font-weight:900;color:#fff;margin-bottom:0.5rem;">Session Complete!</h2>
+                <p id="feedback-session-title" style="color:#94a3b8;font-size:0.9rem;margin-bottom:2rem;">Thanks for
+                    participating. How was the experience?</p>
+
+                <!-- Emoji Reactions -->
+                <div style="margin-bottom:1.5rem;">
+                    <p
+                        style="font-size:0.7rem;font-weight:800;color:#7C3AED;text-transform:uppercase;letter-spacing:0.1em;margin-bottom:0.75rem;">
+                        Rate this session</p>
+                    <div style="display:flex;justify-content:center;gap:1rem;flex-wrap:wrap;" id="emoji-reaction-row">
+                        <button class="emoji-react-btn" data-emoji="🔥" onclick="selectEmoji(this)"
+                            style="font-size:2rem;background:rgba(255,255,255,0.05);border:2px solid transparent;border-radius:16px;padding:0.75rem;cursor:pointer;transition:all 0.2s;">🔥</button>
+                        <button class="emoji-react-btn" data-emoji="💡" onclick="selectEmoji(this)"
+                            style="font-size:2rem;background:rgba(255,255,255,0.05);border:2px solid transparent;border-radius:16px;padding:0.75rem;cursor:pointer;transition:all 0.2s;">💡</button>
+                        <button class="emoji-react-btn" data-emoji="👏" onclick="selectEmoji(this)"
+                            style="font-size:2rem;background:rgba(255,255,255,0.05);border:2px solid transparent;border-radius:16px;padding:0.75rem;cursor:pointer;transition:all 0.2s;">👏</button>
+                        <button class="emoji-react-btn" data-emoji="🤔" onclick="selectEmoji(this)"
+                            style="font-size:2rem;background:rgba(255,255,255,0.05);border:2px solid transparent;border-radius:16px;padding:0.75rem;cursor:pointer;transition:all 0.2s;">🤔</button>
+                        <button class="emoji-react-btn" data-emoji="😐" onclick="selectEmoji(this)"
+                            style="font-size:2rem;background:rgba(255,255,255,0.05);border:2px solid transparent;border-radius:16px;padding:0.75rem;cursor:pointer;transition:all 0.2s;">😐</button>
+                    </div>
+                </div>
+
+                <!-- Text Feedback -->
+                <div style="margin-bottom:1.5rem;">
+                    <p
+                        style="font-size:0.7rem;font-weight:800;color:#7C3AED;text-transform:uppercase;letter-spacing:0.1em;margin-bottom:0.75rem;">
+                        Leave a comment (optional)</p>
+                    <textarea id="feedback-text" placeholder="What did you enjoy? What could be better?" rows="4"
+                        style="width:100%;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);color:white;padding:1rem;border-radius:1rem;outline:none;font-family:inherit;font-size:0.9rem;resize:none;"></textarea>
+                </div>
+
+                <!-- Submit -->
+                <button onclick="submitFeedback()" id="submit-feedback-btn"
+                    style="width:100%;background:linear-gradient(135deg,#7C3AED,#6366f1);color:white;border:none;padding:1rem;border-radius:1rem;font-size:1rem;font-weight:800;cursor:pointer;transition:all 0.2s;">
+                    Submit Feedback
+                </button>
+                <div id="feedback-submitted-msg" class="hidden" style="margin-top:1rem;color:#10b981;font-weight:700;">✓
+                    Thanks! Your feedback has been submitted.</div>
+            </div>
+        </div>
+
+        <!-- Interaction Content -->
+        <div id="interaction-content" style="display:none;">
+            <div
+                style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:6px; gap:12px;">
                 <div>
-                    <div id="slide-info" class="text-violet-500 text-[10px] font-black tracking-widest uppercase mb-1">
-                        Question 1 of 1</div>
-                    <h1 id="question-text" class="text-2xl font-black text-white">Loading question...</h1>
+                    <div class="slide-label" id="slide-info">Question 1 of 1</div>
+                    <h1 class="question-text" id="question-text">Loading...</h1>
                 </div>
-                <div id="participant-timer"
-                    class="hidden bg-slate-800 px-3 py-1 rounded-lg border border-white/5 font-black text-violet-400 text-sm">
-                    00
+                <div class="timer-pill" id="participant-timer" style="display:none;">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                        stroke-width="2.5">
+                        <circle cx="12" cy="12" r="10" />
+                        <polyline points="12 6 12 12 16 14" />
+                    </svg>
+                    <span id="timer-val">00</span>
                 </div>
             </div>
 
-            <div id="options-container" class="space-y-4">
-                <!-- Options will be injected here -->
-            </div>
+            <div id="options-container"></div>
 
-            <!-- Quiz Feedback Container -->
-            <div id="quiz-feedback" class="mt-8 hidden animate-scale-in">
-                <div id="feedback-card" class="p-6 rounded-3xl border flex items-center gap-4">
-                    <div id="feedback-icon" class="w-12 h-12 rounded-2xl flex items-center justify-center shrink-0">
-                    </div>
-                    <div>
-                        <div id="feedback-title" class="font-black text-lg"></div>
-                        <div id="feedback-text" class="text-sm opacity-80"></div>
-                    </div>
-                </div>
-            </div>
+            <!-- Quiz Feedback -->
+            <div id="quiz-feedback" style="display:none;"></div>
         </div>
     </main>
 
-    <footer id="footer-controls"
-        class="fixed bottom-0 left-0 right-0 p-6 bg-slate-950/80 backdrop-blur-xl border-t border-white/5 z-50 transform translate-y-full transition-transform duration-300 safe-pb">
-        <button id="submit-btn" disabled
-            class="w-full h-14 bg-slate-800 text-slate-500 rounded-2xl font-black transition-all shadow-xl">
-            Submit Answer
-        </button>
+    <!-- Submit Footer -->
+    <footer id="footer-controls">
+        <button id="submit-btn" class="submit-btn disabled" disabled>Submit Answer</button>
     </footer>
 
     <script type="module">
-        import { db, ref, onValue, update, set, push } from './firebase-config.js';
+        import { db, ref, onValue, set } from './firebase-config.js';
 
         let selectedIdx = -1;
         let currentSlideNum = -1;
@@ -181,25 +785,54 @@
         const sessionId = urlParams.get('id') || "582914";
         const sessionRef = ref(db, `sessions/${sessionId}`);
 
+        // Dark mode toggle
+        window.toggleDarkMode = function () {
+            const body = document.body;
+            const btn = document.getElementById('mode-btn');
+            body.classList.toggle('dark-mode');
+            const isDark = body.classList.contains('dark-mode');
+            localStorage.setItem('eiq_dark', isDark ? '1' : '0');
+            btn.innerHTML = isDark
+                ? `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#a78bfa" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>`
+                : `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#64748b" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>`;
+        };
+        if (localStorage.getItem('eiq_dark') === '1') window.toggleDarkMode();
+
+        function getParticipant() {
+            const saved = localStorage.getItem('eiq_participant');
+            return saved ? JSON.parse(saved) : null;
+        }
+
+        function setFooterVisible(show) {
+            const footer = document.getElementById('footer-controls');
+            if (footer) footer.classList.toggle('visible', show);
+        }
+
+        function setSubmitState(state) {
+            const btn = document.getElementById('submit-btn');
+            btn.className = 'submit-btn ' + state;
+            if (state === 'active') { btn.disabled = false; btn.innerText = 'Submit Answer'; }
+            else if (state === 'submitted') { btn.disabled = true; btn.innerText = '✓ Answer Submitted'; }
+            else { btn.disabled = true; btn.innerText = 'Submit Answer'; }
+        }
+
         function renderSlide(slideNum, data) {
             const waitingState = document.getElementById('waiting-state');
             const interactionContent = document.getElementById('interaction-content');
-            const footerControls = document.getElementById('footer-controls');
             const quizFeedback = document.getElementById('quiz-feedback');
-            const participantTimer = document.getElementById('participant-timer');
+            const timerEl = document.getElementById('participant-timer');
 
-            // Clear previous states
             clearInterval(timerInterval);
-            quizFeedback.classList.add('hidden');
-            participantTimer.classList.add('hidden');
+            quizFeedback.style.display = 'none';
+            timerEl.style.display = 'none';
             hasVotedOnCurrentSlide = false;
             selectedIdx = -1;
             selectedResponse = null;
 
             if (slideNum === 1) {
-                waitingState.classList.remove('hidden');
-                interactionContent.classList.add('hidden');
-                footerControls.classList.add('translate-y-full');
+                waitingState.style.display = 'flex';
+                interactionContent.style.display = 'none';
+                setFooterVisible(false);
                 return;
             }
 
@@ -208,17 +841,22 @@
             const slide = data.slides[slideIndex];
             if (!slide) return;
 
-            // Check if user already voted on this slide
-            const userId = getUserId();
+            const participant = getParticipant();
+            if (!participant) {
+                document.getElementById('join-modal').classList.remove('hidden');
+                return;
+            }
+
+            const userId = participant.id;
             if (data.votes && data.votes[slideIndex] && data.votes[slideIndex][userId] !== undefined) {
                 hasVotedOnCurrentSlide = true;
                 selectedResponse = data.votes[slideIndex][userId];
-                if (slide.type === 'POLL') selectedIdx = selectedResponse;
+                if (slide.type === 'POLL' || slide.type === 'QUIZ') selectedIdx = selectedResponse;
             }
 
-            waitingState.classList.add('hidden');
-            interactionContent.classList.remove('hidden');
-            footerControls.classList.remove('translate-y-full');
+            waitingState.style.display = 'none';
+            interactionContent.style.display = 'block';
+            setFooterVisible(true);
 
             document.getElementById('slide-info').innerText = `Interaction ${slideNum - 1} of ${data.slides.length}`;
             document.getElementById('question-text').innerText = slide.question;
@@ -227,175 +865,124 @@
             optionsContainer.innerHTML = '';
 
             const type = slide.type || 'POLL';
+
             if (type === 'POLL') {
                 slide.options.forEach((opt, idx) => {
-                    const btn = document.createElement('button');
                     const isSelected = selectedIdx === idx;
-                    btn.className = `option-card w-full p-5 rounded-2xl flex items-center justify-between group text-left border ${isSelected ? 'border-violet-500 bg-violet-500/10' : 'border-white/5 bg-white/5'} shadow-lg`;
+                    const card = document.createElement('button');
+                    card.className = 'option-card' + (isSelected ? ' selected' : '');
+                    card.innerHTML = `
+                        <span class="option-text">${opt}</span>
+                        <div class="option-radio">
+                            <div class="option-radio-dot"></div>
+                        </div>`;
                     if (!hasVotedOnCurrentSlide) {
-                        btn.onclick = () => selectOption(idx, btn);
+                        card.onclick = () => selectOption(idx, card);
                     } else {
-                        btn.style.pointerEvents = 'none';
+                        card.style.pointerEvents = 'none';
                     }
-                    btn.innerHTML = `
-                        <span class="font-bold ${isSelected ? 'text-white' : 'text-slate-300'} group-hover:text-white transition-colors flex-1">${opt}</span>
-                        <div class="w-6 h-6 rounded-full border border-white/10 flex items-center justify-center flex-shrink-0 ml-4">
-                            <div class="w-3 h-3 rounded-full bg-violet-600 ${isSelected ? 'opacity-100' : 'opacity-0'} transition-opacity"></div>
-                        </div>
-                    `;
-                    optionsContainer.appendChild(btn);
+                    optionsContainer.appendChild(card);
                 });
+                if (hasVotedOnCurrentSlide) setSubmitState('submitted');
+                else setSubmitState('disabled');
+
             } else if (type === 'QA' || type === 'WORD_CLOUD') {
-                const inputWrapper = document.createElement('div');
-                inputWrapper.className = 'space-y-4';
-                inputWrapper.innerHTML = `
-                    <textarea id="text-response" placeholder="${type === 'WORD_CLOUD' ? 'Enter short phrases or single words...' : 'Type your answer here...'}" 
-                    class="w-full bg-slate-900 border border-white/10 rounded-2xl p-5 text-white focus:outline-none focus:border-violet-500 transition-colors h-32 text-lg shadow-inner"
-                    ${hasVotedOnCurrentSlide ? 'disabled' : ''}
-                    oninput="validateTextResponse(this)">${hasVotedOnCurrentSlide ? selectedResponse : ''}</textarea>
-                `;
-                optionsContainer.appendChild(inputWrapper);
+                const placeholder = type === 'WORD_CLOUD' ? 'Enter short phrases or words...' : 'Type your answer here...';
+                const ta = document.createElement('textarea');
+                ta.placeholder = placeholder;
+                ta.disabled = hasVotedOnCurrentSlide;
+                if (hasVotedOnCurrentSlide) ta.value = selectedResponse;
+                ta.oninput = () => {
+                    selectedResponse = ta.value.trim();
+                    setSubmitState(selectedResponse.length > 0 ? 'active' : 'disabled');
+                };
+                optionsContainer.appendChild(ta);
+                if (hasVotedOnCurrentSlide) setSubmitState('submitted');
+                else setSubmitState('disabled');
+
             } else if (type === 'SLIDER') {
-                const initialVal = hasVotedOnCurrentSlide ? selectedResponse : 50;
-                const sliderWrapper = document.createElement('div');
-                sliderWrapper.className = 'py-10 px-4 space-y-8 bg-white/5 rounded-3xl border border-white/5 p-6';
-                sliderWrapper.innerHTML = `
-                    <div class="flex justify-between items-center px-2">
-                         <span class="text-xs font-black text-slate-500 uppercase tracking-widest">${slide.minLabel}</span>
-                         <span id="slider-val" class="text-5xl font-black text-violet-400">${initialVal}</span>
-                         <span class="text-xs font-black text-slate-500 uppercase tracking-widest">${slide.maxLabel}</span>
-                    </div>
-                    <input type="range" min="0" max="100" value="${initialVal}" class="w-full h-3 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-violet-500"
-                    ${hasVotedOnCurrentSlide ? 'disabled' : ''}
-                    oninput="updateSliderVal(this)">
-                `;
-                optionsContainer.appendChild(sliderWrapper);
-                if (!hasVotedOnCurrentSlide) selectedResponse = 50;
+                const initVal = hasVotedOnCurrentSlide ? selectedResponse : 50;
+                const card = document.createElement('div');
+                card.className = 'slider-card';
+                card.innerHTML = `
+                    <div class="slider-labels"><span>${slide.minLabel || 'Not at all'}</span><span>${slide.maxLabel || 'Extremely'}</span></div>
+                    <span class="slider-value" id="slider-val">${initVal}</span>
+                    <input type="range" min="0" max="100" value="${initVal}" ${hasVotedOnCurrentSlide ? 'disabled' : ''}
+                        oninput="document.getElementById('slider-val').innerText = this.value; window._sliderVal = Number(this.value);">`;
+                optionsContainer.appendChild(card);
+                window._sliderVal = initVal;
+                if (!hasVotedOnCurrentSlide) { selectedResponse = initVal; setSubmitState('active'); }
+                else setSubmitState('submitted');
             }
 
-            // Handle Timer
+            // Timer
             if (slide.timer > 0 && !hasVotedOnCurrentSlide) {
-                participantTimer.classList.remove('hidden');
-                let timeLeft = slide.timer;
-                participantTimer.innerText = timeLeft.toString().padStart(2, '0');
+                timerEl.style.display = 'flex';
+                let t = slide.timer;
+                document.getElementById('timer-val').innerText = String(t).padStart(2, '0');
                 timerInterval = setInterval(() => {
-                    timeLeft--;
-                    participantTimer.innerText = timeLeft.toString().padStart(2, '0');
-                    if (timeLeft <= 0) {
-                        clearInterval(timerInterval);
-                        if (!hasVotedOnCurrentSlide && selectedResponse !== null) {
-                            submitVote();
-                        }
-                    }
+                    t--;
+                    document.getElementById('timer-val').innerText = String(t).padStart(2, '0');
+                    if (t <= 0) { clearInterval(timerInterval); if (!hasVotedOnCurrentSlide && selectedResponse !== null) submitVote(); }
                 }, 1000);
             }
 
-            // Submit Button State
-            const submitBtn = document.getElementById('submit-btn');
-            if (hasVotedOnCurrentSlide) {
-                submitBtn.disabled = true;
-                submitBtn.innerText = 'Answer Submitted';
-                submitBtn.className = 'w-full h-14 bg-emerald-600/20 text-emerald-500 rounded-2xl font-black transition-all border border-emerald-500/20';
-            } else if (type === 'SLIDER') {
-                submitBtn.disabled = false;
-                submitBtn.className = 'w-full h-14 bg-violet-600 text-white rounded-2xl font-black transition-all shadow-xl shadow-violet-900/20';
-                submitBtn.innerText = 'Submit Answer';
-            } else {
-                submitBtn.disabled = true;
-                submitBtn.innerText = 'Submit Answer';
-                submitBtn.className = 'w-full h-14 bg-slate-800 text-slate-500 rounded-2xl font-black transition-all';
-            }
-
-            // Check if already revealed
-            if (data.revealed && data.revealed[slideIndex]) {
-                showQuizFeedback(slide, selectedResponse);
-            }
+            if (data.revealed && data.revealed[slideIndex]) showQuizFeedback(slide, selectedResponse);
         }
 
-        function getUserId() {
-            let userId = localStorage.getItem('participant_id');
-            if (!userId) {
-                userId = Math.random().toString(36).substr(2, 9);
-                localStorage.setItem('participant_id', userId);
-            }
-            return userId;
-        }
-
-        window.validateTextResponse = function (el) {
-            selectedResponse = el.value.trim();
-            const btn = document.getElementById('submit-btn');
-            if (selectedResponse.length > 0) {
-                btn.disabled = false;
-                btn.className = 'w-full h-14 bg-violet-600 text-white rounded-2xl font-black transition-all shadow-xl shadow-violet-900/20';
-            } else {
-                btn.disabled = true;
-                btn.className = 'w-full h-14 bg-slate-800 text-slate-500 rounded-2xl font-black transition-all';
-            }
-        };
-
-        window.updateSliderVal = function (el) {
-            selectedResponse = Number(el.value);
-            document.getElementById('slider-val').innerText = selectedResponse;
-        };
-
-        window.selectOption = function (idx, btn) {
+        window.selectOption = function (idx, card) {
             if (hasVotedOnCurrentSlide) return;
             selectedIdx = idx;
             selectedResponse = idx;
-
-            document.querySelectorAll('.option-card').forEach((c) => {
-                c.classList.remove('selected', 'border-violet-500', 'bg-violet-500/10');
-                c.classList.add('border-white/5', 'bg-white/5');
-                c.querySelector('span').classList.remove('text-white');
-                c.querySelector('span').classList.add('text-slate-300');
-                const check = c.querySelector('div div');
-                if (check) check.classList.add('opacity-0');
-            });
-
-            btn.classList.add('selected', 'border-violet-500', 'bg-violet-500/10');
-            btn.classList.remove('border-white/5', 'bg-white/5');
-            btn.querySelector('span').classList.add('text-white');
-            btn.querySelector('span').classList.remove('text-slate-300');
-            const check = btn.querySelector('div div');
-            if (check) check.classList.remove('opacity-0');
-
-            const submitBtn = document.getElementById('submit-btn');
-            submitBtn.disabled = false;
-            submitBtn.className = 'w-full h-14 bg-violet-600 text-white rounded-2xl font-black transition-all shadow-xl shadow-violet-900/20';
+            document.querySelectorAll('.option-card').forEach(c => c.classList.remove('selected'));
+            card.classList.add('selected');
+            setSubmitState('active');
         };
 
         async function submitVote() {
-            if (selectedResponse === null || hasVotedOnCurrentSlide) return;
+            const participant = getParticipant();
+            if (!participant) return;
+            const userId = participant.id;
 
-            const btn = document.getElementById('submit-btn');
-            const slideIndex = currentSlideNum - 2;
-            const userId = getUserId();
-
+            if (window._sliderVal !== undefined && sessionData?.slides?.[slideIndex]?.type === 'SLIDER') {
+                selectedResponse = window._sliderVal;
+            }
             try {
-                btn.disabled = true;
-                btn.innerText = 'Submitting...';
+                setSubmitState('submitted');
 
-                const voteRef = ref(db, `sessions/${sessionId}/votes/${slideIndex}/${userId}`);
-                await set(voteRef, selectedResponse);
+                // Save vote
+                await set(ref(db, `sessions/${sessionId}/votes/${slideIndex}/${userId}`), selectedResponse);
+
+                // Handle Quiz Scoring
+                const slide = sessionData.slides[slideIndex];
+                if (slide.type === 'QUIZ' || (slide.type === 'POLL' && slide.quizMode)) {
+                    const correctedCorrectIdx = Number(slide.correctAnswer);
+                    if (selectedResponse === correctedCorrectIdx) {
+                        const points = Number(slide.points) || 10;
+                        // For scores, we'll use a separate leaderboard node to keep it clean
+                        const scoreRef = ref(db, `sessions/${sessionId}/leaderboard/${userId}`);
+                        onValue(scoreRef, (snap) => {
+                            const cur = snap.val() || { name: participant.name, score: 0 };
+                            set(scoreRef, {
+                                name: participant.name,
+                                score: (cur.score || 0) + points,
+                                lastUpdated: Date.now()
+                            });
+                        }, { onlyOnce: true });
+                    }
+                }
 
                 hasVotedOnCurrentSlide = true;
                 clearInterval(timerInterval);
-                document.getElementById('participant-timer').classList.add('hidden');
-
-                btn.innerText = 'Answer Submitted';
-                btn.className = 'w-full h-14 bg-emerald-600/20 text-emerald-500 rounded-2xl font-black transition-all border border-emerald-500/20';
-
-                // Disable inputs
+                document.getElementById('participant-timer').style.display = 'none';
                 document.querySelectorAll('.option-card').forEach(c => c.style.pointerEvents = 'none');
-                const textArea = document.getElementById('text-response');
-                if (textArea) textArea.disabled = true;
-                const rangeInput = document.querySelector('input[type="range"]');
-                if (rangeInput) rangeInput.disabled = true;
-
+                const ta = document.querySelector('textarea');
+                if (ta) ta.disabled = true;
+                const range = document.querySelector('input[type="range"]');
+                if (range) range.disabled = true;
             } catch (e) {
-                console.error("Vote failed:", e);
-                btn.innerText = 'Error! Try Again';
-                btn.disabled = false;
+                console.error(e);
+                setSubmitState('active');
             }
         }
 
@@ -403,64 +990,151 @@
 
         function showQuizFeedback(slide, userResponse) {
             if (slide.type !== 'POLL' || !slide.quizMode) return;
-
-            const quizFeedback = document.getElementById('quiz-feedback');
-            const card = document.getElementById('feedback-card');
-            const icon = document.getElementById('feedback-icon');
-            const title = document.getElementById('feedback-title');
-            const text = document.getElementById('feedback-text');
-
-            quizFeedback.classList.remove('hidden');
+            const fb = document.getElementById('quiz-feedback');
             const correctIdx = Number(slide.correctAnswer) - 1;
             const isCorrect = userResponse === correctIdx;
 
-            if (isCorrect) {
-                card.className = 'p-6 rounded-3xl border border-emerald-500/30 bg-emerald-500/10 flex items-center gap-4';
-                icon.className = 'w-12 h-12 rounded-2xl flex items-center justify-center shrink-0 bg-emerald-500 text-white';
-                icon.innerHTML = '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12" /></svg>';
-                title.innerText = 'Correct Answer!';
-                title.className = 'font-black text-lg text-emerald-400';
-                text.innerText = 'Great job! You got it right.';
-            } else {
-                card.className = 'p-6 rounded-3xl border border-red-500/30 bg-red-500/10 flex items-center gap-4';
-                icon.className = 'w-12 h-12 rounded-2xl flex items-center justify-center shrink-0 bg-red-500 text-white';
-                icon.innerHTML = '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" /></svg>';
-                title.innerText = 'Incorrect';
-                title.className = 'font-black text-lg text-red-400';
-                const correctText = slide.options[correctIdx];
-                text.innerText = `The correct answer was: ${correctText}`;
-            }
+            fb.innerHTML = `
+                <div class="feedback-card ${isCorrect ? 'feedback-correct' : 'feedback-wrong'}">
+                    <div class="feedback-icon" style="background:${isCorrect ? '#dcfce7' : '#fee2e2'};">
+                        ${isCorrect
+                    ? `<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>`
+                    : `<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="3"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>`}
+                    </div>
+                    <div>
+                        <div style="font-weight:900;font-size:1rem;color:${isCorrect ? '#15803d' : '#b91c1c'}">${isCorrect ? 'Correct! 🎉' : 'Not quite'}</div>
+                        <div style="font-size:0.85rem;color:${isCorrect ? '#166534' : '#991b1b'};margin-top:2px;">${isCorrect ? 'Great job!' : `Correct answer: ${slide.options[correctIdx]}`}</div>
+                    </div>
+                </div>`;
+            fb.style.display = 'block';
 
-            // Highlight in options list
-            document.querySelectorAll('.option-card').forEach((btn, idx) => {
-                const check = btn.querySelector('div');
+            document.querySelectorAll('.option-card').forEach((card, idx) => {
                 if (idx === correctIdx) {
-                    btn.classList.add('border-emerald-500', 'bg-emerald-500/10');
-                    btn.classList.remove('border-white/5', 'bg-white/5');
+                    card.style.borderColor = '#86efac';
+                    card.style.background = '#f0fdf4';
                 } else if (idx === userResponse) {
-                    btn.classList.add('border-red-500', 'bg-red-500/10');
-                    btn.classList.remove('border-white/5', 'bg-white/5');
+                    card.style.borderColor = '#fca5a5';
+                    card.style.background = '#fef2f2';
                 }
             });
         }
 
-        // Initialize listener
+        // Join Session Logic
+        document.getElementById('join-btn').onclick = async () => {
+            const name = document.getElementById('participant-name').value.trim();
+            const email = document.getElementById('participant-email').value.trim();
+            if (!name || !email) return alert('Please enter both name and email.');
+
+            const id = Math.random().toString(36).substr(2, 9);
+            const participant = { id, name, email };
+            localStorage.setItem('eiq_participant', JSON.stringify(participant));
+            document.getElementById('join-modal').classList.add('hidden');
+
+            // Add to session participants
+            await set(ref(db, `sessions/${sessionId}/participants/${id}`), participant);
+
+            // Re-render
+            if (sessionData) renderSlide(sessionData.activeSlide || 1, sessionData);
+        };
+
         onValue(sessionRef, (snapshot) => {
             const data = snapshot.val();
-            if (data) {
-                const oldSlideNum = currentSlideNum;
-                sessionData = data;
+            if (!data) return;
+            sessionData = data;
 
-                if (data.activeSlide !== currentSlideNum) {
-                    currentSlideNum = data.activeSlide || 1;
-                    renderSlide(currentSlideNum, data);
-                } else if (data.revealed && data.revealed[currentSlideNum - 2]) {
-                    // Check if newly revealed
-                    const slideIdx = currentSlideNum - 2;
-                    showQuizFeedback(data.slides[slideIdx], selectedResponse);
+            // Handle Participant Presence
+            const participant = getParticipant();
+            const joinModal = document.getElementById('join-modal');
+            if (participant) {
+                if (joinModal) joinModal.classList.add('hidden');
+            } else {
+                if (joinModal) {
+                    joinModal.classList.remove('hidden');
+                    // GSAP Entrance
+                    gsap.from("#join-modal > div", { y: 50, opacity: 0, duration: 0.8, ease: "power4.out" });
+                }
+            }
+
+            // Handle Branding
+            if (data.branding) {
+                if (data.branding.logoUrl) {
+                    document.getElementById('header-logo-container').innerHTML = `<img src="${data.branding.logoUrl}" class="header-logo-img">`;
+                    document.getElementById('join-logo-container').innerHTML = `<img src="${data.branding.logoUrl}" class="w-full h-full object-contain rounded-2xl p-2">`;
+                    document.getElementById('brand-logo-small').src = data.branding.logoUrl;
+                    document.getElementById('brand-footer').classList.remove('hidden');
+                }
+                if (data.branding.name) {
+                    document.getElementById('header-brand-name').innerText = data.branding.name;
+                    document.getElementById('join-welcome-msg').innerText = `Join ${data.branding.name}'s session to participate and engage.`;
+                    document.getElementById('brand-name-small').innerText = data.branding.name;
+                    document.getElementById('brand-footer').classList.remove('hidden');
+                }
+            }
+
+            if (data.activeSlide !== currentSlideNum) {
+                currentSlideNum = data.activeSlide || 1;
+                renderSlide(currentSlideNum, data);
+            } else if (data.revealed && data.revealed[currentSlideNum - 2]) {
+                const idx = currentSlideNum - 2;
+                showQuizFeedback(data.slides[idx], selectedResponse);
+            }
+
+            // Check if session has ended — show feedback screen
+            if (data.status === 'ended') {
+                const screen = document.getElementById('session-ended-screen');
+                if (screen && screen.classList.contains('hidden')) {
+                    screen.classList.remove('hidden');
+                    if (data.title) {
+                        document.getElementById('feedback-session-title').innerText = `"${data.title}" — Thanks for joining! How was the experience?`;
+                    }
                 }
             }
         });
+
+        // Emoji reaction selection
+        window.selectedEmoji = null;
+        window.selectEmoji = function (btn) {
+            document.querySelectorAll('.emoji-react-btn').forEach(b => {
+                b.style.border = '2px solid transparent';
+                b.style.background = 'rgba(255,255,255,0.05)';
+                b.style.transform = 'scale(1)';
+            });
+            btn.style.border = '2px solid #7C3AED';
+            btn.style.background = 'rgba(124, 58, 237, 0.2)';
+            btn.style.transform = 'scale(1.15)';
+            window.selectedEmoji = btn.dataset.emoji;
+        };
+
+        window.submitFeedback = function () {
+            const participant = (() => { try { return JSON.parse(localStorage.getItem(`participant_${sessionId}`)); } catch (e) { return null; } })();
+            const text = document.getElementById('feedback-text').value.trim();
+            const emoji = window.selectedEmoji;
+
+            if (!emoji && !text) {
+                document.getElementById('feedback-text').style.borderColor = '#ef4444';
+                document.getElementById('feedback-text').placeholder = 'Please select an emoji or write a comment...';
+                return;
+            }
+
+            const feedbackEntry = {
+                participantName: participant?.name || 'Anonymous',
+                participantEmail: participant?.email || '',
+                emoji: emoji || '—',
+                text: text || '',
+                submittedAt: Date.now(),
+                isPublic: false
+            };
+
+            const feedbackKey = `${Date.now()}_${Math.random().toString(36).substr(2, 6)}`;
+            set(ref(db, `sessions/${sessionId}/feedback/${feedbackKey}`), feedbackEntry).then(() => {
+                document.getElementById('submit-feedback-btn').style.display = 'none';
+                document.getElementById('feedback-submitted-msg').classList.remove('hidden');
+                document.getElementById('feedback-emoji-burst').innerText = emoji || '🙏';
+            }).catch(err => {
+                console.error('Feedback submit error', err);
+                alert('Failed to submit feedback. Please try again.');
+            });
+        };
     </script>
 </body>
 
