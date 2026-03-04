@@ -616,50 +616,62 @@
         </div>
     </header>
 
-    <!-- Join Session Modal -->
+    <!-- Join Session Page -->
     <div id="join-modal"
-        class="fixed inset-0 z-[100] flex items-center justify-center p-6 bg-slate-950/90 backdrop-blur-xl transition-all duration-500">
+        class="fixed inset-0 z-[100] flex flex-col items-center justify-center p-6 bg-slate-950 transition-all duration-500 overflow-y-auto">
+
+        <!-- Animated Background Elements -->
         <div
-            class="w-full max-w-sm bg-white/5 border border-white/10 backdrop-blur-md rounded-[2.5rem] p-10 shadow-2xl relative overflow-hidden">
-            <!-- Decorative Glow -->
-            <div class="absolute -top-24 -left-24 w-48 h-48 bg-violet-600/20 blur-[80px] rounded-full"></div>
+            class="absolute top-0 right-0 w-[40vw] h-[40vw] max-w-[500px] max-h-[500px] bg-indigo-600/20 blur-[100px] rounded-full mix-blend-screen pointer-events-none">
+        </div>
+        <div
+            class="absolute bottom-0 left-0 w-[50vw] h-[50vw] max-w-[600px] max-h-[600px] bg-violet-600/20 blur-[120px] rounded-full mix-blend-screen pointer-events-none">
+        </div>
 
-            <div class="relative z-10">
-                <div class="text-center mb-10">
-                    <div id="join-logo-container"
-                        class="w-20 h-20 bg-violet-600 rounded-3xl flex items-center justify-center text-white mx-auto mb-6 shadow-xl shadow-violet-900/30">
-                        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                            stroke-width="2.5">
-                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
-                            <circle cx="12" cy="7" r="4" />
-                        </svg>
-                    </div>
-                    <h2 class="text-3xl font-black text-white mb-3">Welcome!</h2>
-                    <p class="text-slate-400 text-sm leading-relaxed" id="join-welcome-msg">Join the conversation and
-                        participate in live polls & quizzes.</p>
-                </div>
+        <div class="w-full max-w-lg relative z-10 flex flex-col items-center pt-10 pb-10">
 
-                <div class="space-y-6">
-                    <div class="space-y-2">
-                        <label class="block text-[10px] font-black text-violet-400 uppercase tracking-widest ml-1">Your
-                            Full Name</label>
-                        <input type="text" id="participant-name" placeholder="Enter your name"
-                            class="w-full bg-white/5 border border-white/10 rounded-2xl px-5 py-4 text-white placeholder:text-slate-600 focus:outline-none focus:border-violet-500 focus:bg-white/10 transition-all">
+            <!-- Dynamic Logo -->
+            <div id="join-logo-container"
+                class="mb-8 w-24 h-24 md:w-28 md:h-28 flex items-center justify-center bg-white/5 rounded-[2rem] border border-white/10 shadow-2xl p-4 backdrop-blur-md">
+                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                    <circle cx="12" cy="7" r="4" />
+                </svg>
+            </div>
+
+            <!-- Dynamic Program Details -->
+            <h1 id="join-program-name"
+                class="text-3xl md:text-4xl font-black text-white text-center mb-4 leading-tight tracking-tight">Welcome
+                to the Session</h1>
+            <p id="join-welcome-msg" class="text-base text-slate-400 text-center mb-10 max-w-sm leading-relaxed">Please
+                join the conversation and participate in the live interactive polls & quizzes.</p>
+
+            <!-- Join Form -->
+            <div class="w-full bg-white/5 border border-white/10 backdrop-blur-xl rounded-[2.5rem] p-8 shadow-2xl">
+                <div class="space-y-6 flex flex-col items-center">
+                    <div class="space-y-3 w-full text-center">
+                        <label class="block text-xs font-black text-violet-400 uppercase tracking-[0.2em] mb-4">Let's
+                            get started</label>
+                        <h2 class="text-2xl font-bold text-white mb-6">Enter your name</h2>
+                        <input type="text" id="participant-name" placeholder="e.g. Jane Doe"
+                            class="w-full bg-white/5 border border-white/20 rounded-2xl px-6 py-5 text-center text-white text-xl font-medium placeholder:text-slate-500 focus:outline-none focus:border-violet-500 focus:bg-white/10 focus:ring-4 focus:ring-violet-500/20 transition-all">
                     </div>
-                    <div class="space-y-2">
-                        <label class="block text-[10px] font-black text-violet-400 uppercase tracking-widest ml-1">Email
-                            Address</label>
-                        <input type="email" id="participant-email" placeholder="name@company.com"
-                            class="w-full bg-white/5 border border-white/10 rounded-2xl px-5 py-4 text-white placeholder:text-slate-600 focus:outline-none focus:border-violet-500 focus:bg-white/10 transition-all">
-                    </div>
+
                     <button id="join-btn"
-                        class="w-full py-5 bg-violet-600 hover:bg-violet-500 text-white font-black rounded-2xl shadow-xl shadow-violet-900/40 hover:scale-[1.02] active:scale-95 transition-all text-lg mt-4">
-                        Join Session
+                        class="w-full py-5 bg-gradient-to-r from-violet-600 to-indigo-600 hover:from-violet-500 hover:to-indigo-500 text-white font-black rounded-2xl shadow-xl shadow-violet-900/50 hover:scale-[1.02] active:scale-95 transition-all text-xl mt-4 flex items-center justify-center gap-3">
+                        Join Now
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="5" y1="12" x2="19" y2="12"></line>
+                            <polyline points="12 5 19 12 12 19"></polyline>
+                        </svg>
                     </button>
-                    <p class="text-center text-[10px] text-slate-500 font-bold uppercase tracking-widest mt-6">EngageIQ
-                        by Quantum Step</p>
                 </div>
             </div>
+
+            <p
+                class="text-center text-[10px] text-slate-500 font-bold uppercase tracking-[0.2em] mt-12 bg-white/5 px-5 py-2.5 rounded-full border border-white/10 backdrop-blur-sm shadow-sm inline-block">
+                Powered by EngageIQ</p>
         </div>
     </div>
 
@@ -1022,16 +1034,15 @@
         // Join Session Logic
         document.getElementById('join-btn').onclick = async () => {
             const name = document.getElementById('participant-name').value.trim();
-            const email = document.getElementById('participant-email').value.trim();
-            if (!name || !email) return alert('Please enter both name and email.');
+            if (!name) return alert('Please enter your name.');
 
             const id = Math.random().toString(36).substr(2, 9);
-            const participant = { id, name, email };
+            const participant = { id, name };
             localStorage.setItem('eiq_participant', JSON.stringify(participant));
             document.getElementById('join-modal').classList.add('hidden');
 
             // Add to session participants
-            await set(ref(db, `sessions/${sessionId}/participants/${id}`), participant);
+            await set(ref(db, \`sessions/\${sessionId}/participants/\${id}\`), participant);
 
             // Re-render
             if (sessionData) renderSlide(sessionData.activeSlide || 1, sessionData);
@@ -1056,19 +1067,36 @@
             }
 
             // Handle Branding
+            if (data.title) {
+                const titleEl = document.getElementById('join-program-name');
+                if(titleEl) titleEl.innerText = data.title;
+            }
+
             if (data.branding) {
                 if (data.branding.logoUrl) {
-                    document.getElementById('header-logo-container').innerHTML = `<img src="${data.branding.logoUrl}" class="header-logo-img">`;
-                    document.getElementById('join-logo-container').innerHTML = `<img src="${data.branding.logoUrl}" class="w-full h-full object-contain rounded-2xl p-2">`;
+                    document.getElementById('header-logo-container').innerHTML = \`<img src="\${data.branding.logoUrl}" class="header-logo-img">\`;
+                    
+                    const joinLogoEl = document.getElementById('join-logo-container');
+                    if(joinLogoEl) {
+                        joinLogoEl.innerHTML = \`<img src="\${data.branding.logoUrl}" class="w-full h-full object-contain p-1">\`;
+                        joinLogoEl.classList.remove('bg-white/5', 'p-4');
+                    }
+                    
                     document.getElementById('brand-logo-small').src = data.branding.logoUrl;
                     document.getElementById('brand-footer').classList.remove('hidden');
                 }
                 if (data.branding.name) {
                     document.getElementById('header-brand-name').innerText = data.branding.name;
-                    document.getElementById('join-welcome-msg').innerText = `Join ${data.branding.name}'s session to participate and engage.`;
+                    
+                    const joinMsgEl = document.getElementById('join-welcome-msg');
+                    if(joinMsgEl) joinMsgEl.innerText = \`Join \${data.branding.name}'s interactive broadcast to participate in live polls & quizzes.\`;
+                    
                     document.getElementById('brand-name-small').innerText = data.branding.name;
                     document.getElementById('brand-footer').classList.remove('hidden');
                 }
+            } else {
+                 const joinMsgEl = document.getElementById('join-welcome-msg');
+                 if(joinMsgEl) joinMsgEl.innerText = \`Please join the conversation and participate in the live interactive polls & quizzes.\`;
             }
 
             if (data.activeSlide !== currentSlideNum) {
@@ -1085,7 +1113,7 @@
                 if (screen && screen.classList.contains('hidden')) {
                     screen.classList.remove('hidden');
                     if (data.title) {
-                        document.getElementById('feedback-session-title').innerText = `"${data.title}" — Thanks for joining! How was the experience?`;
+                        document.getElementById('feedback-session-title').innerText = `"${data.title}" — Thanks for joining! How was the experience ? `;
                     }
                 }
             }
@@ -1106,7 +1134,7 @@
         };
 
         window.submitFeedback = function () {
-            const participant = (() => { try { return JSON.parse(localStorage.getItem(`participant_${sessionId}`)); } catch (e) { return null; } })();
+            const participant = (() => { try { return JSON.parse(localStorage.getItem(`participant_${ sessionId } `)); } catch (e) { return null; } })();
             const text = document.getElementById('feedback-text').value.trim();
             const emoji = window.selectedEmoji;
 
@@ -1125,8 +1153,8 @@
                 isPublic: false
             };
 
-            const feedbackKey = `${Date.now()}_${Math.random().toString(36).substr(2, 6)}`;
-            set(ref(db, `sessions/${sessionId}/feedback/${feedbackKey}`), feedbackEntry).then(() => {
+            const feedbackKey = `${ Date.now() }_${ Math.random().toString(36).substr(2, 6) } `;
+            set(ref(db, `sessions / ${ sessionId } /feedback/${ feedbackKey }`), feedbackEntry).then(() => {
                 document.getElementById('submit-feedback-btn').style.display = 'none';
                 document.getElementById('feedback-submitted-msg').classList.remove('hidden');
                 document.getElementById('feedback-emoji-burst').innerText = emoji || '🙏';
