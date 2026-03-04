@@ -1302,7 +1302,7 @@
                 formData.append('logo', file);
 
                 // Assuming upload.php is deployed in the same directory as the frontend
-                const response = await fetch('/upload.php', {
+                const response = await fetch('./upload.php', {
                     method: 'POST',
                     body: formData
                 });
