@@ -1109,7 +1109,10 @@
             WORD_CLOUD: { label: 'Word Cloud', icon: '☁️' }
         };
 
+        let currentSessionType = 'standard';
+
         window.startNewSession = (type = 'standard') => {
+            currentSessionType = type;
             resetBuilder();
             if (type === 'quiz') {
                 document.getElementById('session-title-input').value = 'New Quiz';
@@ -1132,14 +1135,20 @@
             if (modal.classList.contains('hidden')) {
                 modal.classList.remove('hidden');
                 setTimeout(() => modal.classList.remove('opacity-0'), 10);
-                if (id === 'session-modal' && slides.length === 0) addSlide('POLL');
+                if (id === 'session-modal' && slides.length === 0) {
+                    const defaultType = currentSessionType === 'quiz' ? 'QUIZ' : 'POLL';
+                    addSlide(defaultType);
+                }
             } else {
                 modal.classList.add('opacity-0');
                 setTimeout(() => modal.classList.add('hidden'), 300);
             }
         };
 
-        window.addSlide = (type = 'POLL') => {
+        window.addSlide = (type) => {
+            if (!type) {
+                type = currentSessionType === 'quiz' ? 'QUIZ' : 'POLL';
+            }
             if (slides.length >= window.MAX_SLIDES) {
                 document.getElementById('limit-warning').classList.remove('hidden');
                 document.getElementById('add-slide-btn').style.display = 'none';
@@ -1311,16 +1320,27 @@
             const originalText = saveBtn.innerText;
             const title = document.getElementById('session-title-input').value || "New Engagement Session";
             const slideElements = document.querySelectorAll('#slides-container > div');
+            const globalTimerStr = document.getElementById('config-global-timer')?.value;
+            const globalTimer = globalTimerStr ? parseInt(globalTimerStr) : null;
+            const requireNames = document.getElementById('config-require-names')?.checked || false;
+            const passcode = document.getElementById('config-passcode')?.value?.trim() || "";
+
             const sessionData = {
                 title, status, activeSlide: 0, slides: [], createdAt: Date.now(), updatedAt: Date.now(),
-                branding: { name: document.getElementById('brand-name-input')?.value?.trim() || '', logoUrl: document.getElementById('brand-logo-url-hidden')?.value?.trim() || '', isPremium: window.IS_PREMIUM }
+                branding: { name: document.getElementById('brand-name-input')?.value?.trim() || '', logoUrl: document.getElementById('brand-logo-url-hidden')?.value?.trim() || '', isPremium: window.IS_PREMIUM },
+                settings: { requireNames, passcode, globalTimer }
             };
             slideElements.forEach(el => {
                 const type = el.querySelector('.slide-type').value;
+                let slideTimer = parseInt(el.querySelector('.slide-timer')?.value || "15");
+                if (globalTimer !== null && !isNaN(globalTimer)) {
+                    slideTimer = globalTimer;
+                }
+
                 const slide = {
                     question: el.querySelector('.slide-question').value,
                     type,
-                    timer: parseInt(el.querySelector('.slide-timer')?.value || "15"),
+                    timer: slideTimer,
                     revealed: false
                 };
 
@@ -1333,7 +1353,10 @@
 
                     if (slide.quizMode) {
                         slide.points = parseInt(el.querySelector('.slide-points')?.value || "10");
-                        slide.timeLimit = parseInt(el.querySelector('.slide-time-limit')?.value || "20");
+                        // Sync the question time limit with the auto-reveal timer, unless explicitly overridden
+                        slide.timeLimit = parseInt(el.querySelector('.slide-time-limit')?.value) || slide.timer;
+                        // Enforce sync: The reveal timer and the countdown timer MUST be the same.
+                        slide.timeLimit = slide.timer;
                     }
                 } else if (type === 'SLIDER') {
                     slide.minLabel = el.querySelector('.slide-min-label').value || "Not at all";
@@ -1384,6 +1407,13 @@
                 uploadBtn.classList.remove('bg-emerald-600');
                 uploadBtn.classList.add('bg-slate-800');
             }
+
+            const globalTimerEl = document.getElementById('config-global-timer');
+            if (globalTimerEl) globalTimerEl.value = '';
+            const requireNamesEl = document.getElementById('config-require-names');
+            if (requireNamesEl) requireNamesEl.checked = false;
+            const passcodeEl = document.getElementById('config-passcode');
+            if (passcodeEl) passcodeEl.value = '';
 
             document.getElementById('slides-container').innerHTML = '';
             slides = [];

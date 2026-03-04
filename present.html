@@ -390,15 +390,21 @@
 
             // Slide 1: Welcome (Universal)
             const sessionTitle = data.title || 'Untitled Session';
+            const brandName = data.branding?.name ? data.branding.name : 'EngageIQ';
+            const brandLogoHtml = data.branding?.logoUrl
+                ? `<img src="${data.branding.logoUrl}" alt="Brand Logo" class="h-16 md:h-20 mx-auto mb-6 object-contain rounded-lg">`
+                : `<div class="h-16 md:h-20 mb-6 flex items-center justify-center"><span class="text-3xl">🚀</span></div>`;
+
             const welcomeSlide = `
                 <div id="slide-1" class="slide ${currentSlide === 1 ? 'active' : ''}">
-                    <div class="text-center max-w-4xl mx-auto">
-                        <p class="text-violet-400 font-black uppercase tracking-[0.25em] text-sm mb-6">You're invited to</p>
-                        <h1 class="font-black mb-10 leading-tight" style="font-size:clamp(2.5rem,6vw,5rem);">${sessionTitle}</h1>
-                        <div class="mb-10 inline-block bg-white p-6 rounded-[2rem] shadow-2xl shadow-violet-500/30">
+                    <div class="text-center max-w-4xl mx-auto mt-8 md:mt-0">
+                        ${brandLogoHtml}
+                        <p class="text-violet-400 font-black uppercase tracking-[0.25em] text-xs md:text-sm mb-4 md:mb-6">${brandName} invites you to</p>
+                        <h1 class="font-black mb-8 md:mb-10 leading-tight" style="font-size:clamp(2rem,5vw,4.5rem);">${sessionTitle}</h1>
+                        <div class="mb-8 md:mb-10 inline-block bg-white p-4 md:p-6 rounded-[2rem] shadow-2xl shadow-violet-500/30">
                             <div id="qrcode-large"></div>
                         </div>
-                        <p class="text-xl text-slate-400">Scan the QR code or visit <span class="text-white font-bold underline instruction-url">${window.location.host}</span> &nbsp;·&nbsp; Code: <span class="text-violet-400 font-black text-2xl tracking-widest">${sessionId.substring(0, 3)} ${sessionId.substring(3)}</span></p>
+                        <p class="text-lg md:text-xl text-slate-400">Scan the QR code or visit <span class="text-white font-bold underline instruction-url">${window.location.host}</span> &nbsp;·&nbsp; Code: <span class="text-violet-400 font-black text-2xl tracking-widest">${sessionId.substring(0, 3)} ${sessionId.substring(3)}</span></p>
                     </div>
                 </div>
             `;
