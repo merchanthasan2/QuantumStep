@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EngageIQ Pricing - Quantum Step</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .pricing-section {
+            padding: 8rem 0;
+            background: #f8fafc;
+        }
+
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            margin-top: 4rem;
+        }
+
+        .pricing-card {
+            background: white;
+            border-radius: 16px;
+            padding: 2.5rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .pricing-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        }
+
+        .pricing-card.popular {
+            border: 2px solid #6366f1;
+        }
+
+        .popular-badge {
+            position: absolute;
+            top: -12px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #6366f1;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .plan-name {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #1e293b;
+            margin-bottom: 0.5rem;
+        }
+
+        .plan-desc {
+            color: #64748b;
+            font-size: 0.95rem;
+            margin-bottom: 1.5rem;
+            min-height: 44px;
+        }
+
+        .plan-price {
+            font-size: 2.5rem;
+            font-weight: 900;
+            color: #0f172a;
+            margin-bottom: 0.5rem;
+        }
+
+        .plan-price span {
+            font-size: 1rem;
+            font-weight: 500;
+            color: #64748b;
+        }
+
+        .plan-price-inr {
+            font-size: 0.95rem;
+            color: #475569;
+            margin-bottom: 2rem;
+            font-weight: 500;
+        }
+
+        .plan-features {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            margin-bottom: 2.5rem;
+            flex-grow: 1;
+        }
+
+        .plan-features li {
+            position: relative;
+            padding-left: 1.75rem;
+            margin-bottom: 1rem;
+            color: #475569;
+            font-size: 0.95rem;
+        }
+
+        .plan-features li::before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #10b981;
+            font-weight: bold;
+        }
+
+        .plan-features li.pro-feature {
+            font-weight: 600;
+            color: #1e293b;
+        }
+
+        .plan-features li.pro-feature::before {
+            color: #6366f1;
+        }
+
+        .plan-features li.missing::before {
+            content: "×";
+            color: #ef4444;
+        }
+
+        .plan-features li.missing {
+            color: #94a3b8;
+        }
+
+        .btn-upgrade {
+            display: inline-block;
+            text-align: center;
+            padding: 0.875rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .btn-upgrade.primary {
+            background: #6366f1;
+            color: white;
+        }
+
+        .btn-upgrade.primary:hover {
+            background: #4f46e5;
+        }
+
+        .btn-upgrade.secondary {
+            background: #f1f5f9;
+            color: #1e293b;
+        }
+
+        .btn-upgrade.secondary:hover {
+            background: #e2e8f0;
+        }
+
+        /* Comparison Table */
+        .comparison-section {
+            padding: 4rem 0 8rem;
+            background: white;
+        }
+
+        .comparison-table-wrapper {
+            overflow-x: auto;
+            margin-top: 3rem;
+        }
+
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+        }
+
+        .table th,
+        .table td {
+            padding: 1.25rem 1rem;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .table th {
+            font-weight: 600;
+            color: #1e293b;
+            background: #f8fafc;
+        }
+
+        .table td {
+            color: #475569;
+            font-size: 0.95rem;
+        }
+
+        .table th:first-child,
+        .table td:first-child {
+            font-weight: 600;
+            color: #0f172a;
+            position: sticky;
+            left: 0;
+            background: #f8fafc;
+        }
+
+        .table td:first-child {
+            background: white;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            background: #f1f5f9;
+            color: #475569;
+        }
+
+        .status-badge.live {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .icon-check {
+            color: #10b981;
+            font-weight: bold;
+        }
+
+        .icon-cross {
+            color: #ef4444;
+            font-weight: bold;
+        }
+
+        .savings-banner {
+            text-align: center;
+            margin-bottom: 2rem;
+            color: #10b981;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Navigation -->
+    <nav id="main-nav" class="main-nav" style="background: rgba(15, 23, 42, 0.95);">
+        <div class="nav-container">
+            <a href="index.html" class="logo">
+                <img src="logo-light.png" alt="Quantum Step Creations" class="logo-image">
+                <span class="logo-text">Quantum Step</span>
+            </a>
+            <ul id="nav-menu" class="nav-menu">
+                <li><a href="index.html#engageiq" class="nav-link">About EngageIQ</a></li>
+                <li><a href="auth.html" class="nav-cta-btn">Sign In</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Pricing Section -->
+    <section class="pricing-section">
+        <div class="container">
+            <div class="section-header">
+                <div class="section-badge">EngageIQ Pricing</div>
+                <h2 class="section-title">Simple, transparent <span class="gradient-text">pricing</span></h2>
+                <p class="section-description">Choose the plan that fits your event size and audience needs. Upgrade
+                    anytime.</p>
+            </div>
+
+            <div class="savings-banner">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
+                </svg>
+                Save ~17% with Annual Billing offered inside!
+            </div>
+
+            <div class="pricing-grid">
+                <!-- Free Plan -->
+                <div class="pricing-card">
+                    <h3 class="plan-name">🆓 Free</h3>
+                    <p class="plan-desc">First-time users & testing</p>
+                    <div class="plan-price">$0</div>
+                    <div class="plan-price-inr">₹0 / forever</div>
+                    <ul class="plan-features">
+                        <li>100 Participants per Event</li>
+                        <li>2 Events Total</li>
+                        <li>3 Questions per Event</li>
+                        <li>QR Code Join</li>
+                        <li>Live Results Display</li>
+                        <li class="missing">Analytics & Exports</li>
+                        <li class="missing">Custom Branding</li>
+                    </ul>
+                    <a href="auth.html" class="btn-upgrade secondary">Get Started Free</a>
+                </div>
+
+                <!-- Starter Plan -->
+                <div class="pricing-card">
+                    <h3 class="plan-name">🚀 Starter</h3>
+                    <p class="plan-desc">Freelancers & educators</p>
+                    <div class="plan-price">$4.99<span> / mo</span></div>
+                    <div class="plan-price-inr">₹415 / mo</div>
+                    <ul class="plan-features">
+                        <li class="pro-feature">300 Participants per Event</li>
+                        <li class="pro-feature">Unlimited Events</li>
+                        <li class="pro-feature">Unlimited Questions</li>
+                        <li>QR Code Join</li>
+                        <li>Live Results Display</li>
+                        <li>Standard Analytics</li>
+                        <li class="missing">Custom Branding</li>
+                    </ul>
+                    <a href="#" class="btn-upgrade secondary">Upgrade to Starter</a>
+                </div>
+
+                <!-- Pro Plan -->
+                <div class="pricing-card popular">
+                    <div class="popular-badge">Most Popular</div>
+                    <h3 class="plan-name">⚡ Pro</h3>
+                    <p class="plan-desc">Professionals & teams</p>
+                    <div class="plan-price">$14.99<span> / mo</span></div>
+                    <div class="plan-price-inr">₹1,249 / mo</div>
+                    <ul class="plan-features">
+                        <li class="pro-feature">1,000 Participants per Event</li>
+                        <li class="pro-feature">Unlimited Events & Questions</li>
+                        <li class="pro-feature">Export (CSV / PDF)</li>
+                        <li class="pro-feature">Advanced Analytics</li>
+                        <li class="pro-feature">Custom Branding</li>
+                        <li class="pro-feature">Full Customization</li>
+                        <li class="missing">White Label & SSO</li>
+                    </ul>
+                    <a href="#" class="btn-upgrade primary">Upgrade to Pro</a>
+                </div>
+
+                <!-- Enterprise Plan -->
+                <div class="pricing-card">
+                    <h3 class="plan-name">🏢 Enterprise</h3>
+                    <p class="plan-desc">Large corporates & enterprises</p>
+                    <div class="plan-price">$39.99<span> / user/mo</span></div>
+                    <div class="plan-price-inr">₹3,329 / user/mo</div>
+                    <ul class="plan-features">
+                        <li class="pro-feature">5,000 Participants per Event</li>
+                        <li class="pro-feature">White Label</li>
+                        <li class="pro-feature">Collaboration tools</li>
+                        <li class="pro-feature">SSO / Auth</li>
+                        <li class="pro-feature">Custom Integrations</li>
+                        <li class="pro-feature">Dedicated Manager & SLA</li>
+                    </ul>
+                    <a href="#" class="btn-upgrade secondary"
+                        style="cursor: not-allowed; background:#e2e8f0; color:#94a3b8;">Coming Soon</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Comparison Section -->
+    <section class="comparison-section">
+        <div class="container">
+            <h2 class="section-title text-center">Compare features side-by-side</h2>
+            <div class="comparison-table-wrapper">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Feature</th>
+                            <th>Free</th>
+                            <th>Starter</th>
+                            <th>Pro</th>
+                            <th>Enterprise</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Pricing (Monthly)</td>
+                            <td>$0</td>
+                            <td>$4.99</td>
+                            <td>$14.99</td>
+                            <td>$39.99 / user</td>
+                        </tr>
+                        <tr>
+                            <td>Status</td>
+                            <td><span class="status-badge live">Live</span></td>
+                            <td><span class="status-badge live">Live</span></td>
+                            <td><span class="status-badge live">Live</span></td>
+                            <td><span class="status-badge">Coming Soon</span></td>
+                        </tr>
+                        <tr>
+                            <td>Participants per Event</td>
+                            <td>100</td>
+                            <td>300</td>
+                            <td>1,000</td>
+                            <td>5,000</td>
+                        </tr>
+                        <tr>
+                            <td>Events Allowed</td>
+                            <td>2 total</td>
+                            <td>Unlimited</td>
+                            <td>Unlimited</td>
+                            <td>Unlimited</td>
+                        </tr>
+                        <tr>
+                            <td>Questions per Event</td>
+                            <td>3</td>
+                            <td>Unlimited</td>
+                            <td>Unlimited</td>
+                            <td>Unlimited</td>
+                        </tr>
+                        <tr>
+                            <td>Question Types</td>
+                            <td>All 7 types</td>
+                            <td>All 7 types</td>
+                            <td>All 7 types</td>
+                            <td>All 7 types</td>
+                        </tr>
+                        <tr>
+                            <td>QR Code Join</td>
+                            <td class="icon-check">✓</td>
+                            <td class="icon-check">✓</td>
+                            <td class="icon-check">✓</td>
+                            <td class="icon-check">✓</td>
+                        </tr>
+                        <tr>
+                            <td>Live Results Display</td>
+                            <td class="icon-check">✓</td>
+                            <td class="icon-check">✓</td>
+                            <td class="icon-check">✓</td>
+                            <td class="icon-check">✓</td>
+                        </tr>
+                        <tr>
+                            <td>Export (CSV / PDF)</td>
+                            <td class="icon-cross">×</td>
+                            <td class="icon-cross">×</td>
+                            <td class="icon-check">✓</td>
+                            <td class="icon-check">✓</td>
+                        </tr>
+                        <tr>
+                            <td>Analytics</td>
+                            <td>Basic</td>
+                            <td>Standard</td>
+                            <td>Advanced</td>
+                            <td>Advanced</td>
+                        </tr>
+                        <tr>
+                            <td>Custom Branding</td>
+                            <td class="icon-cross">×</td>
+                            <td class="icon-cross">×</td>
+                            <td class="icon-check">✓</td>
+                            <td class="icon-check">✓</td>
+                        </tr>
+                        <tr>
+                            <td>Customization</td>
+                            <td class="icon-cross">×</td>
+                            <td class="icon-cross">×</td>
+                            <td class="icon-check">✓</td>
+                            <td class="icon-check">✓</td>
+                        </tr>
+                        <tr>
+                            <td>Collaboration</td>
+                            <td class="icon-cross">×</td>
+                            <td class="icon-cross">×</td>
+                            <td class="icon-cross">×</td>
+                            <td class="icon-check">✓</td>
+                        </tr>
+                        <tr>
+                            <td>White Label</td>
+                            <td class="icon-cross">×</td>
+                            <td class="icon-cross">×</td>
+                            <td class="icon-cross">×</td>
+                            <td class="icon-check">✓</td>
+                        </tr>
+                        <tr>
+                            <td>SSO / Auth</td>
+                            <td class="icon-cross">×</td>
+                            <td class="icon-cross">×</td>
+                            <td class="icon-cross">×</td>
+                            <td class="icon-check">✓</td>
+                        </tr>
+                        <tr>
+                            <td>Custom Integrations</td>
+                            <td class="icon-cross">×</td>
+                            <td class="icon-cross">×</td>
+                            <td class="icon-cross">×</td>
+                            <td class="icon-check">✓</td>
+                        </tr>
+                        <tr>
+                            <td>Support</td>
+                            <td class="icon-cross">×</td>
+                            <td>Email</td>
+                            <td>Priority Email</td>
+                            <td>Dedicated Manager</td>
+                        </tr>
+                        <tr>
+                            <td>SLA</td>
+                            <td class="icon-cross">×</td>
+                            <td class="icon-cross">×</td>
+                            <td class="icon-cross">×</td>
+                            <td class="icon-check">✓</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+
+</body>
+
+</html>
