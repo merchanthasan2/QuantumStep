@@ -12,6 +12,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initCounters();
     initModal();
     initForms();
+    initEngageIQ();
 });
 
 // Loading Screen
@@ -377,6 +378,25 @@ function initForms() {
             });
         });
     }
+}
+
+// EngageIQ Animations
+function initEngageIQ() {
+    const observerOptions = {
+        threshold: 0.2
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('active');
+            }
+        });
+    }, observerOptions);
+
+    document.querySelectorAll('.animate-on-scroll').forEach(el => {
+        observer.observe(el);
+    });
 }
 
 // Add hover effect to cards

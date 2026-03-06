@@ -39,6 +39,7 @@
         radial-gradient(at 100% 0%, #ec4899 0%, transparent 50%),
         radial-gradient(at 100% 100%, #10b981 0%, transparent 50%),
         radial-gradient(at 0% 100%, #f59e0b 0%, transparent 50%);
+    --gradient-aurora: linear-gradient(225deg, #4f46e5 0%, #6366f1 25%, #8b5cf6 50%, #d946ef 75%, #f43f5e 100%);
 
     /* Shadows & Glows */
     --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.1);
@@ -600,6 +601,43 @@ section {
     font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 0.1em;
+}
+
+/* EngageIQ Banner */
+.engageiq-banner {
+    padding: var(--spacing-2xl) 0;
+    position: relative;
+    overflow: hidden;
+}
+
+.aurora-mesh {
+    position: absolute;
+    inset: 0;
+    background: var(--gradient-aurora);
+    filter: blur(100px);
+    opacity: 0.15;
+    animation: auroraRotate 20s linear infinite;
+}
+
+@keyframes auroraRotate {
+    from { transform: rotate(0deg) scale(1.5); }
+    to { transform: rotate(360deg) scale(1.5); }
+}
+
+.engageiq-section {
+    position: relative;
+    overflow: hidden;
+}
+
+.animate-on-scroll {
+    opacity: 0;
+    transform: translateY(40px);
+    transition: all 1s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.animate-on-scroll.active {
+    opacity: 1;
+    transform: translateY(0);
 }
 
 /* Services Section */
